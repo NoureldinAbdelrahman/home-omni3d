@@ -1,0 +1,38 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# --- Raw OmniObject3D download (place data here; do not commit) ---
+dataset/*
+!dataset/.gitkeep
+
+# --- Prepared model inputs (rebuild with prepare_model_data.py) ---
+Pix2Vox/datasets/OmniObject3D/*
+!Pix2Vox/datasets/OmniObject3D/.gitkeep
+
+AtlasNet/dataset/data/*
+!AtlasNet/dataset/data/.gitkeep
+!AtlasNet/dataset/data/taxonomy.json
+
+# --- Training outputs / logs / checkpoints ---
+Pix2Vox/output/
+AtlasNet/log/
+*.pth
+*.pt
+*.ckpt
+*.binvox
+
+# --- AtlasNet runtime caches & media ---
+**/training_media/
+master.pkl
+master.html
+
+# --- OS / editor ---
+.DS_Store
+.idea/
+.vscode/
+*.swp

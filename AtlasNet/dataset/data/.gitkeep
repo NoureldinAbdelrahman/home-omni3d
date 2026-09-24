@@ -1,0 +1,5 @@
+# Place AtlasNet-ready data here (created by prepare_model_data.py --target atlasnet):
+#   taxonomy.json
+#   ShapeNetV1PointCloud/<category>/<object_id>.npy
+#   ShapeNetV1Renderings/<category>/<object_id>/rendering/{00..23}.png
+# This directory is gitignored — copy data manually when moving machines.

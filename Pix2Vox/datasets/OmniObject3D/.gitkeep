@@ -1,0 +1,5 @@
+# Place Pix2Vox-ready data here (created by prepare_model_data.py --target pix2vox):
+#   OmniObject3D.json
+#   OmniObjectRendering/<category>/<object_id>/rendering/{00..23}.png
+#   OmniObjectVox32/<category>/<object_id>/model.mat
+# This directory is gitignored — copy data manually when moving machines.

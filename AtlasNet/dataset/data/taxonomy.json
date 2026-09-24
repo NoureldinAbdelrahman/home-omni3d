@@ -1,0 +1,74 @@
+[
+  {
+    "synsetId": "bed",
+    "name": "bed, bedroom bed"
+  },
+  {
+    "synsetId": "pillow",
+    "name": "pillow, bedroom pillow"
+  },
+  {
+    "synsetId": "chair",
+    "name": "chair, bedroom chair"
+  },
+  {
+    "synsetId": "light",
+    "name": "light, bedroom light"
+  },
+  {
+    "synsetId": "cabinet",
+    "name": "cabinet, bedroom cabinet"
+  },
+  {
+    "synsetId": "table",
+    "name": "table, bedroom table"
+  },
+  {
+    "synsetId": "sofa",
+    "name": "sofa, bedroom sofa"
+  },
+  {
+    "synsetId": "stool",
+    "name": "stool, bedroom stool"
+  },
+  {
+    "synsetId": "clock",
+    "name": "clock, bedroom clock"
+  },
+  {
+    "synsetId": "tvstand",
+    "name": "tvstand, bedroom tvstand"
+  },
+  {
+    "synsetId": "vase",
+    "name": "vase, bedroom vase"
+  },
+  {
+    "synsetId": "tissue",
+    "name": "tissue, bedroom tissue"
+  },
+  {
+    "synsetId": "teddy_bear",
+    "name": "teddy_bear, bedroom teddy_bear"
+  },
+  {
+    "synsetId": "doll",
+    "name": "doll, bedroom doll"
+  },
+  {
+    "synsetId": "plant",
+    "name": "plant, bedroom plant"
+  },
+  {
+    "synsetId": "fan",
+    "name": "fan, bedroom fan"
+  },
+  {
+    "synsetId": "suitcase",
+    "name": "suitcase, bedroom suitcase"
+  },
+  {
+    "synsetId": "hair_dryer",
+    "name": "hair_dryer, bedroom hair_dryer"
+  }
+]

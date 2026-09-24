@@ -1,0 +1,4 @@
+# Place OmniObject3D bedroom subset here (created by download_bedroom_subset.py):
+#   dataset/renders/<category>/<object_id>/{000..023}.png
+#   dataset/point_clouds/<category>/<object_id>.npy
+# This directory is gitignored — copy data manually when moving machines.
