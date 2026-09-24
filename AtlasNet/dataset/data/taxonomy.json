@@ -70,5 +70,9 @@
   {
     "synsetId": "hair_dryer",
     "name": "hair_dryer, house hair_dryer"
+  },
+  {
+    "synsetId": "plug",
+    "name": "plug, house plug"
   }
 ]
