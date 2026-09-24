@@ -15,7 +15,9 @@ matplotlib>=3.8
 tensorboardX>=2.6
 joblib>=1.3
 termcolor>=2.3
-visdom>=0.3.0
+# visdom (AtlasNet-only live plots) is intentionally NOT required: 0.3.0 needs
+# Python>=3.12 + openTSNE, while older sdists fail to build on new setuptools.
+# Training works without it; install manually for live plots: pip install visdom
 websocket-client>=1.6
 tornado>=6.3
 ninja>=1.11

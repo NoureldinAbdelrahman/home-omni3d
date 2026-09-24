@@ -1,4 +1,4 @@
-# house-omni3d
+# home-omni3d
 
 Bedroom/house subset of [OmniObject3D](https://opendatalab.com/OpenDataLab/OmniObject3D) bridged into **Pix2Vox** and **AtlasNet** for single-view 3D reconstruction (DMET 901).
 
@@ -32,9 +32,11 @@ Utility: `dustbin`, `fire_extinguisher`, `flash_light`, `hammer`, `scissor`, `um
 
 ## Setup
 
+Requires **Python 3.10–3.14** (tested on 3.14). Avoid 3.14.1 — `torchvision` has no wheel for it.
+
 ```bash
-git clone https://github.com/NoureldinAbdelrahman/house-omni3d.git
-cd house-omni3d
+git clone https://github.com/NoureldinAbdelrahman/home-omni3d.git
+cd home-omni3d
 
 python3 -m venv .venv
 source .venv/bin/activate
@@ -47,6 +49,28 @@ Optional OpenDataLab auth (or use `--use-fallback-keys`):
 ```bash
 export OPENXLAB_AK=...
 export OPENXLAB_SK=...
+```
+
+### Troubleshooting
+
+If `pip install -r requirements.txt` fails, first confirm your interpreter:
+
+```bash
+python -V   # need 3.10–3.14 (not 3.14.1)
+```
+
+A resolution error like `Could not find a version that satisfies the requirement
+visdom>=0.3` means an old pin was used: `visdom 0.3.0` requires Python ≥3.12.
+`git pull` and retry — `visdom` is no longer a required dependency. It is only
+used by AtlasNet for optional live plots and is not needed for training. Install
+it separately if you want the plots: `pip install visdom`.
+
+Failed installs are safe to retry:
+
+```bash
+git pull
+pip install -r requirements.txt
+./install_openxlab.sh
 ```
 
 ## Download data

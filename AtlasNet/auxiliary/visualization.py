@@ -1,7 +1,11 @@
-import visdom
 import os
 import sys
 import time
+
+try:
+    import visdom
+except Exception:  # visdom is optional; used only for live training curves
+    visdom = None
 
 """
     Author : Thibault Groueix 01.11.2019
@@ -22,12 +26,19 @@ def is_port_in_use(port):
 class Visualizer(object):
     def __init__(self, visdom_port, env, http_port):
         super(Visualizer, self).__init__()
+        self.visdom_port = visdom_port
+        self.http_port = http_port
+        if visdom is None:
+            print("visdom not installed; live visualization disabled.")
+            self.vis = None
+            return
+
         # Create Visdom Server
         try:
             if not is_port_in_use(visdom_port):
                 print(f"Launching new visdom instance in port {visdom_port}")
                 cmd = f"{sys.executable} -m visdom.server -p {visdom_port} > /dev/null 2>&1"
-                CMD = f'TMUX=0 tmux new-session -d -s visdom_server \; send-keys "{cmd}" Enter'
+                CMD = rf'TMUX=0 tmux new-session -d -s visdom_server \; send-keys "{cmd}" Enter'
                 print(CMD)
                 os.system(CMD)
                 time.sleep(2)
@@ -39,14 +50,11 @@ class Visualizer(object):
             if not is_port_in_use(http_port):
                 print(f"Launching new HTTP instance in port {http_port}")
                 cmd = f"{sys.executable} -m http.server -p {http_port} > /dev/null 2>&1"
-                CMD = f'TMUX=0 tmux new-session -d -s http_server \; send-keys "{cmd}" Enter'
+                CMD = rf'TMUX=0 tmux new-session -d -s http_server \; send-keys "{cmd}" Enter'
                 print(CMD)
                 os.system(CMD)
         except:
             print("couldn't set up http server.")
-
-        self.visdom_port = visdom_port
-        self.http_port = http_port
 
         vis = visdom.Visdom(port=visdom_port, env=env)
         self.vis = vis
@@ -58,6 +66,8 @@ class Visualizer(object):
         :param Y:
         :return:
         """
+        if self.vis is None:
+            return
         points = points.squeeze()
         if points.size(-1) == 3:
             points = points.contiguous().data.cpu()
@@ -93,5 +103,7 @@ class Visualizer(object):
             self.show_pointcloud(points[i], title=title)
 
     def show_image(self, img, title=None):
+        if self.vis is None:
+            return
         img = img.squeeze()
         self.vis.image(img, win=title, opts=dict(title=title))
