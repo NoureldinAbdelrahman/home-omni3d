@@ -1,74 +1,74 @@
 [
   {
     "synsetId": "bed",
-    "name": "bed, bedroom bed"
+    "name": "bed, house bed"
   },
   {
     "synsetId": "pillow",
-    "name": "pillow, bedroom pillow"
+    "name": "pillow, house pillow"
   },
   {
     "synsetId": "chair",
-    "name": "chair, bedroom chair"
+    "name": "chair, house chair"
   },
   {
     "synsetId": "light",
-    "name": "light, bedroom light"
+    "name": "light, house light"
   },
   {
     "synsetId": "cabinet",
-    "name": "cabinet, bedroom cabinet"
+    "name": "cabinet, house cabinet"
   },
   {
     "synsetId": "table",
-    "name": "table, bedroom table"
+    "name": "table, house table"
   },
   {
     "synsetId": "sofa",
-    "name": "sofa, bedroom sofa"
+    "name": "sofa, house sofa"
   },
   {
     "synsetId": "stool",
-    "name": "stool, bedroom stool"
+    "name": "stool, house stool"
   },
   {
     "synsetId": "clock",
-    "name": "clock, bedroom clock"
+    "name": "clock, house clock"
   },
   {
     "synsetId": "tvstand",
-    "name": "tvstand, bedroom tvstand"
+    "name": "tvstand, house tvstand"
   },
   {
     "synsetId": "vase",
-    "name": "vase, bedroom vase"
+    "name": "vase, house vase"
   },
   {
     "synsetId": "tissue",
-    "name": "tissue, bedroom tissue"
+    "name": "tissue, house tissue"
   },
   {
     "synsetId": "teddy_bear",
-    "name": "teddy_bear, bedroom teddy_bear"
+    "name": "teddy_bear, house teddy_bear"
   },
   {
     "synsetId": "doll",
-    "name": "doll, bedroom doll"
+    "name": "doll, house doll"
   },
   {
     "synsetId": "plant",
-    "name": "plant, bedroom plant"
+    "name": "plant, house plant"
   },
   {
     "synsetId": "fan",
-    "name": "fan, bedroom fan"
+    "name": "fan, house fan"
   },
   {
     "synsetId": "suitcase",
-    "name": "suitcase, bedroom suitcase"
+    "name": "suitcase, house suitcase"
   },
   {
     "synsetId": "hair_dryer",
-    "name": "hair_dryer, bedroom hair_dryer"
+    "name": "hair_dryer, house hair_dryer"
   }
 ]

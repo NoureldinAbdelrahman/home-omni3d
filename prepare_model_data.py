@@ -15,6 +15,18 @@ sys.path.insert(0, str(ROOT))
 from bedroom_categories import BEDROOM_CATEGORIES  # noqa: E402
 
 
+def discover_categories(dataset_dir: Path) -> list[str]:
+    """Categories present under point_clouds/ and/or renders/ (bedroom first)."""
+    found: set[str] = set()
+    for sub in ("point_clouds", "renders"):
+        root = dataset_dir / sub
+        if root.is_dir():
+            found |= {p.name for p in root.iterdir() if p.is_dir()}
+    ordered = [c for c in BEDROOM_CATEGORIES if c in found]
+    ordered += sorted(found - set(ordered))
+    return ordered
+
+
 def list_objects(dataset_dir: Path, category: str) -> list[str]:
     pc_dir = dataset_dir / "point_clouds" / category
     if not pc_dir.is_dir():
@@ -84,14 +96,20 @@ def link_or_copy(src: Path, dst: Path):
 
 # ---------------- Pix2Vox ----------------
 
-def prepare_pix2vox(dataset_dir: Path, out_dir: Path, grid: int = 32) -> None:
+def prepare_pix2vox(
+    dataset_dir: Path,
+    out_dir: Path,
+    grid: int = 32,
+    categories: list[str] | None = None,
+) -> None:
     rendering_root = out_dir / "OmniObjectRendering"
     voxel_root = out_dir / "OmniObjectVox32"
     taxonomy_path = out_dir / "OmniObject3D.json"
 
+    cats = categories if categories is not None else discover_categories(dataset_dir)
     taxonomy = []
     n_obj = n_img = n_vox = 0
-    for cat in BEDROOM_CATEGORIES:
+    for cat in cats:
         object_ids = list_objects(dataset_dir, cat)
         if not object_ids:
             continue
@@ -127,22 +145,27 @@ def prepare_pix2vox(dataset_dir: Path, out_dir: Path, grid: int = 32) -> None:
 
 # ---------------- AtlasNet ----------------
 
-def prepare_atlasnet(dataset_dir: Path, out_dir: Path) -> None:
+def prepare_atlasnet(
+    dataset_dir: Path,
+    out_dir: Path,
+    categories: list[str] | None = None,
+) -> None:
     """out_dir should be AtlasNet/dataset/data."""
     pc_root = out_dir / "ShapeNetV1PointCloud"
     render_root = out_dir / "ShapeNetV1Renderings"
     taxonomy_path = out_dir / "taxonomy.json"
 
+    cats = categories if categories is not None else discover_categories(dataset_dir)
     taxonomy = []
     n_obj = n_img = n_pc = 0
-    for cat in BEDROOM_CATEGORIES:
+    for cat in cats:
         object_ids = list_objects(dataset_dir, cat)
         if not object_ids:
             continue
         taxonomy.append({
             "synsetId": cat,
             # AtlasNet takes name.split(',')[0] as the friendly class name.
-            "name": f"{cat}, bedroom {cat}",
+            "name": f"{cat}, house {cat}",
         })
         for obj in object_ids:
             src_pc = dataset_dir / "point_clouds" / cat / f"{obj}.npy"
@@ -172,12 +195,25 @@ def main():
     ap.add_argument("--target", choices=["pix2vox", "atlasnet", "both"],
                     default="both")
     ap.add_argument("--grid", type=int, default=32)
+    ap.add_argument("--categories", nargs="+", metavar="CAT", default=None,
+                    help="Override category list (default: all found on disk).")
     args = ap.parse_args()
 
+    cats = None
+    if args.categories:
+        from bedroom_categories import resolve_category
+        cats = [resolve_category(c) for c in args.categories]
+    elif args.dataset_dir.is_dir():
+        found = discover_categories(args.dataset_dir)
+        if found:
+            print(f"Discovered {len(found)} categories under {args.dataset_dir}")
+            cats = found
+
     if args.target in ("pix2vox", "both"):
-        prepare_pix2vox(args.dataset_dir, args.pix2vox_out, grid=args.grid)
+        prepare_pix2vox(args.dataset_dir, args.pix2vox_out, grid=args.grid,
+                        categories=cats)
     if args.target in ("atlasnet", "both"):
-        prepare_atlasnet(args.dataset_dir, args.atlasnet_out)
+        prepare_atlasnet(args.dataset_dir, args.atlasnet_out, categories=cats)
 
 
 if __name__ == "__main__":

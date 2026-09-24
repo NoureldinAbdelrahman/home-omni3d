@@ -2,14 +2,16 @@
 
 Bedroom/house subset of [OmniObject3D](https://opendatalab.com/OpenDataLab/OmniObject3D) bridged into **Pix2Vox** and **AtlasNet** for single-view 3D reconstruction (DMET 901).
 
-Download 24-view Blender renders + point clouds for 18 home categories, convert them into each model’s expected layout, and train / evaluate baselines on a GPU box.
+Download 24-view Blender renders + point clouds for home categories (18 bedroom + 32 extra house), convert them into each model’s expected layout, and train / evaluate baselines on a GPU box.
 
 ## Contents
 
 | Path | Role |
 |------|------|
 | `download_bedroom_subset.py` | Fetch renders + HDF5 point clouds from OpenDataLab |
-| `bedroom_categories.py` | 18-category subset + aliases (`lamp`→`light`, etc.) |
+| `download_house_extra.py` | Fetch **32 extra house categories** (kitchen / bath / utility) |
+| `bedroom_categories.py` | Original 18-category subset + aliases (`lamp`→`light`, etc.) |
+| `house_extra_categories.py` | Extra house category list (32) |
 | `bedroom_omni_dataset.py` | Generic PyTorch loader over `dataset/` |
 | `prepare_model_data.py` | Convert `dataset/` → Pix2Vox and AtlasNet layouts |
 | `Pix2Vox/` | Vendored [Pix2Vox](https://github.com/hzxie/Pix2Vox) (voxel recon) |
@@ -17,9 +19,16 @@ Download 24-view Blender renders + point clouds for 18 home categories, convert 
 | `dataset/` | **Data placeholder** (gitignored) |
 | `requirements.txt`, `install_openxlab.sh` | Environment |
 
-### Categories (18)
+### Original bedroom categories (18)
 
 `bed`, `pillow`, `chair`, `light`, `cabinet`, `table`, `sofa`, `stool`, `clock`, `tvstand`, `vase`, `tissue`, `teddy_bear`, `doll`, `plant`, `fan`, `suitcase`, `hair_dryer`
+
+### Extra house categories (32)
+
+Kitchen: `kettle`, `microwaveoven`, `ricecooker`, `pan`, `dish`, `cup`, `bowl`, `bottle`, `teapot`, `thermos`, `timer`  
+Living/desk: `remote_control`, `speaker`, `projector`, `keyboard`, `laptop`, `monitor`, `mouse`, `power_strip`, `plug`  
+Bathroom: `shampoo`, `soap`, `tooth_brush`, `tooth_paste`, `razor`, `medicine_bottle`  
+Utility: `dustbin`, `fire_extinguisher`, `flash_light`, `hammer`, `scissor`, `umbrella`
 
 ## Setup
 
@@ -43,11 +52,24 @@ export OPENXLAB_SK=...
 ## Download data
 
 ```bash
-# plan only
+# plan only (original 18 bedroom categories)
 python download_bedroom_subset.py --dry-run
 
 # full bedroom subset (~9 GB under dataset/)
 python download_bedroom_subset.py --output-dir dataset --point-count 4096
+
+# --- on a lab PC before the bedroom dump arrives ---
+# list the 32 extra house categories
+python download_house_extra.py --list
+
+# plan
+python download_house_extra.py --dry-run
+
+# download extras into dataset/ (skips anything already local)
+python download_house_extra.py --output-dir dataset --point-count 4096
+
+# optional: auth if you have no cached login
+python download_house_extra.py --use-fallback-keys
 ```
 
 Layout written under `dataset/`:
@@ -58,12 +80,18 @@ dataset/
 └── point_clouds/<category>/<object_id>.npy
 ```
 
+When you later copy the bedroom `dataset/` onto the same machine, both trees merge; re-run `prepare_model_data.py` so taxonomies cover every category on disk.
+
 ## Prepare model inputs
 
 ```bash
 python prepare_model_data.py --target both
 # or: --target pix2vox | --target atlasnet
+# or pin a subset:
+python prepare_model_data.py --categories kettle soap laptop
 ```
+
+Categories are **auto-discovered** from `dataset/point_clouds/` and `dataset/renders/` (bedroom first, then sorted extras).
 
 This fills (gitignored) placeholders:
 
