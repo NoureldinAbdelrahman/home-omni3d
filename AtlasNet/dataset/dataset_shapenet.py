@@ -10,6 +10,7 @@ import pickle
 from os.path import join, dirname, exists
 from easydict import EasyDict
 import json
+import hashlib
 from termcolor import colored
 import dataset.pointcloud_processor as pointcloud_processor
 from copy import deepcopy
@@ -69,12 +70,16 @@ class ShapeNet(data.Dataset):
                     new_classes.append(self.names2id[category])
                 self.classes = new_classes
 
-            # Create Cache path
+            # Create Cache path. The class list can be long (dozens of
+            # categories); hash it when it would overflow filename limits.
+            cache_key = "_".join(self.opt.class_choice)
+            if len(cache_key) > 64:
+                cache_key = hashlib.md5(cache_key.encode("utf-8")).hexdigest()
             self.path_dataset = join(dirname(__file__), 'data', 'cache')
             if not exists(self.path_dataset):
                 os.mkdir(self.path_dataset)
             self.path_dataset = join(self.path_dataset,
-                                     self.opt.normalization + str(train) + "_".join(self.opt.class_choice))
+                                     self.opt.normalization + str(train) + cache_key)
 
             if not exists(self.image_path):
                 os.system("chmod +x dataset/download_shapenet_renderings.sh")
