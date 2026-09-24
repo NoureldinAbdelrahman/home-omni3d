@@ -65,6 +65,12 @@ visdom>=0.3` means an old pin was used: `visdom 0.3.0` requires Python ≥3.12.
 used by AtlasNet for optional live plots and is not needed for training. Install
 it separately if you want the plots: `pip install visdom`.
 
+After `./install_openxlab.sh`, `pip check` reports openxlab is missing `tqdm`
+and/or has "incompatible" `filelock`/`setuptools`. This is expected: openxlab
+pins `setuptools~=60.2.0` (which conflicts with torch) and old `tqdm`/`filelock`
+versions. We install those without the pins — openxlab never imports setuptools
+at runtime, so the warnings are harmless.
+
 Failed installs are safe to retry:
 
 ```bash
