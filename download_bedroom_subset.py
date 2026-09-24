@@ -181,7 +181,10 @@ def _extract_renders(archive: Path, category: str, renders_root: Path) -> list[s
     extract_dir = archive.parent / f"_extract_{category}"
 
     with tarfile.open(archive, "r:gz") as tar:
-        tar.extractall(path=extract_dir, filter="data")
+        try:
+            tar.extractall(path=extract_dir, filter="data")
+        except TypeError:  # filter= added in 3.12, backported to some 3.10.x
+            tar.extractall(path=extract_dir)
 
     try:
         for entry in sorted(extract_dir.iterdir()):
