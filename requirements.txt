@@ -21,3 +21,7 @@ termcolor>=2.3
 websocket-client>=1.6
 tornado>=6.3
 ninja>=1.11
+
+# --- analysis notebook (notebooks/dataset_analysis.ipynb) ---
+pandas>=2.0
+nbformat>=5.9
