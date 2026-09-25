@@ -1,7 +1,7 @@
 {
   "category": "shampoo",
   "object": "shampoo_031",
-  "chamfer": 1.5959088560729522,
-  "fscore_tau0.01": 0.0018231909893849769,
+  "chamfer": 0.14232896399513556,
+  "fscore_tau0.01": 0.009023600185099491,
   "n_points": 2500
 }

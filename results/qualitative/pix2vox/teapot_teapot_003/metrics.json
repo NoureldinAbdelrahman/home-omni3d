@@ -1,7 +1,7 @@
 {
   "category": "teapot",
   "object": "teapot_003",
-  "iou_t0.3": 0.16834018464856124,
-  "n_pred_voxels": 10723,
+  "iou_t0.3": 0.2773776820847873,
+  "n_pred_voxels": 10591,
   "n_gt_voxels": 6614
 }

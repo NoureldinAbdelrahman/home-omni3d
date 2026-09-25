@@ -154,6 +154,31 @@ class ResNet(nn.Module):
         return x
 
 
+def _load_pretrained(model, url_key):
+    """Load ImageNet weights into a torchvision-copied ResNet.
+
+    Tries the original download URL, then falls back to torchvision. The final
+    ``fc`` head is skipped on purpose (it is rebuilt to ``num_classes``), and any
+    key whose shape differs is skipped rather than crashing the load.
+    """
+    try:
+        state = model_zoo.load_url(model_urls[url_key])
+    except Exception as exc:  # network / retired URL -> torchvision fallback
+        print(f"[resnet] model_zoo load failed ({exc}); using torchvision weights")
+        import torchvision
+        weights = {
+            'resnet18': torchvision.models.ResNet18_Weights.DEFAULT,
+        }.get(url_key)
+        state = torchvision.models.resnet18(weights=weights).state_dict()
+    own = model.state_dict()
+    matched = {k: v for k, v in state.items()
+               if k in own and not k.startswith("fc.") and own[k].shape == v.shape}
+    model.load_state_dict(matched, strict=False)
+    print(f"[resnet] loaded {len(matched)} ImageNet tensors (fc head re-init to "
+          f"{model.fc.out_features} outputs)")
+    return model
+
+
 def resnet18(pretrained=False, **kwargs):
     """Constructs a ResNet-18 model.
     Args:
@@ -161,7 +186,7 @@ def resnet18(pretrained=False, **kwargs):
     """
     model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
+        _load_pretrained(model, 'resnet18')
     return model
 
 

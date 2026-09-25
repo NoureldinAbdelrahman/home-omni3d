@@ -2,7 +2,9 @@ model,run,task,headline,metric
 Pix2Vox,2026-09-25T01:10:43.513497,image->voxel,0.3372,IoU@t=0.3
 Pix2Vox,2026-09-25T06:51:00.676358,image->voxel,0.3374,IoU@t=0.3
 Pix2Vox,2026-09-25T16:25:17.351995,image->voxel,0.3073,IoU@t=0.2
+Pix2Vox,2026-09-25T21:38:11.694424,image->voxel,0.3203,IoU@t=0.2
 AtlasNet-SVR,svr25,image->surface,0.08792327493429183,F-score
 AtlasNet-SVR,svr25_150,image->surface,0.07928681075572967,F-score
 AtlasNet-SVR,svr25_full,image->surface,0.08173999842256308,F-score
+AtlasNet-SVR,svr25_pretrained,image->surface,0.08294670470058918,F-score
 NeRF-oracle (multi-view),sample-6,multi-view->radiance,25.199849005895018,PSNR (dB)

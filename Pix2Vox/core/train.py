@@ -75,8 +75,14 @@ def train_net(cfg):
     print('[DEBUG] %s Parameters in Refiner: %d.' % (dt.now(), utils.network_utils.count_parameters(refiner)))
     print('[DEBUG] %s Parameters in Merger: %d.' % (dt.now(), utils.network_utils.count_parameters(merger)))
 
-    # Initialize weights of networks
-    encoder.apply(utils.network_utils.init_weights)
+    # Initialize weights of networks. Keep the ImageNet-pretrained VGG16
+    # backbone (encoder.vgg, frozen in models/encoder.py) untouched: applying
+    # init_weights to it would replace the pretrained filters with random ones
+    # while freezing them out of the optimizer. Only the layers stacked on
+    # top of it (encoder.layer1..3) need initialization.
+    for _name, _module in encoder.named_children():
+        if _name != "vgg":
+            _module.apply(utils.network_utils.init_weights)
     decoder.apply(utils.network_utils.init_weights)
     refiner.apply(utils.network_utils.init_weights)
     merger.apply(utils.network_utils.init_weights)

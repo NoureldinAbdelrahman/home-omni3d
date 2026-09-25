@@ -1,7 +1,7 @@
 {
   "category": "shampoo",
   "object": "shampoo_003",
-  "iou_t0.3": 0.5186080231996133,
-  "n_pred_voxels": 10586,
+  "iou_t0.3": 0.5543031100872141,
+  "n_pred_voxels": 10625,
   "n_gt_voxels": 8266
 }

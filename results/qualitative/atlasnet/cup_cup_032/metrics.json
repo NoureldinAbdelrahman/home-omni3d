@@ -1,7 +1,7 @@
 {
   "category": "cup",
   "object": "cup_032",
-  "chamfer": 5.8430519364458435,
+  "chamfer": 0.21311438504504618,
   "fscore_tau0.01": 0.0006064281382656155,
   "n_points": 2500
 }
