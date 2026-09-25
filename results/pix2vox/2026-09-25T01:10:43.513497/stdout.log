@@ -1,0 +1,241 @@
+/home/susan/agentic_workspace/home-omni3d/.venv/lib/python3.10/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/home/susan/agentic_workspace/home-omni3d/.venv/lib/python3.10/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_BN_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_BN_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Use config:
+{'CONST': {'BATCH_SIZE': 8,
+           'CROP_IMG_H': 128,
+           'CROP_IMG_W': 128,
+           'DEVICE': '0',
+           'IMG_H': 224,
+           'IMG_W': 224,
+           'N_VIEWS_RENDERING': 1,
+           'N_VOX': 32,
+           'RNG_SEED': 0,
+           'WEIGHTS': './output/checkpoints/2026-09-25T01:10:43.513497/best-ckpt.pth'},
+ 'DATASET': {'MEAN': [0.5, 0.5, 0.5],
+             'STD': [0.5, 0.5, 0.5],
+             'TEST_DATASET': 'ShapeNet',
+             'TRAIN_DATASET': 'ShapeNet'},
+ 'DATASETS': {'PASCAL3D': {'ANNOTATION_PATH': '/home/hzxie/Datasets/PASCAL3D/Annotations/%s_imagenet/%s.mat',
+                           'RENDERING_PATH': '/home/hzxie/Datasets/PASCAL3D/Images/%s_imagenet/%s.JPEG',
+                           'TAXONOMY_FILE_PATH': './datasets/Pascal3D.json',
+                           'VOXEL_PATH': '/home/hzxie/Datasets/PASCAL3D/CAD/%s/%02d.binvox'},
+              'PIX3D': {'ANNOTATION_PATH': '/home/hzxie/Datasets/Pix3D/pix3d.json',
+                        'RENDERING_PATH': '/home/hzxie/Datasets/Pix3D/img/%s/%s.%s',
+                        'TAXONOMY_FILE_PATH': './datasets/Pix3D.json',
+                        'VOXEL_PATH': '/home/hzxie/Datasets/Pix3D/model/%s/%s/%s.binvox'},
+              'SHAPENET': {'RENDERING_PATH': './datasets/OmniObject3D/OmniObjectRendering/%s/%s/rendering/%02d.png',
+                           'TAXONOMY_FILE_PATH': './datasets/OmniObject3D/OmniObject3D.json',
+                           'VOXEL_PATH': './datasets/OmniObject3D/OmniObjectVox32/%s/%s/model.mat'}},
+ 'DIR': {'OUT_PATH': './output',
+         'RANDOM_BG_PATH': '/home/hzxie/Datasets/SUN2012/JPEGImages'},
+ 'NETWORK': {'LEAKY_VALUE': 0.2,
+             'TCONV_USE_BIAS': False,
+             'USE_MERGER': True,
+             'USE_REFINER': True},
+ 'TEST': {'RANDOM_BG_COLOR_RANGE': [[240, 240], [240, 240], [240, 240]],
+          'VOXEL_THRESH': [0.2, 0.3, 0.4, 0.5]},
+ 'TRAIN': {'BETAS': (0.9, 0.999),
+           'BRIGHTNESS': 0.4,
+           'CONTRAST': 0.4,
+           'DECODER_LEARNING_RATE': 0.001,
+           'DECODER_LR_MILESTONES': [150],
+           'ENCODER_LEARNING_RATE': 0.001,
+           'ENCODER_LR_MILESTONES': [150],
+           'EPOCH_START_USE_MERGER': 0,
+           'EPOCH_START_USE_REFINER': 0,
+           'GAMMA': 0.5,
+           'MERGER_LEARNING_RATE': 0.0001,
+           'MERGER_LR_MILESTONES': [150],
+           'MOMENTUM': 0.9,
+           'NOISE_STD': 0.1,
+           'NUM_EPOCHES': 250,
+           'NUM_WORKER': 4,
+           'POLICY': 'adam',
+           'RANDOM_BG_COLOR_RANGE': [[225, 255], [225, 255], [225, 255]],
+           'REFINER_LEARNING_RATE': 0.001,
+           'REFINER_LR_MILESTONES': [150],
+           'RESUME_TRAIN': False,
+           'SATURATION': 0.4,
+           'SAVE_FREQ': 10,
+           'UPDATE_N_VIEWS_RENDERING': False}}
+[INFO] 2026-09-25 03:22:41.117942 Collecting files of Taxonomy[ID=bottle, Name=bottle]
+[INFO] 2026-09-25 03:22:41.118863 Collecting files of Taxonomy[ID=bowl, Name=bowl]
+[INFO] 2026-09-25 03:22:41.119337 Collecting files of Taxonomy[ID=cup, Name=cup]
+[INFO] 2026-09-25 03:22:41.120684 Collecting files of Taxonomy[ID=dish, Name=dish]
+[INFO] 2026-09-25 03:22:41.121330 Collecting files of Taxonomy[ID=dustbin, Name=dustbin]
+[INFO] 2026-09-25 03:22:41.121990 Collecting files of Taxonomy[ID=fire_extinguisher, Name=fire_extinguisher]
+[INFO] 2026-09-25 03:22:41.122575 Collecting files of Taxonomy[ID=flash_light, Name=flash_light]
+[INFO] 2026-09-25 03:22:41.122776 Collecting files of Taxonomy[ID=hammer, Name=hammer]
+[INFO] 2026-09-25 03:22:41.123437 Collecting files of Taxonomy[ID=kettle, Name=kettle]
+[INFO] 2026-09-25 03:22:41.123859 Collecting files of Taxonomy[ID=keyboard, Name=keyboard]
+[INFO] 2026-09-25 03:22:41.124299 Collecting files of Taxonomy[ID=laptop, Name=laptop]
+[INFO] 2026-09-25 03:22:41.124523 Collecting files of Taxonomy[ID=medicine_bottle, Name=medicine_bottle]
+[INFO] 2026-09-25 03:22:41.126982 Collecting files of Taxonomy[ID=microwaveoven, Name=microwaveoven]
+[INFO] 2026-09-25 03:22:41.127191 Collecting files of Taxonomy[ID=monitor, Name=monitor]
+[INFO] 2026-09-25 03:22:41.127397 Collecting files of Taxonomy[ID=mouse, Name=mouse]
+[INFO] 2026-09-25 03:22:41.128229 Collecting files of Taxonomy[ID=pan, Name=pan]
+[INFO] 2026-09-25 03:22:41.128437 Collecting files of Taxonomy[ID=plug, Name=plug]
+[INFO] 2026-09-25 03:22:41.128657 Collecting files of Taxonomy[ID=power_strip, Name=power_strip]
+[INFO] 2026-09-25 03:22:41.129717 Collecting files of Taxonomy[ID=projector, Name=projector]
+[INFO] 2026-09-25 03:22:41.130170 Collecting files of Taxonomy[ID=razor, Name=razor]
+[INFO] 2026-09-25 03:22:41.130526 Collecting files of Taxonomy[ID=remote_control, Name=remote_control]
+[INFO] 2026-09-25 03:22:41.131297 Collecting files of Taxonomy[ID=ricecooker, Name=ricecooker]
+[INFO] 2026-09-25 03:22:41.131452 Collecting files of Taxonomy[ID=scissor, Name=scissor]
+[INFO] 2026-09-25 03:22:41.131913 Collecting files of Taxonomy[ID=shampoo, Name=shampoo]
+[INFO] 2026-09-25 03:22:41.132819 Collecting files of Taxonomy[ID=soap, Name=soap]
+[INFO] 2026-09-25 03:22:41.133768 Collecting files of Taxonomy[ID=speaker, Name=speaker]
+[INFO] 2026-09-25 03:22:41.133943 Collecting files of Taxonomy[ID=teapot, Name=teapot]
+[INFO] 2026-09-25 03:22:41.134849 Collecting files of Taxonomy[ID=thermos, Name=thermos]
+[INFO] 2026-09-25 03:22:41.135013 Collecting files of Taxonomy[ID=timer, Name=timer]
+[INFO] 2026-09-25 03:22:41.135479 Collecting files of Taxonomy[ID=tooth_brush, Name=tooth_brush]
+[INFO] 2026-09-25 03:22:41.136099 Collecting files of Taxonomy[ID=tooth_paste, Name=tooth_paste]
+[INFO] 2026-09-25 03:22:41.137164 Collecting files of Taxonomy[ID=umbrella, Name=umbrella]
+[INFO] 2026-09-25 03:22:41.137632 Complete collecting files of the dataset. Total files: 104.
+[INFO] 2026-09-25 03:22:44.519282 Loading weights from ./output/checkpoints/2026-09-25T01:10:43.513497/best-ckpt.pth ...
+[INFO/Process-1] child process calling self.run()
+[INFO/Process-1] created temp directory /tmp/pymp-6bl6f44_
+[INFO] 2026-09-25 03:22:48.878916 Test[1/104] Taxonomy = bottle Sample = bottle_040 EDLoss = 4.7323 RLoss = 4.6999 IoU = ['0.3583', '0.3581', '0.3392', '0.2509']
+[INFO] 2026-09-25 03:22:48.885450 Test[2/104] Taxonomy = bottle Sample = bottle_046 EDLoss = 3.8957 RLoss = 3.8147 IoU = ['0.4418', '0.5597', '0.5405', '0.3723']
+[INFO] 2026-09-25 03:22:48.890833 Test[3/104] Taxonomy = bottle Sample = bottle_047 EDLoss = 4.1488 RLoss = 4.0712 IoU = ['0.4145', '0.4772', '0.4476', '0.3191']
+[INFO] 2026-09-25 03:22:48.918391 Test[4/104] Taxonomy = bottle Sample = bottle_055 EDLoss = 3.9550 RLoss = 3.8729 IoU = ['0.4124', '0.5552', '0.5189', '0.3352']
+[INFO] 2026-09-25 03:22:48.948427 Test[5/104] Taxonomy = bowl Sample = bowl_003 EDLoss = 5.7100 RLoss = 5.8130 IoU = ['0.2219', '0.1994', '0.1235', '0.0768']
+[INFO] 2026-09-25 03:22:48.973264 Test[6/104] Taxonomy = bowl Sample = bowl_015 EDLoss = 6.0072 RLoss = 6.0573 IoU = ['0.2133', '0.1914', '0.1242', '0.0767']
+[INFO] 2026-09-25 03:22:49.000253 Test[7/104] Taxonomy = cup Sample = cup_003 EDLoss = 5.4533 RLoss = 5.4258 IoU = ['0.2556', '0.2092', '0.1460', '0.1087']
+[INFO] 2026-09-25 03:22:49.035762 Test[8/104] Taxonomy = cup Sample = cup_004 EDLoss = 4.9167 RLoss = 4.9644 IoU = ['0.3530', '0.3114', '0.2247', '0.1443']
+[INFO] 2026-09-25 03:22:49.067441 Test[9/104] Taxonomy = cup Sample = cup_005 EDLoss = 4.9782 RLoss = 4.9746 IoU = ['0.3377', '0.3403', '0.2890', '0.2171']
+[INFO] 2026-09-25 03:22:49.095233 Test[10/104] Taxonomy = cup Sample = cup_011 EDLoss = 4.7730 RLoss = 4.7199 IoU = ['0.3277', '0.3224', '0.2652', '0.1977']
+[INFO] 2026-09-25 03:22:49.122470 Test[11/104] Taxonomy = cup Sample = cup_021 EDLoss = 4.4500 RLoss = 4.4267 IoU = ['0.3338', '0.3824', '0.3646', '0.3034']
+[INFO] 2026-09-25 03:22:49.153462 Test[12/104] Taxonomy = cup Sample = cup_022 EDLoss = 5.7418 RLoss = 5.7914 IoU = ['0.3272', '0.3081', '0.2426', '0.1687']
+[INFO] 2026-09-25 03:22:49.179006 Test[13/104] Taxonomy = dish Sample = dish_003 EDLoss = 6.1083 RLoss = 6.2537 IoU = ['0.2482', '0.2024', '0.1205', '0.0684']
+[INFO] 2026-09-25 03:22:49.208524 Test[14/104] Taxonomy = dish Sample = dish_004 EDLoss = 6.1621 RLoss = 6.2309 IoU = ['0.3201', '0.2533', '0.2014', '0.1220']
+[INFO] 2026-09-25 03:22:49.233392 Test[15/104] Taxonomy = dish Sample = dish_011 EDLoss = 5.9597 RLoss = 6.0063 IoU = ['0.3212', '0.2477', '0.1452', '0.0911']
+[INFO] 2026-09-25 03:22:49.266477 Test[16/104] Taxonomy = dustbin Sample = dustbin_005 EDLoss = 5.2716 RLoss = 5.2682 IoU = ['0.3539', '0.3692', '0.3515', '0.2626']
+[INFO] 2026-09-25 03:22:49.300935 Test[17/104] Taxonomy = dustbin Sample = dustbin_007 EDLoss = 5.4400 RLoss = 5.5051 IoU = ['0.3429', '0.3099', '0.2180', '0.1239']
+[INFO] 2026-09-25 03:22:49.331375 Test[18/104] Taxonomy = dustbin Sample = dustbin_020 EDLoss = 5.4666 RLoss = 5.4952 IoU = ['0.3390', '0.3035', '0.1949', '0.1031']
+[INFO] 2026-09-25 03:22:49.362308 Test[19/104] Taxonomy = fire_extinguisher Sample = fire_extinguisher_003 EDLoss = 4.7495 RLoss = 4.7785 IoU = ['0.2933', '0.2847', '0.2713', '0.2159']
+[INFO] 2026-09-25 03:22:49.389928 Test[20/104] Taxonomy = fire_extinguisher Sample = fire_extinguisher_004 EDLoss = 4.7312 RLoss = 4.6685 IoU = ['0.3009', '0.3287', '0.3407', '0.2847']
+[INFO] 2026-09-25 03:22:49.418725 Test[21/104] Taxonomy = fire_extinguisher Sample = fire_extinguisher_012 EDLoss = 4.7119 RLoss = 4.6858 IoU = ['0.3127', '0.3296', '0.3342', '0.2685']
+[INFO] 2026-09-25 03:22:49.447585 Test[22/104] Taxonomy = flash_light Sample = flash_light_003 EDLoss = 5.7095 RLoss = 5.7528 IoU = ['0.1764', '0.1429', '0.1200', '0.1076']
+[INFO] 2026-09-25 03:22:49.473459 Test[23/104] Taxonomy = hammer Sample = hammer_011 EDLoss = 4.0242 RLoss = 4.1666 IoU = ['0.3429', '0.3676', '0.3335', '0.2173']
+[INFO] 2026-09-25 03:22:49.503715 Test[24/104] Taxonomy = hammer Sample = hammer_018 EDLoss = 3.9656 RLoss = 3.9275 IoU = ['0.2862', '0.2772', '0.2494', '0.1503']
+[INFO] 2026-09-25 03:22:49.531269 Test[25/104] Taxonomy = hammer Sample = hammer_021 EDLoss = 4.8036 RLoss = 4.8007 IoU = ['0.2509', '0.2676', '0.2647', '0.2242']
+[INFO] 2026-09-25 03:22:49.566901 Test[26/104] Taxonomy = kettle Sample = kettle_003 EDLoss = 4.6770 RLoss = 4.6706 IoU = ['0.3410', '0.3874', '0.3771', '0.2847']
+[INFO] 2026-09-25 03:22:49.601040 Test[27/104] Taxonomy = kettle Sample = kettle_016 EDLoss = 4.5979 RLoss = 4.5685 IoU = ['0.3393', '0.3693', '0.3590', '0.2838']
+[INFO] 2026-09-25 03:22:49.622268 Test[28/104] Taxonomy = keyboard Sample = keyboard_003 EDLoss = 6.1949 RLoss = 6.2634 IoU = ['0.3329', '0.2599', '0.1780', '0.1141']
+[INFO] 2026-09-25 03:22:49.648265 Test[29/104] Taxonomy = keyboard Sample = keyboard_012 EDLoss = 4.8080 RLoss = 4.8270 IoU = ['0.1657', '0.1446', '0.1226', '0.0789']
+[INFO] 2026-09-25 03:22:49.675858 Test[30/104] Taxonomy = laptop Sample = laptop_004 EDLoss = 5.3414 RLoss = 5.3576 IoU = ['0.2963', '0.2972', '0.2461', '0.1746']
+[INFO] 2026-09-25 03:22:49.706937 Test[31/104] Taxonomy = medicine_bottle Sample = medicine_bottle_006 EDLoss = 4.2160 RLoss = 4.1326 IoU = ['0.4700', '0.5711', '0.5075', '0.3431']
+[INFO] 2026-09-25 03:22:49.742603 Test[32/104] Taxonomy = medicine_bottle Sample = medicine_bottle_009 EDLoss = 4.0666 RLoss = 3.9933 IoU = ['0.4563', '0.5784', '0.5403', '0.3687']
+[INFO] 2026-09-25 03:22:49.771519 Test[33/104] Taxonomy = medicine_bottle Sample = medicine_bottle_017 EDLoss = 4.0542 RLoss = 3.9943 IoU = ['0.4663', '0.5979', '0.5438', '0.3680']
+[INFO] 2026-09-25 03:22:49.806952 Test[34/104] Taxonomy = medicine_bottle Sample = medicine_bottle_035 EDLoss = 4.1325 RLoss = 4.0305 IoU = ['0.4572', '0.5966', '0.5428', '0.3666']
+[INFO] 2026-09-25 03:22:49.840147 Test[35/104] Taxonomy = medicine_bottle Sample = medicine_bottle_040 EDLoss = 3.9972 RLoss = 3.9032 IoU = ['0.4515', '0.5892', '0.5488', '0.3639']
+[INFO] 2026-09-25 03:22:49.874046 Test[36/104] Taxonomy = medicine_bottle Sample = medicine_bottle_044 EDLoss = 3.9576 RLoss = 3.9000 IoU = ['0.4620', '0.5884', '0.5635', '0.3764']
+[INFO] 2026-09-25 03:22:49.902838 Test[37/104] Taxonomy = medicine_bottle Sample = medicine_bottle_050 EDLoss = 3.9788 RLoss = 3.8833 IoU = ['0.4386', '0.5320', '0.5286', '0.3827']
+[INFO] 2026-09-25 03:22:49.934330 Test[38/104] Taxonomy = medicine_bottle Sample = medicine_bottle_052 EDLoss = 4.8814 RLoss = 4.9010 IoU = ['0.3857', '0.3478', '0.2596', '0.1663']
+[INFO] 2026-09-25 03:22:49.963330 Test[39/104] Taxonomy = medicine_bottle Sample = medicine_bottle_056 EDLoss = 3.9793 RLoss = 3.8822 IoU = ['0.4601', '0.6119', '0.5680', '0.3842']
+[INFO] 2026-09-25 03:22:49.993334 Test[40/104] Taxonomy = medicine_bottle Sample = medicine_bottle_068 EDLoss = 3.8645 RLoss = 3.8301 IoU = ['0.4647', '0.6333', '0.5985', '0.3798']
+[INFO] 2026-09-25 03:22:50.023895 Test[41/104] Taxonomy = medicine_bottle Sample = medicine_bottle_071 EDLoss = 4.3889 RLoss = 4.3117 IoU = ['0.3637', '0.4112', '0.4459', '0.3312']
+[INFO] 2026-09-25 03:22:50.056251 Test[42/104] Taxonomy = medicine_bottle Sample = medicine_bottle_072 EDLoss = 4.0561 RLoss = 3.9452 IoU = ['0.4310', '0.5181', '0.5177', '0.3725']
+[INFO] 2026-09-25 03:22:50.091139 Test[43/104] Taxonomy = microwaveoven Sample = microwaveoven_005 EDLoss = 5.2742 RLoss = 5.2745 IoU = ['0.3806', '0.3700', '0.3299', '0.2439']
+[INFO] 2026-09-25 03:22:50.122851 Test[44/104] Taxonomy = monitor Sample = monitor_003 EDLoss = 4.9763 RLoss = 4.8462 IoU = ['0.3442', '0.3456', '0.2090', '0.1046']
+[INFO] 2026-09-25 03:22:50.156442 Test[45/104] Taxonomy = mouse Sample = mouse_003 EDLoss = 4.9046 RLoss = 4.8857 IoU = ['0.3420', '0.2989', '0.2601', '0.1974']
+[INFO] 2026-09-25 03:22:50.186812 Test[46/104] Taxonomy = mouse Sample = mouse_012 EDLoss = 4.6286 RLoss = 4.6136 IoU = ['0.3739', '0.3611', '0.3060', '0.2233']
+[INFO] 2026-09-25 03:22:50.216434 Test[47/104] Taxonomy = mouse Sample = mouse_022 EDLoss = 4.7397 RLoss = 4.7006 IoU = ['0.3104', '0.2859', '0.2652', '0.2193']
+[INFO] 2026-09-25 03:22:50.238413 Test[48/104] Taxonomy = mouse Sample = mouse_028 EDLoss = 4.7226 RLoss = 4.7010 IoU = ['0.3509', '0.3218', '0.2781', '0.2242']
+[INFO] 2026-09-25 03:22:50.261032 Test[49/104] Taxonomy = pan Sample = pan_003 EDLoss = 4.8336 RLoss = 4.9238 IoU = ['0.1731', '0.1913', '0.1743', '0.1329']
+[INFO] 2026-09-25 03:22:50.290181 Test[50/104] Taxonomy = plug Sample = plug_002 EDLoss = 5.4689 RLoss = 5.4345 IoU = ['0.2688', '0.2812', '0.2782', '0.2559']
+[INFO] 2026-09-25 03:22:50.324138 Test[51/104] Taxonomy = power_strip Sample = power_strip_003 EDLoss = 4.7303 RLoss = 4.6908 IoU = ['0.3723', '0.3582', '0.3469', '0.2895']
+[INFO] 2026-09-25 03:22:50.354661 Test[52/104] Taxonomy = power_strip Sample = power_strip_004 EDLoss = 5.0866 RLoss = 5.0544 IoU = ['0.3266', '0.3122', '0.3163', '0.2748']
+[INFO] 2026-09-25 03:22:50.383063 Test[53/104] Taxonomy = power_strip Sample = power_strip_005 EDLoss = 4.8352 RLoss = 4.8221 IoU = ['0.3781', '0.3603', '0.3348', '0.2378']
+[INFO] 2026-09-25 03:22:50.412068 Test[54/104] Taxonomy = power_strip Sample = power_strip_031 EDLoss = 6.2426 RLoss = 6.2518 IoU = ['0.2468', '0.2314', '0.2126', '0.1788']
+[INFO] 2026-09-25 03:22:50.438945 Test[55/104] Taxonomy = power_strip Sample = power_strip_034 EDLoss = 4.8219 RLoss = 4.8059 IoU = ['0.3510', '0.3479', '0.3316', '0.2601']
+[INFO] 2026-09-25 03:22:50.471221 Test[56/104] Taxonomy = projector Sample = projector_005 EDLoss = 6.2595 RLoss = 5.9806 IoU = ['0.2781', '0.2812', '0.2171', '0.1226']
+[INFO] 2026-09-25 03:22:50.508016 Test[57/104] Taxonomy = projector Sample = projector_007 EDLoss = 5.2105 RLoss = 5.1958 IoU = ['0.3728', '0.3415', '0.3183', '0.2559']
+[INFO] 2026-09-25 03:22:50.535545 Test[58/104] Taxonomy = razor Sample = razor_003 EDLoss = 4.9629 RLoss = 5.0844 IoU = ['0.1346', '0.1432', '0.1523', '0.1326']
+[INFO] 2026-09-25 03:22:50.560605 Test[59/104] Taxonomy = razor Sample = razor_010 EDLoss = 3.8650 RLoss = 3.7232 IoU = ['0.2139', '0.2374', '0.2224', '0.1666']
+[INFO] 2026-09-25 03:22:50.587919 Test[60/104] Taxonomy = remote_control Sample = remote_control_003 EDLoss = 4.4065 RLoss = 4.3518 IoU = ['0.4192', '0.4447', '0.3790', '0.2703']
+[INFO] 2026-09-25 03:22:50.614656 Test[61/104] Taxonomy = remote_control Sample = remote_control_012 EDLoss = 5.5338 RLoss = 5.4509 IoU = ['0.2862', '0.1902', '0.1195', '0.0602']
+[INFO] 2026-09-25 03:22:50.642359 Test[62/104] Taxonomy = remote_control Sample = remote_control_020 EDLoss = 5.2403 RLoss = 5.1598 IoU = ['0.3320', '0.3355', '0.2940', '0.2082']
+[INFO] 2026-09-25 03:22:50.673988 Test[63/104] Taxonomy = remote_control Sample = remote_control_024 EDLoss = 5.5847 RLoss = 5.6126 IoU = ['0.3670', '0.3908', '0.3099', '0.1808']
+[INFO] 2026-09-25 03:22:50.700832 Test[64/104] Taxonomy = remote_control Sample = remote_control_026 EDLoss = 4.5737 RLoss = 4.4020 IoU = ['0.3629', '0.3852', '0.2818', '0.1566']
+[INFO] 2026-09-25 03:22:50.729522 Test[65/104] Taxonomy = ricecooker Sample = ricecooker_005 EDLoss = 4.5038 RLoss = 4.4912 IoU = ['0.4019', '0.4325', '0.3304', '0.2219']
+[INFO] 2026-09-25 03:22:50.757517 Test[66/104] Taxonomy = scissor Sample = scissor_003 EDLoss = 5.0401 RLoss = 5.0829 IoU = ['0.2641', '0.2753', '0.2204', '0.1190']
+[INFO] 2026-09-25 03:22:50.784388 Test[67/104] Taxonomy = scissor Sample = scissor_004 EDLoss = 4.9151 RLoss = 4.7348 IoU = ['0.3807', '0.3665', '0.2786', '0.1607']
+[INFO] 2026-09-25 03:22:50.811480 Test[68/104] Taxonomy = scissor Sample = scissor_011 EDLoss = 6.8609 RLoss = 7.0138 IoU = ['0.1794', '0.1147', '0.0526', '0.0208']
+[INFO] 2026-09-25 03:22:50.842084 Test[69/104] Taxonomy = shampoo Sample = shampoo_003 EDLoss = 4.0467 RLoss = 3.9804 IoU = ['0.4243', '0.5076', '0.4990', '0.3557']
+[INFO] 2026-09-25 03:22:50.870024 Test[70/104] Taxonomy = shampoo Sample = shampoo_004 EDLoss = 4.2974 RLoss = 4.1916 IoU = ['0.4137', '0.5133', '0.4807', '0.3254']
+[INFO] 2026-09-25 03:22:50.901803 Test[71/104] Taxonomy = shampoo Sample = shampoo_005 EDLoss = 4.2642 RLoss = 4.2035 IoU = ['0.3301', '0.4277', '0.4579', '0.3393']
+[INFO] 2026-09-25 03:22:50.933658 Test[72/104] Taxonomy = shampoo Sample = shampoo_011 EDLoss = 4.4707 RLoss = 4.4074 IoU = ['0.3383', '0.3663', '0.3847', '0.3036']
+[INFO] 2026-09-25 03:22:50.962998 Test[73/104] Taxonomy = shampoo Sample = shampoo_021 EDLoss = 4.2182 RLoss = 4.1413 IoU = ['0.4319', '0.5480', '0.5315', '0.3479']
+[INFO] 2026-09-25 03:22:50.993210 Test[74/104] Taxonomy = shampoo Sample = shampoo_022 EDLoss = 4.2141 RLoss = 4.1345 IoU = ['0.3703', '0.4381', '0.4617', '0.3509']
+[INFO] 2026-09-25 03:22:51.021603 Test[75/104] Taxonomy = soap Sample = soap_003 EDLoss = 5.7613 RLoss = 5.7907 IoU = ['0.3477', '0.3250', '0.2921', '0.2073']
+[INFO] 2026-09-25 03:22:51.048121 Test[76/104] Taxonomy = soap Sample = soap_004 EDLoss = 5.4674 RLoss = 5.4541 IoU = ['0.3194', '0.3383', '0.3401', '0.2722']
+[INFO] 2026-09-25 03:22:51.073823 Test[77/104] Taxonomy = soap Sample = soap_005 EDLoss = 5.3338 RLoss = 5.3626 IoU = ['0.3892', '0.3870', '0.3442', '0.2378']
+[INFO] 2026-09-25 03:22:51.104164 Test[78/104] Taxonomy = soap Sample = soap_019 EDLoss = 5.5760 RLoss = 5.6235 IoU = ['0.3781', '0.3652', '0.3110', '0.2143']
+[INFO] 2026-09-25 03:22:51.131595 Test[79/104] Taxonomy = soap Sample = soap_021 EDLoss = 5.7036 RLoss = 5.7994 IoU = ['0.2848', '0.2625', '0.2150', '0.1489']
+[INFO] 2026-09-25 03:22:51.155094 Test[80/104] Taxonomy = soap Sample = soap_035 EDLoss = 5.5192 RLoss = 5.6238 IoU = ['0.3992', '0.3546', '0.2437', '0.1248']
+[INFO] 2026-09-25 03:22:51.184711 Test[81/104] Taxonomy = speaker Sample = speaker_005 EDLoss = 5.9157 RLoss = 5.8813 IoU = ['0.3025', '0.2804', '0.2400', '0.1574']
+[INFO] 2026-09-25 03:22:51.219994 Test[82/104] Taxonomy = teapot Sample = teapot_003 EDLoss = 5.2362 RLoss = 5.2478 IoU = ['0.1919', '0.1813', '0.1753', '0.1797']
+[INFO] 2026-09-25 03:22:51.250441 Test[83/104] Taxonomy = teapot Sample = teapot_004 EDLoss = 4.9495 RLoss = 4.9477 IoU = ['0.3097', '0.3212', '0.2875', '0.2330']
+[INFO] 2026-09-25 03:22:51.280230 Test[84/104] Taxonomy = teapot Sample = teapot_005 EDLoss = 5.1834 RLoss = 5.2518 IoU = ['0.2650', '0.2069', '0.1849', '0.1434']
+[INFO] 2026-09-25 03:22:51.311910 Test[85/104] Taxonomy = teapot Sample = teapot_011 EDLoss = 4.7944 RLoss = 4.8117 IoU = ['0.2488', '0.1944', '0.1956', '0.1898']
+[INFO] 2026-09-25 03:22:51.341184 Test[86/104] Taxonomy = teapot Sample = teapot_021 EDLoss = 5.6505 RLoss = 5.7073 IoU = ['0.1738', '0.1453', '0.1234', '0.1057']
+[INFO] 2026-09-25 03:22:51.368003 Test[87/104] Taxonomy = teapot Sample = teapot_022 EDLoss = 5.3274 RLoss = 5.3534 IoU = ['0.2572', '0.2361', '0.2242', '0.1733']
+[INFO] 2026-09-25 03:22:51.400080 Test[88/104] Taxonomy = thermos Sample = thermos_004 EDLoss = 4.5771 RLoss = 4.5274 IoU = ['0.3251', '0.3519', '0.3598', '0.2965']
+[INFO] 2026-09-25 03:22:51.433954 Test[89/104] Taxonomy = timer Sample = timer_011 EDLoss = 5.7651 RLoss = 5.8500 IoU = ['0.1788', '0.1980', '0.2179', '0.1656']
+[INFO] 2026-09-25 03:22:51.466128 Test[90/104] Taxonomy = timer Sample = timer_017 EDLoss = 5.3370 RLoss = 5.4085 IoU = ['0.2021', '0.2297', '0.2495', '0.2024']
+[INFO] 2026-09-25 03:22:51.494272 Test[91/104] Taxonomy = timer Sample = timer_020 EDLoss = 5.1408 RLoss = 5.1379 IoU = ['0.4048', '0.3607', '0.2279', '0.0909']
+[INFO] 2026-09-25 03:22:51.521448 Test[92/104] Taxonomy = tooth_brush Sample = tooth_brush_005 EDLoss = 5.2511 RLoss = 5.1024 IoU = ['0.2835', '0.2720', '0.2297', '0.1590']
+[INFO] 2026-09-25 03:22:51.544056 Test[93/104] Taxonomy = tooth_brush Sample = tooth_brush_011 EDLoss = 4.5906 RLoss = 4.4362 IoU = ['0.3470', '0.3519', '0.3107', '0.2155']
+[INFO] 2026-09-25 03:22:51.569390 Test[94/104] Taxonomy = tooth_brush Sample = tooth_brush_012 EDLoss = 4.1296 RLoss = 4.0352 IoU = ['0.3856', '0.3880', '0.3205', '0.2027']
+[INFO] 2026-09-25 03:22:51.593501 Test[95/104] Taxonomy = tooth_brush Sample = tooth_brush_020 EDLoss = 4.2940 RLoss = 4.2542 IoU = ['0.3817', '0.3950', '0.3368', '0.2393']
+[INFO] 2026-09-25 03:22:51.622426 Test[96/104] Taxonomy = tooth_paste Sample = tooth_paste_003 EDLoss = 5.2211 RLoss = 5.2441 IoU = ['0.2251', '0.1798', '0.1547', '0.1301']
+[INFO] 2026-09-25 03:22:51.650162 Test[97/104] Taxonomy = tooth_paste Sample = tooth_paste_005 EDLoss = 5.2308 RLoss = 5.1460 IoU = ['0.2304', '0.2201', '0.1964', '0.1500']
+[INFO/Process-1] process shutting down
+[INFO/Process-1] process exiting with exitcode 0
+[INFO] 2026-09-25 03:22:51.677923 Test[98/104] Taxonomy = tooth_paste Sample = tooth_paste_012 EDLoss = 5.4086 RLoss = 5.3871 IoU = ['0.3280', '0.3378', '0.3127', '0.2337']
+[INFO] 2026-09-25 03:22:51.703035 Test[99/104] Taxonomy = tooth_paste Sample = tooth_paste_024 EDLoss = 4.9404 RLoss = 4.8356 IoU = ['0.2961', '0.2083', '0.1425', '0.0799']
+[INFO] 2026-09-25 03:22:51.733396 Test[100/104] Taxonomy = tooth_paste Sample = tooth_paste_026 EDLoss = 5.1703 RLoss = 5.1907 IoU = ['0.3614', '0.3622', '0.3253', '0.2115']
+[INFO] 2026-09-25 03:22:51.755542 Test[101/104] Taxonomy = tooth_paste Sample = tooth_paste_029 EDLoss = 4.7876 RLoss = 4.7224 IoU = ['0.3006', '0.2473', '0.1530', '0.0803']
+[INFO] 2026-09-25 03:22:51.781183 Test[102/104] Taxonomy = umbrella Sample = umbrella_005 EDLoss = 6.0279 RLoss = 6.1066 IoU = ['0.1986', '0.1146', '0.0919', '0.0758']
+[INFO] 2026-09-25 03:22:51.812377 Test[103/104] Taxonomy = umbrella Sample = umbrella_007 EDLoss = 5.4506 RLoss = 5.4237 IoU = ['0.2908', '0.2309', '0.1656', '0.1113']
+[INFO] 2026-09-25 03:22:51.843465 Test[104/104] Taxonomy = umbrella Sample = umbrella_020 EDLoss = 5.3723 RLoss = 5.3914 IoU = ['0.3167', '0.2809', '0.1924', '0.1218']
+============================ TEST RESULTS ============================
+Taxonomy	#Sample	Baseline	t=0.20	t=0.30	t=0.40	t=0.50	
+bottle  	4	N/a		0.4067	0.4876	0.4616	0.3194	
+bowl    	2	N/a		0.2176	0.1954	0.1238	0.0767	
+cup     	6	N/a		0.3225	0.3123	0.2554	0.1900	
+dish    	3	N/a		0.2965	0.2345	0.1557	0.0939	
+dustbin 	3	N/a		0.3453	0.3275	0.2548	0.1632	
+fire_extinguisher	3	N/a		0.3023	0.3143	0.3154	0.2564	
+flash_light	1	N/a		0.1764	0.1429	0.1200	0.1076	
+hammer  	3	N/a		0.2933	0.3041	0.2825	0.1973	
+kettle  	2	N/a		0.3401	0.3784	0.3681	0.2842	
+keyboard	2	N/a		0.2493	0.2022	0.1503	0.0965	
+laptop  	1	N/a		0.2963	0.2972	0.2461	0.1746	
+medicine_bottle	12	N/a		0.4423	0.5480	0.5138	0.3503	
+microwaveoven	1	N/a		0.3806	0.3700	0.3299	0.2439	
+monitor 	1	N/a		0.3442	0.3456	0.2090	0.1046	
+mouse   	4	N/a		0.3443	0.3169	0.2774	0.2160	
+pan     	1	N/a		0.1731	0.1913	0.1743	0.1329	
+plug    	1	N/a		0.2688	0.2812	0.2782	0.2559	
+power_strip	5	N/a		0.3350	0.3220	0.3084	0.2482	
+projector	2	N/a		0.3254	0.3113	0.2677	0.1893	
+razor   	2	N/a		0.1742	0.1903	0.1873	0.1496	
+remote_control	5	N/a		0.3535	0.3493	0.2768	0.1752	
+ricecooker	1	N/a		0.4019	0.4325	0.3304	0.2219	
+scissor 	3	N/a		0.2747	0.2522	0.1838	0.1002	
+shampoo 	6	N/a		0.3848	0.4668	0.4692	0.3371	
+soap    	6	N/a		0.3531	0.3388	0.2910	0.2009	
+speaker 	1	N/a		0.3025	0.2804	0.2400	0.1574	
+teapot  	6	N/a		0.2411	0.2142	0.1985	0.1708	
+thermos 	1	N/a		0.3251	0.3519	0.3598	0.2965	
+timer   	3	N/a		0.2619	0.2628	0.2317	0.1530	
+tooth_brush	4	N/a		0.3494	0.3517	0.2994	0.2041	
+tooth_paste	6	N/a		0.2903	0.2592	0.2141	0.1476	
+umbrella	3	N/a		0.2687	0.2088	0.1500	0.1030	
+Overall 				0.3280	0.3372	0.2983	0.2120	
+
+[INFO/MainProcess] process shutting down

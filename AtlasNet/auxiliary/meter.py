@@ -97,22 +97,23 @@ class Logs(object):
             else:
                 pass
 
-        vis.line(X=X_Loss,
-                 Y=Y_Loss,
-                 win='loss',
-                 opts=dict(title="loss", legend=Names_Loss))
+        if vis is not None:
+            vis.line(X=X_Loss,
+                     Y=Y_Loss,
+                     win='loss',
+                     opts=dict(title="loss", legend=Names_Loss))
 
-        vis.line(X=X_Loss,
-                 Y=np.log(Y_Loss),
-                 win='log',
-                 opts=dict(title="log", legend=Names_Loss))
-        try:
-            vis.line(X=np.arange(len(self.curves["fscore"])),
-                     Y=self.curves["fscore"],
-                     win='fscore',
-                     opts=dict(title="fscore"))
-        except:
-            pass
+            vis.line(X=X_Loss,
+                     Y=np.log(Y_Loss),
+                     win='log',
+                     opts=dict(title="log", legend=Names_Loss))
+            try:
+                vis.line(X=np.arange(len(self.curves["fscore"])),
+                         Y=self.curves["fscore"],
+                         win='fscore',
+                         opts=dict(title="fscore"))
+            except:
+                pass
         # Save figures in PNGs
         plt.figure()
         for i in range(X_Loss.shape[1]):

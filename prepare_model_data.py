@@ -27,11 +27,54 @@ def discover_categories(dataset_dir: Path) -> list[str]:
     return ordered
 
 
-def list_objects(dataset_dir: Path, category: str) -> list[str]:
+EXPECTED_VIEWS = 24
+
+
+def object_is_valid(
+    dataset_dir: Path,
+    category: str,
+    object_id: str,
+    expected_views: int = EXPECTED_VIEWS,
+) -> bool:
+    """An object is usable only with a clean (N,3) cloud and every expected view.
+
+    AtlasNet's SVR loader samples a random view index in ``[0, 23]`` and crashes
+    on a missing render, so partial objects must be dropped at prep time.
+    """
+    pc_path = dataset_dir / "point_clouds" / category / f"{object_id}.npy"
+    rd_dir = dataset_dir / "renders" / category / object_id
+    if not pc_path.is_file() or not rd_dir.is_dir():
+        return False
+    try:
+        pts = np.load(pc_path).astype(np.float64)
+    except Exception:
+        return False
+    if pts.ndim != 2 or pts.shape[1] != 3 or pts.shape[0] == 0:
+        return False
+    if not np.isfinite(pts).all():
+        return False
+    if (pts.max(0) - pts.min(0) < 1e-6).any():
+        return False
+    views = {int(p.stem) for p in rd_dir.glob("*.png") if p.stem.isdigit()}
+    return set(range(expected_views)).issubset(views)
+
+
+def list_objects(
+    dataset_dir: Path,
+    category: str,
+    expected_views: int = EXPECTED_VIEWS,
+) -> list[str]:
     pc_dir = dataset_dir / "point_clouds" / category
     if not pc_dir.is_dir():
         return []
-    return sorted(p.stem for p in pc_dir.glob("*.npy"))
+    candidates = sorted(p.stem for p in pc_dir.glob("*.npy"))
+    kept, dropped = [], []
+    for obj in candidates:
+        (kept if object_is_valid(dataset_dir, category, obj, expected_views) else dropped).append(obj)
+    if dropped:
+        print(f"[skip] {category}: dropped {len(dropped)} unusable object(s): "
+              f"{', '.join(dropped)}")
+    return kept
 
 
 def make_splits(object_ids: list[str], seed: int = 0):
@@ -94,6 +137,19 @@ def link_or_copy(src: Path, dst: Path):
         shutil.copy2(src, dst)
 
 
+def prune_stale(root: Path, valid_names: set[str]) -> None:
+    """Remove previously prepared entries for objects that are no longer valid."""
+    if not root.is_dir():
+        return
+    for child in sorted(root.iterdir()):
+        if child.name in valid_names:
+            continue
+        if child.is_dir() and not child.is_symlink():
+            shutil.rmtree(child, ignore_errors=True)
+        else:
+            child.unlink(missing_ok=True)
+
+
 # ---------------- Pix2Vox ----------------
 
 def prepare_pix2vox(
@@ -101,6 +157,7 @@ def prepare_pix2vox(
     out_dir: Path,
     grid: int = 32,
     categories: list[str] | None = None,
+    expected_views: int = EXPECTED_VIEWS,
 ) -> None:
     rendering_root = out_dir / "OmniObjectRendering"
     voxel_root = out_dir / "OmniObjectVox32"
@@ -110,7 +167,9 @@ def prepare_pix2vox(
     taxonomy = []
     n_obj = n_img = n_vox = 0
     for cat in cats:
-        object_ids = list_objects(dataset_dir, cat)
+        object_ids = list_objects(dataset_dir, cat, expected_views)
+        prune_stale(rendering_root / cat, set(object_ids))
+        prune_stale(voxel_root / cat, set(object_ids))
         if not object_ids:
             continue
         train, val, test = make_splits(object_ids)
@@ -149,6 +208,7 @@ def prepare_atlasnet(
     dataset_dir: Path,
     out_dir: Path,
     categories: list[str] | None = None,
+    expected_views: int = EXPECTED_VIEWS,
 ) -> None:
     """out_dir should be AtlasNet/dataset/data."""
     pc_root = out_dir / "ShapeNetV1PointCloud"
@@ -159,7 +219,9 @@ def prepare_atlasnet(
     taxonomy = []
     n_obj = n_img = n_pc = 0
     for cat in cats:
-        object_ids = list_objects(dataset_dir, cat)
+        object_ids = list_objects(dataset_dir, cat, expected_views)
+        prune_stale(pc_root / cat, {f"{o}.npy" for o in object_ids})
+        prune_stale(render_root / cat, set(object_ids))
         if not object_ids:
             continue
         taxonomy.append({
@@ -195,6 +257,9 @@ def main():
     ap.add_argument("--target", choices=["pix2vox", "atlasnet", "both"],
                     default="both")
     ap.add_argument("--grid", type=int, default=32)
+    ap.add_argument("--min-views", type=int, default=EXPECTED_VIEWS,
+                    help="Drop objects without this many complete views "
+                         "(views 0..N-1 required).")
     ap.add_argument("--categories", nargs="+", metavar="CAT", default=None,
                     help="Override category list (default: all found on disk).")
     args = ap.parse_args()
@@ -211,9 +276,10 @@ def main():
 
     if args.target in ("pix2vox", "both"):
         prepare_pix2vox(args.dataset_dir, args.pix2vox_out, grid=args.grid,
-                        categories=cats)
+                        categories=cats, expected_views=args.min_views)
     if args.target in ("atlasnet", "both"):
-        prepare_atlasnet(args.dataset_dir, args.atlasnet_out, categories=cats)
+        prepare_atlasnet(args.dataset_dir, args.atlasnet_out, categories=cats,
+                         expected_views=args.min_views)
 
 
 if __name__ == "__main__":

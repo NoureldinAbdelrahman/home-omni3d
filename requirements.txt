@@ -25,3 +25,5 @@ ninja>=1.11
 # --- analysis notebook (notebooks/dataset_analysis.ipynb) ---
 pandas>=2.0
 nbformat>=5.9
+nbconvert>=7.0
+ipykernel>=6.0
