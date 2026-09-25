@@ -1,0 +1,7 @@
+{
+  "category": "cup",
+  "object": "cup_003",
+  "iou_t0.3": 0.21369376479873717,
+  "n_pred_voxels": 10890,
+  "n_gt_voxels": 7563
+}

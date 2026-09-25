@@ -1,0 +1,7 @@
+{
+  "category": "hammer",
+  "object": "hammer_011",
+  "iou_t0.3": 0.1873230233064692,
+  "n_pred_voxels": 9468,
+  "n_gt_voxels": 6885
+}

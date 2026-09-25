@@ -1,0 +1,7 @@
+{
+  "category": "teapot",
+  "object": "teapot_003",
+  "iou_t0.3": 0.17882058707384493,
+  "n_pred_voxels": 11297,
+  "n_gt_voxels": 6614
+}
