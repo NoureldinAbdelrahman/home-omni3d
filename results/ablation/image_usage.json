@@ -1,0 +1,34 @@
+{
+  "question": "Does the model use the input image (Tatarchenko et al., CVPR 2019)?",
+  "note": "constant = gray image (zero after normalization); shuffled = another object's image. Closing the gap to 'real' means the model ignores image content.",
+  "pix2vox": {
+    "run": "2026-09-25T21:38:11.694424",
+    "real": {
+      "iou_t0.3": 0.31222486511448955,
+      "iou_t0.5": 0.20786813434064472
+    },
+    "constant": {
+      "iou_t0.3": 0.21440356539216318,
+      "iou_t0.5": 0.1367584577876328
+    },
+    "shuffled": {
+      "iou_t0.3": 0.29082983659319533,
+      "iou_t0.5": 0.18598643614773866
+    }
+  },
+  "atlasnet": {
+    "run": "svr25_pretrained",
+    "real": {
+      "chamfer": 0.22912447253214582,
+      "fscore": 0.002864783820643557
+    },
+    "constant": {
+      "chamfer": 0.2326730031340386,
+      "fscore": 0.003189201627098888
+    },
+    "shuffled": {
+      "chamfer": 0.22929058269682911,
+      "fscore": 0.0030537261858937167
+    }
+  }
+}
