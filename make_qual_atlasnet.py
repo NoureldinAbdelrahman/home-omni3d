@@ -85,7 +85,13 @@ def main():
         outd.mkdir(parents=True, exist_ok=True)
         np.save(outd / "pred.npy", pred.astype(np.float32))
         np.save(outd / "gt.npy", gt.astype(np.float32))
-        Image.fromarray((im.numpy().transpose(1, 2, 0) * 255).astype(np.uint8)).save(outd / "input.png")
+        # Object-cropped original render for display (see make_qual_pix2vox).
+        try:
+            sys.path.insert(0, str(ROOT))
+            from plotting import load_display_image
+            load_display_image(img_path).save(outd / "input.png")
+        except Exception:
+            Image.fromarray((im.numpy().transpose(1, 2, 0) * 255).astype(np.uint8)).save(outd / "input.png")
         (outd / "metrics.json").write_text(json.dumps({
             "category": cat, "object": obj, "chamfer": chamfer,
             "fscore_tau0.01": fscore, "n_points": int(pred.shape[0]),

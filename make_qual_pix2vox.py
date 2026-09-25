@@ -111,7 +111,17 @@ def main():
         outd.mkdir(parents=True, exist_ok=True)
         np.save(outd / "pred.npy", pred.astype(np.float32))
         np.save(outd / "gt.npy", gt.astype(np.float32))
-        Image.fromarray((img * 255).astype(np.uint8)).save(outd / "input.png")
+        # Save a *displayable* input: the original render cropped tightly to
+        # the object (the network input is a center crop that usually cuts
+        # most of the object out, which looks confusing in the report).
+        try:
+            sys.path.insert(0, str(ROOT))
+            from plotting import load_display_image
+            load_display_image(
+                ROOT / "dataset" / "renders" / tid / sname / "000.png"
+            ).save(outd / "input.png")
+        except Exception:
+            Image.fromarray((img * 255).astype(np.uint8)).save(outd / "input.png")
 
         pb, gb = pred >= 0.3, gt >= 0.5
         inter = float((pb & gb).sum())
