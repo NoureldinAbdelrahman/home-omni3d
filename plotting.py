@@ -13,26 +13,16 @@ import numpy as np
 
 import matplotlib
 
-# Pick an interactive backend only if we are actually in a display-capable
-# environment; otherwise stay on Agg and never call plt.show().
+# Always render to the Agg canvas: figures are embedded with show_saved() or
+# shown by the notebook's own inline backend. Forcing TkAgg here would make
+# headless execution (nbconvert) hang trying to reach an X display.
 import os
 
-_IN_NOTEBOOK = "ipykernel" in os.environ.get("_", "") or any(
-    os.environ.get(k) for k in ("JPY_PARENT_PID", "IPYKERNEL_CELL_NAME")
-)
-if _IN_NOTEBOOK and os.environ.get("DISPLAY"):
-    try:
-        matplotlib.use("TkAgg")
-    except Exception:
-        matplotlib.use("Agg")
-else:
-    matplotlib.use("Agg")
+matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt  # noqa: E402
 
-_INTERACTIVE = matplotlib.get_backend().lower() not in {
-    "agg", "pdf", "ps", "svg", "cairo", "template",
-}
+_INTERACTIVE = False
 
 
 def show(fig=None):
@@ -41,6 +31,22 @@ def show(fig=None):
         plt.show()
     if fig is not None:
         plt.close(fig)
+
+
+def show_saved(path, width: int = 820):
+    """Embed a saved PNG as a cell output, so figures show inline even when the
+    notebook was executed headless (Agg), where ``plt.show()`` renders nothing."""
+    from IPython.display import Image, display
+
+    path = Path(path)
+    if not Path(path).is_file():
+        print(f"[plotting] figure missing: {path}")
+        return
+    try:
+        display(Image(filename=str(path), width=width))
+    except Exception as exc:  # display not available (e.g. plain script)
+        print(f"[plotting] could not embed {path.name}: {exc}")
+    plt.close("all")
 
 
 def savefig(fig, path: Path, root: Path | None = None, dpi: int = 150) -> str:
