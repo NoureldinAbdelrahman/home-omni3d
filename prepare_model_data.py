@@ -63,6 +63,7 @@ def list_objects(
     dataset_dir: Path,
     category: str,
     expected_views: int = EXPECTED_VIEWS,
+    max_per_class: int = 0,
 ) -> list[str]:
     pc_dir = dataset_dir / "point_clouds" / category
     if not pc_dir.is_dir():
@@ -74,6 +75,12 @@ def list_objects(
     if dropped:
         print(f"[skip] {category}: dropped {len(dropped)} unusable object(s): "
               f"{', '.join(dropped)}")
+    if max_per_class and len(kept) > max_per_class:
+        # Deterministic cap to curb the long tail (keeps alphabetically-first IDs).
+        dropped_cap = kept[max_per_class:]
+        kept = kept[:max_per_class]
+        print(f"[cap]  {category}: kept {max_per_class}/{len(kept) + len(dropped_cap)} "
+              f"object(s), dropped {len(dropped_cap)} for balance")
     return kept
 
 
@@ -158,6 +165,7 @@ def prepare_pix2vox(
     grid: int = 32,
     categories: list[str] | None = None,
     expected_views: int = EXPECTED_VIEWS,
+    max_per_class: int = 0,
 ) -> None:
     rendering_root = out_dir / "OmniObjectRendering"
     voxel_root = out_dir / "OmniObjectVox32"
@@ -167,7 +175,7 @@ def prepare_pix2vox(
     taxonomy = []
     n_obj = n_img = n_vox = 0
     for cat in cats:
-        object_ids = list_objects(dataset_dir, cat, expected_views)
+        object_ids = list_objects(dataset_dir, cat, expected_views, max_per_class)
         prune_stale(rendering_root / cat, set(object_ids))
         prune_stale(voxel_root / cat, set(object_ids))
         if not object_ids:
@@ -209,6 +217,7 @@ def prepare_atlasnet(
     out_dir: Path,
     categories: list[str] | None = None,
     expected_views: int = EXPECTED_VIEWS,
+    max_per_class: int = 0,
 ) -> None:
     """out_dir should be AtlasNet/dataset/data."""
     pc_root = out_dir / "ShapeNetV1PointCloud"
@@ -217,13 +226,16 @@ def prepare_atlasnet(
 
     cats = categories if categories is not None else discover_categories(dataset_dir)
     taxonomy = []
+    splits = {}
     n_obj = n_img = n_pc = 0
     for cat in cats:
-        object_ids = list_objects(dataset_dir, cat, expected_views)
+        object_ids = list_objects(dataset_dir, cat, expected_views, max_per_class)
         prune_stale(pc_root / cat, {f"{o}.npy" for o in object_ids})
         prune_stale(render_root / cat, set(object_ids))
         if not object_ids:
             continue
+        train, val, test = make_splits(object_ids)
+        splits[cat] = {"train": train, "val": val, "test": test}
         taxonomy.append({
             "synsetId": cat,
             # AtlasNet takes name.split(',')[0] as the friendly class name.
@@ -243,6 +255,9 @@ def prepare_atlasnet(
 
     out_dir.mkdir(parents=True, exist_ok=True)
     taxonomy_path.write_text(json.dumps(taxonomy, indent=2))
+    # Record the exact random split so AtlasNet no longer uses its positional
+    # (alphabetical, "last 20%") split; see AtlasNet/dataset/dataset_shapenet.py.
+    (out_dir / "splits.json").write_text(json.dumps(splits, indent=2))
     print(f"[AtlasNet] objects={n_obj} images={n_img} pointclouds={n_pc} "
           f"-> {out_dir}")
 
@@ -260,6 +275,8 @@ def main():
     ap.add_argument("--min-views", type=int, default=EXPECTED_VIEWS,
                     help="Drop objects without this many complete views "
                          "(views 0..N-1 required).")
+    ap.add_argument("--max-per-class", type=int, default=0,
+                    help="Cap objects per category for class balance (0 = no cap).")
     ap.add_argument("--categories", nargs="+", metavar="CAT", default=None,
                     help="Override category list (default: all found on disk).")
     args = ap.parse_args()
@@ -276,10 +293,11 @@ def main():
 
     if args.target in ("pix2vox", "both"):
         prepare_pix2vox(args.dataset_dir, args.pix2vox_out, grid=args.grid,
-                        categories=cats, expected_views=args.min_views)
+                        categories=cats, expected_views=args.min_views,
+                        max_per_class=args.max_per_class)
     if args.target in ("atlasnet", "both"):
         prepare_atlasnet(args.dataset_dir, args.atlasnet_out, categories=cats,
-                         expected_views=args.min_views)
+                         expected_views=args.min_views, max_per_class=args.max_per_class)
 
 
 if __name__ == "__main__":

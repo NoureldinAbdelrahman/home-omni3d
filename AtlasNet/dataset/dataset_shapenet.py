@@ -88,12 +88,24 @@ class ShapeNet(data.Dataset):
             self.num_image_per_object = 24
             self.idx_image_val = 0
 
+            # Use the random split produced by prepare_model_data.py when present;
+            # fall back to the original positional (alphabetical) split otherwise.
+            splits_path = join(dirname(__file__), 'data/splits.json')
+            self.splits = None
+            if exists(splits_path):
+                with open(splits_path, 'r') as f:
+                    self.splits = json.load(f)
+
             # Compile list of pointcloud path by selected category
             for category in self.classes:
                 dir_pointcloud = join(self.pointcloud_path, category)
                 dir_image = join(self.image_path, category)
                 list_pointcloud = sorted(os.listdir(dir_pointcloud))
-                if self.train:
+                if self.splits is not None and category in self.splits:
+                    key = 'train' if self.train else 'test'
+                    wanted = {f"{obj}.npy" for obj in self.splits[category][key]}
+                    list_pointcloud = [p for p in list_pointcloud if p in wanted]
+                elif self.train:
                     list_pointcloud = list_pointcloud[:int(len(list_pointcloud) * 0.8)]
                 else:
                     list_pointcloud = list_pointcloud[int(len(list_pointcloud) * 0.8):]

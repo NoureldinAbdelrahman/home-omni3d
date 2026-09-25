@@ -162,10 +162,14 @@ def test_net(cfg,
 
     # Output testing results
     mean_iou = []
+    weighted_iou = []
     for taxonomy_id in test_iou:
         test_iou[taxonomy_id]['iou'] = np.mean(test_iou[taxonomy_id]['iou'], axis=0)
         mean_iou.append(test_iou[taxonomy_id]['iou'] * test_iou[taxonomy_id]['n_samples'])
+        weighted_iou.append(test_iou[taxonomy_id]['iou'] * test_iou[taxonomy_id]['n_samples'])
     mean_iou = np.sum(mean_iou, axis=0) / n_samples
+    # Macro (per-category) average: keeps the long tail from being drowned out.
+    macro_iou = np.mean([test_iou[t]['iou'] for t in test_iou], axis=0)
 
     # Print header
     print('============================ TEST RESULTS ============================')
@@ -190,6 +194,10 @@ def test_net(cfg,
     # Print mean IoU for each threshold
     print('Overall ', end='\t\t\t\t')
     for mi in mean_iou:
+        print('%.4f' % mi, end='\t')
+    print()
+    print('Macro   ', end='\t\t\t\t')
+    for mi in macro_iou:
         print('%.4f' % mi, end='\t')
     print('\n')
 
