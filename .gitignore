@@ -7,6 +7,8 @@ venv/
 .env
 
 # --- Raw OmniObject3D download (place data here; do not commit) ---
+# dataset/ may be a symlink to a larger disk; ignore the link itself too.
+/dataset
 dataset/*
 !dataset/.gitkeep
 
@@ -19,6 +21,9 @@ AtlasNet/dataset/data/*
 !AtlasNet/dataset/data/taxonomy.json
 
 # --- Training outputs / logs / checkpoints ---
+# (entries without a trailing slash so symlinked output dirs are ignored too)
+Pix2Vox/output
+AtlasNet/log
 Pix2Vox/output/
 AtlasNet/log/
 *.pth

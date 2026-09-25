@@ -351,11 +351,23 @@ def run(args: argparse.Namespace) -> int:
                 local.unlink(missing_ok=True)
         else:
             try:
+                # When only point clouds are requested we still need object IDs
+                # that match the render folder names. Derive them from any
+                # already-extracted renders/<cat> (sorted, same order the HDF5
+                # rows and _extract_renders use) instead of falling back to the
+                # synthetic ``<cat>_NNN`` names, which would not match.
+                category_object_ids = object_ids_by_cat.get(cat, [])
+                if not category_object_ids:
+                    existing_render_dir = output_dir / "renders" / cat
+                    if existing_render_dir.is_dir():
+                        category_object_ids = sorted(
+                            p.name for p in existing_render_dir.iterdir() if p.is_dir()
+                        )
                 n = _extract_point_clouds(
                     local,
                     cat,
                     output_dir / "point_clouds",
-                    object_ids_by_cat.get(cat, []),
+                    category_object_ids,
                 )
                 print(f"  → point_clouds/{cat}: {n} objects")
             except Exception as exc:  # noqa: BLE001

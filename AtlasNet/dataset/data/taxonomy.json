@@ -1,11 +1,87 @@
 [
   {
+    "synsetId": "bed",
+    "name": "bed, house bed"
+  },
+  {
+    "synsetId": "pillow",
+    "name": "pillow, house pillow"
+  },
+  {
+    "synsetId": "table",
+    "name": "table, house table"
+  },
+  {
+    "synsetId": "stool",
+    "name": "stool, house stool"
+  },
+  {
+    "synsetId": "clock",
+    "name": "clock, house clock"
+  },
+  {
+    "synsetId": "tvstand",
+    "name": "tvstand, house tvstand"
+  },
+  {
+    "synsetId": "vase",
+    "name": "vase, house vase"
+  },
+  {
+    "synsetId": "tissue",
+    "name": "tissue, house tissue"
+  },
+  {
+    "synsetId": "doll",
+    "name": "doll, house doll"
+  },
+  {
+    "synsetId": "fan",
+    "name": "fan, house fan"
+  },
+  {
+    "synsetId": "suitcase",
+    "name": "suitcase, house suitcase"
+  },
+  {
+    "synsetId": "battery",
+    "name": "battery, house battery"
+  },
+  {
+    "synsetId": "book",
+    "name": "book, house book"
+  },
+  {
     "synsetId": "bottle",
     "name": "bottle, house bottle"
   },
   {
     "synsetId": "bowl",
     "name": "bowl, house bowl"
+  },
+  {
+    "synsetId": "boxed_beverage",
+    "name": "boxed_beverage, house boxed_beverage"
+  },
+  {
+    "synsetId": "brush",
+    "name": "brush, house brush"
+  },
+  {
+    "synsetId": "candle",
+    "name": "candle, house candle"
+  },
+  {
+    "synsetId": "candy",
+    "name": "candy, house candy"
+  },
+  {
+    "synsetId": "canned_beverage",
+    "name": "canned_beverage, house canned_beverage"
+  },
+  {
+    "synsetId": "chocolate",
+    "name": "chocolate, house chocolate"
   },
   {
     "synsetId": "cup",
@@ -20,6 +96,10 @@
     "name": "dustbin, house dustbin"
   },
   {
+    "synsetId": "facial_cream",
+    "name": "facial_cream, house facial_cream"
+  },
+  {
     "synsetId": "fire_extinguisher",
     "name": "fire_extinguisher, house fire_extinguisher"
   },
@@ -28,8 +108,36 @@
     "name": "flash_light, house flash_light"
   },
   {
+    "synsetId": "fork",
+    "name": "fork, house fork"
+  },
+  {
+    "synsetId": "glasses",
+    "name": "glasses, house glasses"
+  },
+  {
+    "synsetId": "glasses_case",
+    "name": "glasses_case, house glasses_case"
+  },
+  {
+    "synsetId": "hairpin",
+    "name": "hairpin, house hairpin"
+  },
+  {
     "synsetId": "hammer",
     "name": "hammer, house hammer"
+  },
+  {
+    "synsetId": "hand_cream",
+    "name": "hand_cream, house hand_cream"
+  },
+  {
+    "synsetId": "house",
+    "name": "house, house house"
+  },
+  {
+    "synsetId": "kennel",
+    "name": "kennel, house kennel"
   },
   {
     "synsetId": "kettle",
@@ -40,8 +148,16 @@
     "name": "keyboard, house keyboard"
   },
   {
+    "synsetId": "knife",
+    "name": "knife, house knife"
+  },
+  {
     "synsetId": "laptop",
     "name": "laptop, house laptop"
+  },
+  {
+    "synsetId": "lipstick",
+    "name": "lipstick, house lipstick"
   },
   {
     "synsetId": "medicine_bottle",
@@ -60,12 +176,28 @@
     "name": "mouse, house mouse"
   },
   {
+    "synsetId": "ornaments",
+    "name": "ornaments, house ornaments"
+  },
+  {
     "synsetId": "pan",
     "name": "pan, house pan"
   },
   {
+    "synsetId": "pen",
+    "name": "pen, house pen"
+  },
+  {
     "synsetId": "plug",
     "name": "plug, house plug"
+  },
+  {
+    "synsetId": "popcorn",
+    "name": "popcorn, house popcorn"
+  },
+  {
+    "synsetId": "potato_chips",
+    "name": "potato_chips, house potato_chips"
   },
   {
     "synsetId": "power_strip",
@@ -76,8 +208,16 @@
     "name": "projector, house projector"
   },
   {
+    "synsetId": "puff",
+    "name": "puff, house puff"
+  },
+  {
     "synsetId": "razor",
     "name": "razor, house razor"
+  },
+  {
+    "synsetId": "red_wine_glass",
+    "name": "red_wine_glass, house red_wine_glass"
   },
   {
     "synsetId": "remote_control",
@@ -104,6 +244,10 @@
     "name": "speaker, house speaker"
   },
   {
+    "synsetId": "tape_measure",
+    "name": "tape_measure, house tape_measure"
+  },
+  {
     "synsetId": "teapot",
     "name": "teapot, house teapot"
   },
@@ -126,5 +270,9 @@
   {
     "synsetId": "umbrella",
     "name": "umbrella, house umbrella"
+  },
+  {
+    "synsetId": "watch",
+    "name": "watch, house watch"
   }
 ]

@@ -1,7 +1,7 @@
 {
   "category": "hammer",
   "object": "hammer_019",
-  "chamfer": 0.15733373712204107,
-  "fscore_tau0.01": 0.015510183643578734,
+  "chamfer": 0.2517580856925859,
+  "fscore_tau0.01": 0.004516184796231471,
   "n_points": 2500
 }
