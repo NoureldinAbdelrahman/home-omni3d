@@ -37,6 +37,7 @@ def get_args_from_command_line():
                         type=int)
     parser.add_argument('--epoch', dest='epoch', help='number of epoches', default=cfg.TRAIN.NUM_EPOCHES, type=int)
     parser.add_argument('--weights', dest='weights', help='Initialize network from the weights file', default=None)
+    parser.add_argument('--val-freq', dest='val_freq', help='Validate every N epochs', default=cfg.TRAIN.VAL_FREQ, type=int)
     parser.add_argument('--out', dest='out_path', help='Set output path', default=cfg.DIR.OUT_PATH)
     args = parser.parse_args()
     return args
@@ -54,6 +55,8 @@ def main():
         cfg.CONST.BATCH_SIZE = args.batch_size
     if args.epoch is not None:
         cfg.TRAIN.NUM_EPOCHES = args.epoch
+    if args.val_freq is not None:
+        cfg.TRAIN.VAL_FREQ = max(1, args.val_freq)
     if args.out_path is not None:
         cfg.DIR.OUT_PATH = args.out_path
     if args.weights is not None:

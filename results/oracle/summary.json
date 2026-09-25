@@ -1,0 +1,48 @@
+{
+  "method": "NeRF (pure-PyTorch, multi-view oracle)",
+  "n_objects": 6,
+  "res": 128,
+  "iters": 2500,
+  "n_train_views": 20,
+  "n_test_views": 4,
+  "mean_psnr": 25.199849005895018,
+  "mean_ssim": 0.9163865099350611,
+  "per_object": [
+    {
+      "object": "medicine_bottle_medicine_bottle_001",
+      "psnr": 29.671355125223865,
+      "ssim": 0.952870100736618,
+      "seconds": 199.2
+    },
+    {
+      "object": "cup_cup_001",
+      "psnr": 24.536623921798505,
+      "ssim": 0.9099086672067642,
+      "seconds": 167.3
+    },
+    {
+      "object": "teapot_teapot_001",
+      "psnr": 25.822988873117254,
+      "ssim": 0.9150534719228745,
+      "seconds": 224.0
+    },
+    {
+      "object": "hammer_hammer_001",
+      "psnr": 32.98443344932352,
+      "ssim": 0.9925771355628967,
+      "seconds": 180.8
+    },
+    {
+      "object": "laptop_laptop_001",
+      "psnr": 24.098738609389333,
+      "ssim": 0.8840934187173843,
+      "seconds": 183.2
+    },
+    {
+      "object": "tooth_paste_tooth_paste_001",
+      "psnr": 14.08495405651764,
+      "ssim": 0.843816265463829,
+      "seconds": 226.2
+    }
+  ]
+}

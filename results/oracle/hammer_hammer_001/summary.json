@@ -1,0 +1,10 @@
+{
+  "object": "hammer_hammer_001",
+  "psnr": 32.98443344932352,
+  "ssim": 0.9925771355628967,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 180.8
+}

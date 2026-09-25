@@ -260,8 +260,19 @@ def train_net(cfg):
             print('[INFO] %s Epoch [%d/%d] Update #RenderingViews to %d' %
                   (dt.now(), epoch_idx + 2, cfg.TRAIN.NUM_EPOCHES, n_views_rendering))
 
-        # Validate the training models
-        iou = test_net(cfg, epoch_idx + 1, output_dir, val_data_loader, val_writer, encoder, decoder, refiner, merger)
+        # Validate the training models (every VAL_FREQ epochs, always on the last)
+        if (epoch_idx + 1) % max(1, cfg.TRAIN.VAL_FREQ) == 0 or (epoch_idx + 1) == cfg.TRAIN.NUM_EPOCHES:
+            iou = test_net(cfg, epoch_idx + 1, output_dir, val_data_loader, val_writer, encoder, decoder, refiner,
+                           merger)
+            if iou > best_iou:
+                if not os.path.exists(ckpt_dir):
+                    os.makedirs(ckpt_dir)
+
+                best_iou = iou
+                best_epoch = epoch_idx + 1
+                utils.network_utils.save_checkpoints(cfg, os.path.join(ckpt_dir, 'best-ckpt.pth'), epoch_idx + 1,
+                                                     encoder, encoder_solver, decoder, decoder_solver, refiner,
+                                                     refiner_solver, merger, merger_solver, best_iou, best_epoch)
 
         # Save weights to file
         if (epoch_idx + 1) % cfg.TRAIN.SAVE_FREQ == 0:
@@ -271,15 +282,6 @@ def train_net(cfg):
             utils.network_utils.save_checkpoints(cfg, os.path.join(ckpt_dir, 'ckpt-epoch-%04d.pth' % (epoch_idx + 1)),
                                                  epoch_idx + 1, encoder, encoder_solver, decoder, decoder_solver,
                                                  refiner, refiner_solver, merger, merger_solver, best_iou, best_epoch)
-        if iou > best_iou:
-            if not os.path.exists(ckpt_dir):
-                os.makedirs(ckpt_dir)
-
-            best_iou = iou
-            best_epoch = epoch_idx + 1
-            utils.network_utils.save_checkpoints(cfg, os.path.join(ckpt_dir, 'best-ckpt.pth'), epoch_idx + 1, encoder,
-                                                 encoder_solver, decoder, decoder_solver, refiner, refiner_solver,
-                                                 merger, merger_solver, best_iou, best_epoch)
 
     # Close SummaryWriter for TensorBoard
     train_writer.close()

@@ -1,0 +1,10 @@
+{
+  "best_chamfer": 0.10492377281188965,
+  "best_fscore": 0.07928681075572967,
+  "final_chamfer": 71.70371217727661,
+  "final_fscore": 0.04337514117360115,
+  "n_epochs": 150,
+  "best_chamfer_epoch": 5,
+  "best_fscore_epoch": 11,
+  "final_lr": 1.0000000000000002e-06
+}

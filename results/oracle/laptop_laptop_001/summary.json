@@ -1,0 +1,10 @@
+{
+  "object": "laptop_laptop_001",
+  "psnr": 24.098738609389333,
+  "ssim": 0.8840934187173843,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 183.2
+}
