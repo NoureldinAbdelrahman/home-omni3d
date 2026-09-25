@@ -20,6 +20,10 @@ add notes under `## My notes` and we re-run what that paper justifies.
 
 ## How to use
 
+> New to the numbers? Read [`docs/METRICS.md`](../docs/METRICS.md) first — it
+> explains IoU thresholds, Chamfer vs F-score, PSNR/SSIM, and micro-vs-macro in
+> plain language.
+
 1. Read the file.
 2. Scroll to the bottom, append `## My notes` and (optionally) `## Do next`.
 3. Tell me (or push). I re-run the corresponding experiment/training and update
