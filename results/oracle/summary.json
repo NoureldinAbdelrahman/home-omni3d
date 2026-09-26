@@ -1,48 +1,156 @@
 {
   "method": "NeRF (pure-PyTorch, multi-view oracle)",
-  "n_objects": 6,
+  "n_objects": 24,
   "res": 128,
   "iters": 2500,
   "n_train_views": 20,
   "n_test_views": 4,
-  "mean_psnr": 25.199849005895018,
-  "mean_ssim": 0.9163865099350611,
+  "mean_psnr": 19.11488534336678,
+  "mean_ssim": 0.8037203388909498,
   "per_object": [
     {
-      "object": "medicine_bottle_medicine_bottle_001",
-      "psnr": 29.671355125223865,
-      "ssim": 0.952870100736618,
-      "seconds": 199.2
+      "object": "battery_battery_001",
+      "psnr": 26.3009274761101,
+      "ssim": 0.914075180888176,
+      "seconds": 187.8
     },
     {
-      "object": "cup_cup_001",
-      "psnr": 24.536623921798505,
-      "ssim": 0.9099086672067642,
-      "seconds": 167.3
+      "object": "battery_battery_002",
+      "psnr": 26.021580619697996,
+      "ssim": 0.8975820541381836,
+      "seconds": 193.8
     },
     {
-      "object": "teapot_teapot_001",
-      "psnr": 25.822988873117254,
-      "ssim": 0.9150534719228745,
-      "seconds": 224.0
+      "object": "bed_bed_001",
+      "psnr": 24.960917124958264,
+      "ssim": 0.911627784371376,
+      "seconds": 199.1
     },
     {
-      "object": "hammer_hammer_001",
-      "psnr": 32.98443344932352,
-      "ssim": 0.9925771355628967,
-      "seconds": 180.8
+      "object": "bed_bed_002",
+      "psnr": 27.805172889000673,
+      "ssim": 0.957145944237709,
+      "seconds": 199.0
     },
     {
-      "object": "laptop_laptop_001",
-      "psnr": 24.098738609389333,
-      "ssim": 0.8840934187173843,
-      "seconds": 183.2
+      "object": "book_book_001",
+      "psnr": 27.668317119209185,
+      "ssim": 0.9209462106227875,
+      "seconds": 185.9
     },
     {
-      "object": "tooth_paste_tooth_paste_001",
-      "psnr": 14.08495405651764,
-      "ssim": 0.843816265463829,
-      "seconds": 226.2
+      "object": "book_book_002",
+      "psnr": 11.573930909996509,
+      "ssim": 0.6635198444128036,
+      "seconds": 104.8
+    },
+    {
+      "object": "bottle_bottle_001",
+      "psnr": 12.755682712833108,
+      "ssim": 0.8029529750347137,
+      "seconds": 203.3
+    },
+    {
+      "object": "bottle_bottle_030",
+      "psnr": 11.840434442688712,
+      "ssim": 0.7756343185901642,
+      "seconds": 197.5
+    },
+    {
+      "object": "bowl_bowl_001",
+      "psnr": 26.54638137365786,
+      "ssim": 0.9199035316705704,
+      "seconds": 202.0
+    },
+    {
+      "object": "bowl_bowl_002",
+      "psnr": 9.024547044484592,
+      "ssim": 0.7051930278539658,
+      "seconds": 196.9
+    },
+    {
+      "object": "boxed_beverage_boxed_beverage_001",
+      "psnr": 8.993185511216247,
+      "ssim": 0.6088321357965469,
+      "seconds": 157.9
+    },
+    {
+      "object": "boxed_beverage_boxed_beverage_002",
+      "psnr": 24.640724948572192,
+      "ssim": 0.8938859850168228,
+      "seconds": 118.0
+    },
+    {
+      "object": "brush_brush_001",
+      "psnr": 13.70855657821982,
+      "ssim": 0.7900983542203903,
+      "seconds": 209.1
+    },
+    {
+      "object": "brush_brush_002",
+      "psnr": 28.56212044493551,
+      "ssim": 0.9263294488191605,
+      "seconds": 202.4
+    },
+    {
+      "object": "candle_candle_001",
+      "psnr": 25.33100332477943,
+      "ssim": 0.8599837720394135,
+      "seconds": 203.4
+    },
+    {
+      "object": "candle_candle_002",
+      "psnr": 27.730234139265097,
+      "ssim": 0.8805113881826401,
+      "seconds": 203.5
+    },
+    {
+      "object": "candy_candy_001",
+      "psnr": 12.474668774701374,
+      "ssim": 0.6671457886695862,
+      "seconds": 148.1
+    },
+    {
+      "object": "candy_candy_002",
+      "psnr": 12.529220913315946,
+      "ssim": 0.7531705349683762,
+      "seconds": 116.5
+    },
+    {
+      "object": "canned_beverage_canned_beverage_001",
+      "psnr": 25.34838663101562,
+      "ssim": 0.9145679175853729,
+      "seconds": 200.1
+    },
+    {
+      "object": "canned_beverage_canned_beverage_002",
+      "psnr": 10.015692231779694,
+      "ssim": 0.7046314924955368,
+      "seconds": 196.5
+    },
+    {
+      "object": "chocolate_chocolate_001",
+      "psnr": 4.841838080490319,
+      "ssim": 0.49639682471752167,
+      "seconds": 195.6
+    },
+    {
+      "object": "chocolate_chocolate_002",
+      "psnr": 23.12137678996144,
+      "ssim": 0.791832447052002,
+      "seconds": 199.9
+    },
+    {
+      "object": "clock_clock_001",
+      "psnr": 24.169796468825016,
+      "ssim": 0.8472271114587784,
+      "seconds": 149.1
+    },
+    {
+      "object": "clock_clock_002",
+      "psnr": 12.79255169108798,
+      "ssim": 0.6860940605401993,
+      "seconds": 115.6
     }
   ]
 }

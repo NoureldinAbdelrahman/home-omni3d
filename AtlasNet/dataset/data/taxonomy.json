@@ -8,8 +8,24 @@
     "name": "pillow, house pillow"
   },
   {
+    "synsetId": "chair",
+    "name": "chair, house chair"
+  },
+  {
+    "synsetId": "light",
+    "name": "light, house light"
+  },
+  {
+    "synsetId": "cabinet",
+    "name": "cabinet, house cabinet"
+  },
+  {
     "synsetId": "table",
     "name": "table, house table"
+  },
+  {
+    "synsetId": "sofa",
+    "name": "sofa, house sofa"
   },
   {
     "synsetId": "stool",
@@ -32,8 +48,16 @@
     "name": "tissue, house tissue"
   },
   {
+    "synsetId": "teddy_bear",
+    "name": "teddy_bear, house teddy_bear"
+  },
+  {
     "synsetId": "doll",
     "name": "doll, house doll"
+  },
+  {
+    "synsetId": "plant",
+    "name": "plant, house plant"
   },
   {
     "synsetId": "fan",
@@ -42,6 +66,10 @@
   {
     "synsetId": "suitcase",
     "name": "suitcase, house suitcase"
+  },
+  {
+    "synsetId": "hair_dryer",
+    "name": "hair_dryer, house hair_dryer"
   },
   {
     "synsetId": "battery",

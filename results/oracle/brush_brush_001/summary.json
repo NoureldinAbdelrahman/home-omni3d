@@ -1,0 +1,10 @@
+{
+  "object": "brush_brush_001",
+  "psnr": 13.70855657821982,
+  "ssim": 0.7900983542203903,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 209.1
+}

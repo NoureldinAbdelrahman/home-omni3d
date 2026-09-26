@@ -1,0 +1,10 @@
+{
+  "object": "candy_candy_001",
+  "psnr": 12.474668774701374,
+  "ssim": 0.6671457886695862,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 148.1
+}

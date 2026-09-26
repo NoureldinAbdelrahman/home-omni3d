@@ -1,0 +1,10 @@
+{
+  "object": "bowl_bowl_002",
+  "psnr": 9.024547044484592,
+  "ssim": 0.7051930278539658,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 196.9
+}

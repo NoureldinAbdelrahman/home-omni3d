@@ -1,0 +1,10 @@
+{
+  "object": "chocolate_chocolate_002",
+  "psnr": 23.12137678996144,
+  "ssim": 0.791832447052002,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 199.9
+}
