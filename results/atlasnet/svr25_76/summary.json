@@ -1,0 +1,13 @@
+{
+  "best_chamfer": 0.05230668932199478,
+  "best_fscore": 0.09112355692519082,
+  "final_chamfer": 14370.728949652777,
+  "final_fscore": 0.029975818884041574,
+  "n_epochs": 150,
+  "best_chamfer_epoch": 69,
+  "best_fscore_epoch": 10,
+  "final_lr": 1.0000000000000002e-06,
+  "encoder": "resnet18 ImageNet-pretrained (fc reinit)",
+  "categories": 76,
+  "objects": 1694
+}
