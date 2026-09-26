@@ -1,7 +1,7 @@
 {
   "category": "hammer",
   "object": "hammer_011",
-  "iou_t0.3": 0.4000175024065809,
-  "n_pred_voxels": 9113,
+  "iou_t0.3": 0.16612606294380644,
+  "n_pred_voxels": 6417,
   "n_gt_voxels": 6885
 }
