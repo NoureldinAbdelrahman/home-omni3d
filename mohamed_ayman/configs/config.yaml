@@ -1,0 +1,63 @@
+dataset:
+  root: "dataset"
+  renders_dir: "dataset/renders"
+  point_clouds_dir: "dataset/point_clouds"
+  image_size: 224
+  point_cloud_points: 4096
+  voxel_size: 32
+  home_decor_categories:
+    - "bed"
+    - "chair"
+    - "sofa"
+    - "table"
+    - "stool"
+    - "cabinet"
+    - "tvstand"
+    - "pillow"
+    - "light"
+    - "vase"
+    - "clock"
+    - "plant"
+    - "ornaments"
+    - "candle"
+    - "dish"
+    - "cup"
+    - "bowl"
+    - "teapot"
+  train_split: 0.70
+  val_split: 0.15
+  test_split: 0.15
+  seed: 42
+
+training:
+  batch_size: 16
+  num_workers: 4
+  epochs: 25
+  lr_encoder: 0.0001
+  lr_decoder: 0.001
+  weight_decay: 0.0001
+  mixed_precision: true
+  gradient_clip: 1.0
+  device: "cuda"
+
+models:
+  pix2vox:
+    backbone: "resnet18"
+    voxel_res: 32
+    use_refiner: true
+    bce_weight: 1.0
+    dice_weight: 0.5
+  atlasnet:
+    backbone: "resnet50"
+    num_patches: 25
+    points_per_patch: 164
+    hidden_dim: 256
+    chamfer_type: "l2"
+  point_e:
+    model_name: "base40M"
+    device: "cuda"
+
+paths:
+  checkpoints: "outputs/checkpoints"
+  evaluations: "outputs/evaluations"
+  figures: "outputs/figures"

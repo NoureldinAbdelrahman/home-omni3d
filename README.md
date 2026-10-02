@@ -16,6 +16,7 @@ Download 24-view Blender renders + point clouds for home categories (18 bedroom 
 | `prepare_model_data.py` | Convert `dataset/` → Pix2Vox and AtlasNet layouts |
 | `Pix2Vox/` | Vendored [Pix2Vox](https://github.com/hzxie/Pix2Vox) (voxel recon) |
 | `AtlasNet/` | Vendored [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) (point / surface gen) |
+| `mohamed_ayman/` | Mohamed Ayman's Multi-View 3D Reconstruction pipeline, trained checkpoints, benchmark evaluations, and Streamlit 3D Studio & Virtual Room Stager |
 | `dataset/` | **Data placeholder** (gitignored) |
 | `requirements.txt`, `install_openxlab.sh` | Environment |
 
