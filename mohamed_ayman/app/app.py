@@ -199,9 +199,17 @@ with tab_reconstruct:
         selected_obj = st.selectbox("2. Select Object Instance", obj_dict.get(selected_cat, []))
         
         num_views_choice = st.radio("3. Input Viewpoints (K)", [1, 3, 5], index=1, horizontal=True)
-        model_choice = st.selectbox("4. Reconstruction Model", ["AtlasNet (Surface Mesh)", "Pix2Vox++ (3D Voxel Grid)", "Point-E (Modern Diffusion)"])
+        model_choice = st.selectbox(
+            "4. Reconstruction Model",
+            [
+                "Pix2Vox++ (3D Refined Voxels - Best)",
+                "Pix2Vox (Base / Coarse Voxels)",
+                "Point-E (Modern Diffusion - Reference)",
+                "AtlasNet (Surface Mesh - Reference)"
+            ]
+        )
         
-        if model_choice.startswith("Pix2Vox"):
+        if "Pix2Vox" in model_choice:
             voxel_thresh = st.slider("Voxel Binarization Threshold", 0.20, 0.70, 0.40, 0.02, help="Lower values make thin structures (chair legs) thicker; higher values remove outer noise.")
         else:
             voxel_thresh = 0.40
@@ -240,7 +248,32 @@ with tab_reconstruct:
             gt_pc, _, orig_radius = normalize_point_cloud(np.load(gt_pc_path)) if os.path.exists(gt_pc_path) else (None, None, 1.0)
             
             start_t = time.time()
-            if "AtlasNet" in model_choice:
+            if "Pix2Vox" in model_choice:
+                with torch.no_grad():
+                    out = pix2vox_model(batch_img)
+                    if "Base" in model_choice:
+                        voxels = out["coarse_voxels"][0].cpu().numpy()
+                        model_title = "Pix2Vox (Base / Coarse)"
+                    else:
+                        voxels = out["voxels"][0].cpu().numpy()
+                        model_title = "Pix2Vox++ (3D U-Net Refined)"
+                elapsed = (time.time() - start_t) * 1000
+                st.caption(f"⚡ Inferred in **{elapsed:.1f} ms** | Voxel Grid: **32x32x32** (Threshold: {voxel_thresh})")
+                
+                mesh_data = voxels_to_mesh(voxels, threshold=voxel_thresh)
+                tab_voxel, tab_gt = st.tabs([f"Predicted Mesh ({model_title})", "Ground Truth 3D Points"])
+                with tab_voxel:
+                    if mesh_data is not None:
+                        verts, faces = mesh_data
+                        st.plotly_chart(plot_mesh_3d(verts, faces, title=f"{model_title} (th={voxel_thresh})", color="#8b5cf6"), use_container_width=True)
+                        obj_data = create_obj_string(verts, faces)
+                        st.download_button("💾 Download Voxel Mesh (.obj)", data=obj_data, file_name=f"{selected_cat}_{selected_obj}_{model_choice.split()[0].lower()}.obj", mime="text/plain")
+                    else:
+                        st.warning(f"Occupancy threshold {voxel_thresh} produced an empty volume. Try lowering the threshold slider.")
+                with tab_gt:
+                    st.plotly_chart(plot_point_cloud_3d(gt_pc, title="Scanner Ground Truth (4096 pts)", color="#10b981"), use_container_width=True)
+
+            elif "AtlasNet" in model_choice:
                 verts, faces = atlasnet_model.generate_mesh(batch_img, grid_res=12)
                 elapsed = (time.time() - start_t) * 1000
                 st.caption(f"⚡ Inferred in **{elapsed:.1f} ms** | Vertices: **{verts.shape[0]}**, Faces: **{faces.shape[0]}**")
@@ -254,26 +287,6 @@ with tab_reconstruct:
                 # Download OBJ
                 obj_data = create_obj_string(verts, faces)
                 st.download_button("💾 Download 3D Mesh (.obj)", data=obj_data, file_name=f"{selected_cat}_{selected_obj}_atlasnet.obj", mime="text/plain")
-
-            elif "Pix2Vox" in model_choice:
-                with torch.no_grad():
-                    out = pix2vox_model(batch_img)
-                    voxels = out["voxels"][0].cpu().numpy()
-                elapsed = (time.time() - start_t) * 1000
-                st.caption(f"⚡ Inferred in **{elapsed:.1f} ms** | Voxel Grid: **32x32x32** (Threshold: {voxel_thresh})")
-                
-                mesh_data = voxels_to_mesh(voxels, threshold=voxel_thresh)
-                tab_voxel, tab_gt = st.tabs(["Predicted Voxel Mesh", "Ground Truth 3D Points"])
-                with tab_voxel:
-                    if mesh_data is not None:
-                        verts, faces = mesh_data
-                        st.plotly_chart(plot_mesh_3d(verts, faces, title=f"Pix2Vox++ Surface Mesh (th={voxel_thresh})", color="#8b5cf6"), use_container_width=True)
-                        obj_data = create_obj_string(verts, faces)
-                        st.download_button("💾 Download Voxel Mesh (.obj)", data=obj_data, file_name=f"{selected_cat}_{selected_obj}_pix2vox.obj", mime="text/plain")
-                    else:
-                        st.warning(f"Occupancy threshold {voxel_thresh} produced an empty volume. Try lowering the threshold slider.")
-                with tab_gt:
-                    st.plotly_chart(plot_point_cloud_3d(gt_pc, title="Scanner Ground Truth (4096 pts)", color="#10b981"), use_container_width=True)
 
             else:  # Point-E
                 pc_pred = point_e_model.reconstruct(loaded_imgs[0], num_points=4096)
@@ -318,24 +331,29 @@ with tab_arena:
     batch_img = torch.stack(tensors, dim=0).unsqueeze(0).to(device)
 
     with col_a:
-        st.markdown("#### 1. Pix2Vox++ (Volumetric)")
+        st.markdown("#### 1. Pix2Vox (Base / Coarse)")
         with torch.no_grad():
             out = pix2vox_model(batch_img)
-            vox = out["voxels"][0].cpu().numpy()
-        mesh_vox = voxels_to_mesh(vox, threshold=arena_thresh)
-        if mesh_vox:
-            st.plotly_chart(plot_mesh_3d(mesh_vox[0], mesh_vox[1], title=f"Pix2Vox Mesh (th={arena_thresh})", color="#8b5cf6"), use_container_width=True)
-            st.caption(f"Vertices: {mesh_vox[0].shape[0]} | Faces: {mesh_vox[1].shape[0]}")
+            vox_coarse = out["coarse_voxels"][0].cpu().numpy()
+            vox_refined = out["voxels"][0].cpu().numpy()
+
+        mesh_coarse = voxels_to_mesh(vox_coarse, threshold=arena_thresh)
+        if mesh_coarse:
+            st.plotly_chart(plot_mesh_3d(mesh_coarse[0], mesh_coarse[1], title=f"Pix2Vox Base (th={arena_thresh})", color="#6366f1"), use_container_width=True)
+            st.caption(f"Vertices: {mesh_coarse[0].shape[0]} | Faces: {mesh_coarse[1].shape[0]}")
         else:
-            st.warning("Occupancy threshold produced an empty volume. Adjust slider.")
-        st.info("**Strengths**: Consistent solid topology, multi-view fusion.\n\n**Weakness**: $32^3$ resolution limits fine detail.")
+            st.warning("Occupancy threshold produced an empty volume.")
+        st.info("**Base Output**: Raw multi-view context fusion before 3D refinement.")
 
     with col_b:
-        st.markdown("#### 2. AtlasNet (Surface Patches)")
-        verts_an, faces_an = atlasnet_model.generate_mesh(batch_img, grid_res=11)
-        st.plotly_chart(plot_mesh_3d(verts_an, faces_an, title="AtlasNet Mesh (25 Patches)", color="#3b82f6"), use_container_width=True)
-        st.caption(f"Vertices: {verts_an.shape[0]} | Faces: {faces_an.shape[0]}")
-        st.info("**Strengths**: Resolution-free continuous surface, sharp geometric boundaries.\n\n**Weakness**: Patch boundaries.")
+        st.markdown("#### 2. Pix2Vox++ (3D U-Net Refined)")
+        mesh_refined = voxels_to_mesh(vox_refined, threshold=arena_thresh)
+        if mesh_refined:
+            st.plotly_chart(plot_mesh_3d(mesh_refined[0], mesh_refined[1], title=f"Pix2Vox++ Refined (th={arena_thresh})", color="#8b5cf6"), use_container_width=True)
+            st.caption(f"Vertices: {mesh_refined[0].shape[0]} | Faces: {mesh_refined[1].shape[0]}")
+        else:
+            st.warning("Occupancy threshold produced an empty volume.")
+        st.success("**Refined Output**: 3D U-Net refiner cleans boundary noise and fills hollow parts.")
 
     with col_c:
         st.markdown("#### 3. Ground Truth 3D Scanner")
@@ -343,8 +361,8 @@ with tab_arena:
         if os.path.exists(gt_pc_path):
             gt_pc, _, _ = normalize_point_cloud(np.load(gt_pc_path))
             st.plotly_chart(plot_point_cloud_3d(gt_pc, title="Laser Scanner Ground Truth (4,096 pts)", color="#10b981"), use_container_width=True)
-            st.caption("Points: 4,096 real scanned 3D points")
-            st.info("**Reference**: Real physical scanner capture used for quantitative evaluation.")
+            st.caption("Points: 4,096 real physical scanned 3D points")
+            st.info("**Ground Truth Reference**: Used for calculating IoU and Chamfer Distance.")
         else:
             pc_pe = point_e_model.reconstruct(v_imgs[0], num_points=3000)
             st.plotly_chart(plot_point_cloud_3d(pc_pe, title="Point-E Colored Points", color="#ec4899"), use_container_width=True)

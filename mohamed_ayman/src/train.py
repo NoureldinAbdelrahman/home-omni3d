@@ -29,7 +29,7 @@ from src.losses.chamfer_distance import ChamferLoss, chamfer_distance, compute_f
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train Multi-View 3D Reconstruction Models")
-    parser.add_argument("--model", type=str, default="pix2vox", choices=["pix2vox", "atlasnet"])
+    parser.add_argument("--model", type=str, default="pix2vox++", choices=["pix2vox", "pix2vox++", "pix2vox_plus", "atlasnet"])
     parser.add_argument("--num_views", type=int, default=3, help="Number of RGB input viewpoints (1, 3, 5)")
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--batch_size", type=int, default=16)
@@ -66,7 +66,7 @@ def train_one_epoch(
         optimizer.zero_grad()
 
         with torch.amp.autocast(device_type="cuda" if device.type == "cuda" else "cpu", enabled=use_amp):
-            if model_type == "pix2vox":
+            if "pix2vox" in model_type:
                 gt_voxels = batch["voxels"].to(device, non_blocking=True)  # (B, 32, 32, 32)
                 out = model(images)
                 loss = criterion(out["voxels"], gt_voxels, out["coarse_voxels"])
@@ -115,7 +115,7 @@ def validate(
             images = batch["images"].to(device, non_blocking=True)
             b_size = images.shape[0]
 
-            if model_type == "pix2vox":
+            if "pix2vox" in model_type:
                 gt_voxels = batch["voxels"].to(device, non_blocking=True)
                 out = model(images)
                 loss = criterion(out["voxels"], gt_voxels, out["coarse_voxels"])
@@ -183,11 +183,13 @@ def main():
     )
 
     # 3. Model & Loss setup
-    if args.model == "pix2vox":
-        model = Pix2Vox(pretrained=True, use_refiner=True).to(device)
+    if "pix2vox" in args.model:
+        use_refiner = ("++" in args.model) or ("plus" in args.model)
+        model = Pix2Vox(pretrained=True, use_refiner=use_refiner).to(device)
         criterion = Pix2VoxLoss(bce_weight=1.0, dice_weight=0.5).to(device)
         metric_name = "Voxel_IoU"
         best_metric = -1.0  # higher is better
+        print(f"Instantiated {'Pix2Vox++ (with 3D Refiner)' if use_refiner else 'Pix2Vox (Base / No Refiner)'}")
     else:
         model = AtlasNet(num_patches=25, latent_dim=1024, hidden_dim=256, pretrained=True).to(device)
         criterion = ChamferLoss(distance_type="l2").to(device)

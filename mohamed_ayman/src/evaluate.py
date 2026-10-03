@@ -31,7 +31,7 @@ from src.metrics.evaluator import ReconstructionEvaluator
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Evaluate 3D Reconstruction Models")
-    parser.add_argument("--model", type=str, default="pix2vox", choices=["pix2vox", "atlasnet", "point_e"])
+    parser.add_argument("--model", type=str, default="pix2vox++", choices=["pix2vox", "pix2vox++", "pix2vox_plus", "atlasnet", "point_e"])
     parser.add_argument("--weights", type=str, default=None, help="Path to checkpoint .pth")
     parser.add_argument("--num_views", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=16)
@@ -99,8 +99,10 @@ def main():
 
     evaluator = ReconstructionEvaluator(home_decor_categories=HOME_DECOR_CATEGORIES)
 
-    if args.model == "pix2vox":
-        model = Pix2Vox(pretrained=False, use_refiner=True).to(device)
+    if "pix2vox" in args.model:
+        use_refiner = ("++" in args.model) or ("plus" in args.model)
+        model = Pix2Vox(pretrained=False, use_refiner=use_refiner).to(device)
+        print(f"Evaluating {'Pix2Vox++ (with 3D Refiner)' if use_refiner else 'Pix2Vox (Base / No Refiner)'}")
         if args.weights and os.path.exists(args.weights):
             ckpt = torch.load(args.weights, map_location=device)
             state_dict = ckpt.get("model_state_dict", ckpt)

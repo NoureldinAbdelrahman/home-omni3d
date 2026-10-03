@@ -214,3 +214,12 @@ class Pix2Vox(nn.Module):
             "voxels": out_voxels,
             "coarse_voxels": coarse_fused.squeeze(1)
         }
+
+
+class Pix2VoxPlusPlus(Pix2Vox):
+    """
+    Pix2Vox++ Architecture (Xie et al., IJCV 2020).
+    Features Context-Aware Multi-View Fusion with 3D Residual U-Net Refiner.
+    """
+    def __init__(self, pretrained: bool = True):
+        super().__init__(pretrained=pretrained, use_refiner=True)
