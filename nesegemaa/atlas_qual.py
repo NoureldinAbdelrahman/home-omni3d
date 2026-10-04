@@ -44,7 +44,10 @@ from easydict import EasyDict  # noqa: E402
 from model.model import EncoderDecoder  # noqa: E402
 from plotting import load_display_image  # noqa: E402
 
-TAU = 0.01
+TAU_SQ = 0.001  # applied to SQUARED distances, exactly like training
+# (== Euclidean tau of sqrt(0.001) ~= 0.0316). The JIT Chamfer kernel never
+# takes a square root, so every MS1 log/summary number lives in these units.
+TAU_EUCLID_APPROX = TAU_SQ ** 0.5
 DEFAULT_PANEL = [
     ("medicine_bottle", "medicine_bottle_068"),
     ("cup", "cup_032"),
@@ -54,13 +57,19 @@ DEFAULT_PANEL = [
 ]
 
 
-def chamfer_and_fscore(a, b, tau=TAU):
+def chamfer_and_fscore(a, b, tau_sq=TAU_SQ):
+    """Same definition as training (see ChamferDistancePytorch/fscore.py):
+    SQUARED nearest-neighbor distances; F-score counts points below tau_sq.
+    MS1-era qualitative scripts used Euclidean distances by mistake, so their
+    per-object numbers are NOT comparable to these (documented, not silently
+    mixed)."""
     from scipy.spatial import cKDTree
-    da, _ = cKDTree(b).query(a)   # pred -> gt
+    da, _ = cKDTree(b).query(a)   # pred -> gt (Euclidean here)
     db, _ = cKDTree(a).query(b)   # gt -> pred
-    chamfer = float(da.mean() + db.mean())
-    precision = float((db < tau).mean())
-    recall = float((da < tau).mean())
+    da2, db2 = da ** 2, db ** 2   # ...squared to match the training kernel
+    chamfer = float(da2.mean() + db2.mean())
+    precision = float((db2 < tau_sq).mean())
+    recall = float((da2 < tau_sq).mean())
     fscore = 0.0 if precision + recall == 0 else 2 * precision * recall / (precision + recall)
     return chamfer, fscore
 
@@ -147,10 +156,10 @@ def main():
                 assert im.shape[0] == 3  # image only; GT never enters recon
                 pred = predict(im)
                 gt = load_gt(cat, obj)
-                chamfer, fscore = chamfer_and_fscore(pred, gt, tau=TAU)
+                chamfer, fscore = chamfer_and_fscore(pred, gt)
                 per_object_rows.append({
                     "category": cat, "object": obj, "view": v,
-                    "chamfer": chamfer, "fscore_tau0.01": fscore,
+                    "chamfer": chamfer, "fscore": fscore,
                     "n_points": int(pred.shape[0]),
                 })
                 if (cat, obj) in panel and v == views[0]:
@@ -166,7 +175,7 @@ def main():
                         ).save(outd / "input.png")
                     (outd / "metrics.json").write_text(json.dumps({
                         "category": cat, "object": obj, "view": v,
-                        "chamfer": chamfer, "fscore_tau0.01": fscore,
+                        "chamfer": chamfer, "fscore": fscore,
                         "n_points": int(pred.shape[0]),
                     }, indent=2) + "\n")
 
@@ -178,9 +187,9 @@ def main():
         for r in rows:
             cats.setdefault(r["category"], []).append(r)
         micro_ch = float(np.mean([r["chamfer"] for r in rows])) if rows else None
-        micro_fs = float(np.mean([r["fscore_tau0.01"] for r in rows])) if rows else None
+        micro_fs = float(np.mean([r["fscore"] for r in rows])) if rows else None
         cat_means = [(c, float(np.mean([r["chamfer"] for r in rs])),
-                      float(np.mean([r["fscore_tau0.01"] for r in rs])), len(rs))
+                      float(np.mean([r["fscore"] for r in rs])), len(rs))
                      for c, rs in sorted(cats.items())]
         macro_ch = float(np.mean([m[1] for m in cat_means])) if cat_means else None
         macro_fs = float(np.mean([m[2] for m in cat_means])) if cat_means else None
@@ -202,7 +211,9 @@ def main():
     res_dir.mkdir(parents=True, exist_ok=True)
     (res_dir / "qual_metrics.json").write_text(json.dumps(per_object_rows, indent=2) + "\n")
     agg = {
-        "run": args.run, "weights": wname, "views": views, "tau": TAU,
+        "run": args.run, "weights": wname, "views": views,
+        "tau_squared": TAU_SQ, "tau_euclid_approx": round(TAU_EUCLID_APPROX, 4),
+        "metric_note": "squared-distance units, same as training loss and MS1 summaries",
         "split": "splits.json test lists",
         "n_test_objects_total": len(per_object_rows),
         "by_view": by_view,

@@ -44,7 +44,8 @@ sys.path.insert(0, str(ROOT))
 
 import dataset.pointcloud_processor as pp  # noqa: E402
 
-TAU = 0.01
+TAU_SQ = 0.001  # squared distances, same as AtlasNet training/eval
+TAU_EUCLID_APPROX = TAU_SQ ** 0.5  # ~= 0.0316
 DEFAULT_PANEL = [
     ("medicine_bottle", "medicine_bottle_068"),
     ("cup", "cup_032"),
@@ -55,13 +56,15 @@ DEFAULT_PANEL = [
 CLIP_MODEL = "ViT-L/14"
 
 
-def chamfer_and_fscore(a, b, tau=TAU):
+def chamfer_and_fscore(a, b, tau_sq=TAU_SQ):
+    # Squared-distance units, identical to the AtlasNet track definition.
     from scipy.spatial import cKDTree
     da, _ = cKDTree(b).query(a)
     db, _ = cKDTree(a).query(b)
-    chamfer = float(da.mean() + db.mean())
-    precision = float((db < tau).mean())
-    recall = float((da < tau).mean())
+    da2, db2 = da ** 2, db ** 2
+    chamfer = float(da2.mean() + db2.mean())
+    precision = float((db2 < tau_sq).mean())
+    recall = float((da2 < tau_sq).mean())
     fscore = 0.0 if precision + recall == 0 else 2 * precision * recall / (precision + recall)
     return chamfer, fscore
 
@@ -219,7 +222,7 @@ def main():
         "method": "Point-E faithful (base40M-imagevec -> upsample)",
         "config": {"view": args.view, "preprocessing": args.preprocessing,
                    "guidance": args.guidance, "points": args.points, "seeds": seeds,
-                   "tau": TAU,
+                   "tau_squared": TAU_SQ, "tau_euclid_approx": round(TAU_EUCLID_APPROX, 4),
                    "normalization": "subtract mean, divide by max radius (unit sphere)"},
         "weights": prov,
         "n_rows": len(rows), "n_objects": len({r["object"] for r in rows}),
