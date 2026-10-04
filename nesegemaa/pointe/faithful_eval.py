@@ -103,9 +103,6 @@ def weight_provenance(cache_dir):
     """URLs + SHAs of every .pt in the point-e/CLIP cache. No silent anything."""
     from point_e.models.download import MODEL_PATHS
     rows = []
-    suffix = f"_{args.tag}" if args.tag else ""
-    trip = args.outdir / f"triplets{suffix}"
-    trip.mkdir(parents=True, exist_ok=True)
     for pt in sorted(Path(cache_dir).rglob("*.pt")):
         rows.append({"file": pt.name, "bytes": pt.stat().st_size,
                      "sha256": sha256_file(pt)})
@@ -204,6 +201,9 @@ def main():
     assert pairs, "no test objects selected"
 
     rows = []
+    suffix = f"_{args.tag}" if args.tag else ""
+    trip = args.outdir / f"triplets{suffix}"
+    trip.mkdir(parents=True, exist_ok=True)
     views = [int(v) for v in (args.views.split(",") if args.views else [args.view])]
     assert views, "no views selected"
     if args.fusion == "first":
@@ -290,7 +290,6 @@ def main():
         "per_category": [{"category": c, "n": n, "chamfer": ch, "fscore": fs}
                          for c, ch, fs, n in cat_rows],
     }
-    suffix = f"_{args.tag}" if args.tag else ""
     args.outdir.mkdir(parents=True, exist_ok=True)
     import csv
     with open(args.outdir / f"results{suffix}.csv", "w", newline="") as f:
