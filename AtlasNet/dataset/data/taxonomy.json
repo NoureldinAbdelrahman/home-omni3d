@@ -1,0 +1,306 @@
+[
+  {
+    "synsetId": "bed",
+    "name": "bed, house bed"
+  },
+  {
+    "synsetId": "pillow",
+    "name": "pillow, house pillow"
+  },
+  {
+    "synsetId": "chair",
+    "name": "chair, house chair"
+  },
+  {
+    "synsetId": "light",
+    "name": "light, house light"
+  },
+  {
+    "synsetId": "cabinet",
+    "name": "cabinet, house cabinet"
+  },
+  {
+    "synsetId": "table",
+    "name": "table, house table"
+  },
+  {
+    "synsetId": "sofa",
+    "name": "sofa, house sofa"
+  },
+  {
+    "synsetId": "stool",
+    "name": "stool, house stool"
+  },
+  {
+    "synsetId": "clock",
+    "name": "clock, house clock"
+  },
+  {
+    "synsetId": "tvstand",
+    "name": "tvstand, house tvstand"
+  },
+  {
+    "synsetId": "vase",
+    "name": "vase, house vase"
+  },
+  {
+    "synsetId": "tissue",
+    "name": "tissue, house tissue"
+  },
+  {
+    "synsetId": "teddy_bear",
+    "name": "teddy_bear, house teddy_bear"
+  },
+  {
+    "synsetId": "doll",
+    "name": "doll, house doll"
+  },
+  {
+    "synsetId": "plant",
+    "name": "plant, house plant"
+  },
+  {
+    "synsetId": "fan",
+    "name": "fan, house fan"
+  },
+  {
+    "synsetId": "suitcase",
+    "name": "suitcase, house suitcase"
+  },
+  {
+    "synsetId": "hair_dryer",
+    "name": "hair_dryer, house hair_dryer"
+  },
+  {
+    "synsetId": "battery",
+    "name": "battery, house battery"
+  },
+  {
+    "synsetId": "book",
+    "name": "book, house book"
+  },
+  {
+    "synsetId": "bottle",
+    "name": "bottle, house bottle"
+  },
+  {
+    "synsetId": "bowl",
+    "name": "bowl, house bowl"
+  },
+  {
+    "synsetId": "boxed_beverage",
+    "name": "boxed_beverage, house boxed_beverage"
+  },
+  {
+    "synsetId": "brush",
+    "name": "brush, house brush"
+  },
+  {
+    "synsetId": "candle",
+    "name": "candle, house candle"
+  },
+  {
+    "synsetId": "candy",
+    "name": "candy, house candy"
+  },
+  {
+    "synsetId": "canned_beverage",
+    "name": "canned_beverage, house canned_beverage"
+  },
+  {
+    "synsetId": "chocolate",
+    "name": "chocolate, house chocolate"
+  },
+  {
+    "synsetId": "cup",
+    "name": "cup, house cup"
+  },
+  {
+    "synsetId": "dish",
+    "name": "dish, house dish"
+  },
+  {
+    "synsetId": "dustbin",
+    "name": "dustbin, house dustbin"
+  },
+  {
+    "synsetId": "facial_cream",
+    "name": "facial_cream, house facial_cream"
+  },
+  {
+    "synsetId": "fire_extinguisher",
+    "name": "fire_extinguisher, house fire_extinguisher"
+  },
+  {
+    "synsetId": "flash_light",
+    "name": "flash_light, house flash_light"
+  },
+  {
+    "synsetId": "fork",
+    "name": "fork, house fork"
+  },
+  {
+    "synsetId": "glasses",
+    "name": "glasses, house glasses"
+  },
+  {
+    "synsetId": "glasses_case",
+    "name": "glasses_case, house glasses_case"
+  },
+  {
+    "synsetId": "hairpin",
+    "name": "hairpin, house hairpin"
+  },
+  {
+    "synsetId": "hammer",
+    "name": "hammer, house hammer"
+  },
+  {
+    "synsetId": "hand_cream",
+    "name": "hand_cream, house hand_cream"
+  },
+  {
+    "synsetId": "house",
+    "name": "house, house house"
+  },
+  {
+    "synsetId": "kennel",
+    "name": "kennel, house kennel"
+  },
+  {
+    "synsetId": "kettle",
+    "name": "kettle, house kettle"
+  },
+  {
+    "synsetId": "keyboard",
+    "name": "keyboard, house keyboard"
+  },
+  {
+    "synsetId": "knife",
+    "name": "knife, house knife"
+  },
+  {
+    "synsetId": "laptop",
+    "name": "laptop, house laptop"
+  },
+  {
+    "synsetId": "lipstick",
+    "name": "lipstick, house lipstick"
+  },
+  {
+    "synsetId": "medicine_bottle",
+    "name": "medicine_bottle, house medicine_bottle"
+  },
+  {
+    "synsetId": "microwaveoven",
+    "name": "microwaveoven, house microwaveoven"
+  },
+  {
+    "synsetId": "monitor",
+    "name": "monitor, house monitor"
+  },
+  {
+    "synsetId": "mouse",
+    "name": "mouse, house mouse"
+  },
+  {
+    "synsetId": "ornaments",
+    "name": "ornaments, house ornaments"
+  },
+  {
+    "synsetId": "pan",
+    "name": "pan, house pan"
+  },
+  {
+    "synsetId": "pen",
+    "name": "pen, house pen"
+  },
+  {
+    "synsetId": "plug",
+    "name": "plug, house plug"
+  },
+  {
+    "synsetId": "popcorn",
+    "name": "popcorn, house popcorn"
+  },
+  {
+    "synsetId": "potato_chips",
+    "name": "potato_chips, house potato_chips"
+  },
+  {
+    "synsetId": "power_strip",
+    "name": "power_strip, house power_strip"
+  },
+  {
+    "synsetId": "projector",
+    "name": "projector, house projector"
+  },
+  {
+    "synsetId": "puff",
+    "name": "puff, house puff"
+  },
+  {
+    "synsetId": "razor",
+    "name": "razor, house razor"
+  },
+  {
+    "synsetId": "red_wine_glass",
+    "name": "red_wine_glass, house red_wine_glass"
+  },
+  {
+    "synsetId": "remote_control",
+    "name": "remote_control, house remote_control"
+  },
+  {
+    "synsetId": "ricecooker",
+    "name": "ricecooker, house ricecooker"
+  },
+  {
+    "synsetId": "scissor",
+    "name": "scissor, house scissor"
+  },
+  {
+    "synsetId": "shampoo",
+    "name": "shampoo, house shampoo"
+  },
+  {
+    "synsetId": "soap",
+    "name": "soap, house soap"
+  },
+  {
+    "synsetId": "speaker",
+    "name": "speaker, house speaker"
+  },
+  {
+    "synsetId": "tape_measure",
+    "name": "tape_measure, house tape_measure"
+  },
+  {
+    "synsetId": "teapot",
+    "name": "teapot, house teapot"
+  },
+  {
+    "synsetId": "thermos",
+    "name": "thermos, house thermos"
+  },
+  {
+    "synsetId": "timer",
+    "name": "timer, house timer"
+  },
+  {
+    "synsetId": "tooth_brush",
+    "name": "tooth_brush, house tooth_brush"
+  },
+  {
+    "synsetId": "tooth_paste",
+    "name": "tooth_paste, house tooth_paste"
+  },
+  {
+    "synsetId": "umbrella",
+    "name": "umbrella, house umbrella"
+  },
+  {
+    "synsetId": "watch",
+    "name": "watch, house watch"
+  }
+]
