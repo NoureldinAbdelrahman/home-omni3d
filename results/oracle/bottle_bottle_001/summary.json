@@ -1,0 +1,10 @@
+{
+  "object": "bottle_bottle_001",
+  "psnr": 12.755682712833108,
+  "ssim": 0.8029529750347137,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 203.3
+}

@@ -1,0 +1,10 @@
+{
+  "object": "bed_bed_001",
+  "psnr": 24.960917124958264,
+  "ssim": 0.911627784371376,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 199.1
+}

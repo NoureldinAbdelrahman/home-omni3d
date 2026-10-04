@@ -1,0 +1,10 @@
+{
+  "object": "battery_battery_002",
+  "psnr": 26.021580619697996,
+  "ssim": 0.8975820541381836,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 193.8
+}
