@@ -1,7 +1,0 @@
-{
-  "category": "medicine_bottle",
-  "object": "medicine_bottle_006",
-  "iou_t0.3": 0.5993771895679253,
-  "n_pred_voxels": 11251,
-  "n_gt_voxels": 9293
-}
