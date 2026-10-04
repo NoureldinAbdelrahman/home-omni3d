@@ -29,8 +29,8 @@ from src.losses.chamfer_distance import ChamferLoss, chamfer_distance, compute_f
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train Multi-View 3D Reconstruction Models")
-    parser.add_argument("--model", type=str, default="pix2vox++", choices=["pix2vox", "pix2vox++", "pix2vox_plus", "atlasnet"])
-    parser.add_argument("--num_views", type=int, default=3, help="Number of RGB input viewpoints (1, 3, 5)")
+    parser.add_argument("--model", type=str, default="pix2vox++", choices=["pix2vox", "pix2vox++", "pix2vox_plus", "pix2vox_pp", "atlasnet"])
+    parser.add_argument("--num_views", "--num_view", dest="num_views", type=int, default=3, help="Number of RGB input viewpoints (1, 3, 5)")
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--lr_encoder", type=float, default=1e-4)

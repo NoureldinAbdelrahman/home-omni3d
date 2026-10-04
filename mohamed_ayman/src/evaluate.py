@@ -31,9 +31,9 @@ from src.metrics.evaluator import ReconstructionEvaluator
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Evaluate 3D Reconstruction Models")
-    parser.add_argument("--model", type=str, default="pix2vox++", choices=["pix2vox", "pix2vox++", "pix2vox_plus", "atlasnet", "point_e"])
+    parser.add_argument("--model", type=str, default="pix2vox++", choices=["pix2vox", "pix2vox++", "pix2vox_plus", "pix2vox_pp", "atlasnet", "point_e"])
     parser.add_argument("--weights", type=str, default=None, help="Path to checkpoint .pth")
-    parser.add_argument("--num_views", type=int, default=3)
+    parser.add_argument("--num_views", "--num_view", dest="num_views", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--output_dir", type=str, default="outputs/evaluations")
