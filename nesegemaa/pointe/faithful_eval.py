@@ -37,7 +37,7 @@ import numpy as np
 import torch
 from PIL import Image
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent  # repo root (script lives in nesegemaa/pointe/)
 ATL = ROOT / "AtlasNet"
 sys.path.insert(0, str(ATL))
 sys.path.insert(0, str(ROOT))
@@ -79,6 +79,18 @@ def unit_ball(pts):
     return ((pts - c) / r).astype(np.float32)
 
 
+def denoise_cloud(pts, nb_neighbors=20, std_ratio=2.0):
+    """Statistical outlier removal (P4 ablation). Returns filtered (M,3)."""
+    import open3d as o3d
+    pcd = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(np.asarray(pts)))
+    clean, _ = pcd.remove_statistical_outlier(nb_neighbors=nb_neighbors,
+                                              std_ratio=std_ratio)
+    out = np.asarray(clean.points, dtype=np.float32)
+    if len(out) < 100:
+        raise RuntimeError(f"denoise removed too much: {len(out)} points left")
+    return out
+
+
 def sha256_file(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -91,6 +103,9 @@ def weight_provenance(cache_dir):
     """URLs + SHAs of every .pt in the point-e/CLIP cache. No silent anything."""
     from point_e.models.download import MODEL_NAMES
     rows = []
+    suffix = f"_{args.tag}" if args.tag else ""
+    trip = args.outdir / f"triplets{suffix}"
+    trip.mkdir(parents=True, exist_ok=True)
     for pt in sorted(Path(cache_dir).rglob("*.pt")):
         rows.append({"file": pt.name, "bytes": pt.stat().st_size,
                      "sha256": sha256_file(pt)})
@@ -118,6 +133,16 @@ def main():
                     help="'cat:obj' pairs; default: the 5 MS1 panel objects")
     ap.add_argument("--view", type=int, default=0,
                     help="render index to condition on (prepared layout: 00..23)")
+    ap.add_argument("--views", default=None,
+                    help="comma-separated render indices for multi-view fusion "
+                         "(overrides --view; needs --fusion)")
+    ap.add_argument("--fusion", choices=["first", "best", "median"], default="first",
+                    help="first=use views[0] (default, identical to --view); "
+                         "best=per-object min-chamfer view; "
+                         "median=coordinate-wise median cloud across views")
+    ap.add_argument("--denoise", action="store_true",
+                    help="statistical outlier removal (open3d, nb=20, std=2.0) "
+                         "before scoring; ablated on/off in P4")
     ap.add_argument("--preprocessing", choices=["raw", "masked", "crop"], default="masked")
     ap.add_argument("--guidance", type=float, default=3.0)
     ap.add_argument("--points", type=int, choices=[1024, 4096], default=4096)
@@ -179,36 +204,65 @@ def main():
     assert pairs, "no test objects selected"
 
     rows = []
+    views = [int(v) for v in (args.views.split(",") if args.views else [args.view])]
+    assert views, "no views selected"
+    if args.fusion == "first":
+        views = views[:1]
     for cat, obj in pairs:
-        img_path = (ATL / "dataset" / "data" / "ShapeNetV1Renderings"
-                    / cat / obj / "rendering" / f"{args.view:02d}.png")
-        if not img_path.is_file():
-            raise RuntimeError(f"render missing: {img_path}")
-        pil = load_image(img_path, args.preprocessing)
         gt_raw = np.load(ATL / "dataset" / "data" / "ShapeNetV1PointCloud"
                          / cat / f"{obj}.npy").astype(np.float64)[:, :3]
         gt = unit_ball(gt_raw)
         for seed in seeds:
-            torch.manual_seed(seed)
-            np.random.seed(seed)
-            t0 = time.time()
-            samples = None
-            for x in sampler.sample_batch_progressive(
-                    batch_size=1, model_kwargs=dict(images=[pil])):
-                samples = x
-            pc = sampler.output_to_point_clouds(samples)[0]
-            pred = unit_ball(pc.coords)
-            chamfer, fscore = chamfer_and_fscore(pred, gt, tau=TAU)
-            dt = time.time() - t0
+            per_view = []
+            for v in views:
+                img_path = (ATL / "dataset" / "data" / "ShapeNetV1Renderings"
+                            / cat / obj / "rendering" / f"{v:02d}.png")
+                if not img_path.is_file():
+                    raise RuntimeError(f"render missing: {img_path}")
+                pil = load_image(img_path, args.preprocessing)
+                torch.manual_seed(seed)
+                np.random.seed(seed)
+                t0 = time.time()
+                samples = None
+                for x in sampler.sample_batch_progressive(
+                        batch_size=1, model_kwargs=dict(images=[pil])):
+                    samples = x
+                pc = sampler.output_to_point_clouds(samples)[0]
+                pred = unit_ball(pc.coords)
+                if args.denoise:
+                    pred = denoise_cloud(pred)
+                dt = time.time() - t0
+                ch, fs = chamfer_and_fscore(pred, gt, tau_sq=TAU_SQ)
+                per_view.append((v, pred, ch, fs, dt))
+            if args.fusion == "best":
+                v, pred, ch, fs, dt = min(per_view, key=lambda t: t[2])
+                fused = f"best-of-{len(views)}"
+            elif args.fusion == "median" and len(per_view) > 1:
+                stacked = np.stack([p for _, p, _, _, _ in per_view], axis=0)
+                pred = np.median(stacked, axis=0).astype(np.float32)
+                ch, fs = chamfer_and_fscore(pred, gt, tau_sq=TAU_SQ)
+                dt = sum(t[4] for t in per_view)
+                v, fused = -1, f"median-of-{len(views)}"
+            else:
+                v, pred, ch, fs, dt = per_view[0]
+                fused = "first" if len(per_view) == 1 else "first"
+                v = per_view[0][0]
             rows.append({
-                "object": f"{cat}_{obj}", "category": cat, "view": args.view,
+                "object": f"{cat}_{obj}", "category": cat, "view": v,
+                "fusion": fused,
                 "preprocessing": args.preprocessing, "guidance": args.guidance,
                 "points": args.points, "seed": seed,
-                "chamfer": chamfer, "fscore": round(fscore, 6),
+                "denoise": bool(args.denoise),
+                "chamfer": ch, "fscore": round(fs, 6),
                 "seconds": round(dt, 1),
             })
-            print(f"  {cat:16s} {obj:22s} seed={seed} chamfer={chamfer:.4f} "
-                  f"fscore={fscore:.4f} ({dt:.0f}s)", flush=True)
+            td = trip / f"{cat}_{obj}"
+            td.mkdir(parents=True, exist_ok=True)
+            np.save(td / "pred.npy", np.asarray(pred, dtype=np.float32))
+            np.save(td / "gt.npy", np.asarray(gt, dtype=np.float32))
+            pil.save(td / "input.png")
+            print(f"  {cat:16s} {obj:22s} seed={seed} {fused:12s} chamfer={ch:.4f} "
+                  f"fscore={fs:.4f} ({dt:.0f}s)", flush=True)
 
     # aggregate: micro over objects, macro over categories, noise flags
     cats = {}
@@ -220,8 +274,10 @@ def main():
     noise = sorted(c for c, _, _, n in cat_rows if n < 3)
     summary = {
         "method": "Point-E faithful (base40M-imagevec -> upsample)",
-        "config": {"view": args.view, "preprocessing": args.preprocessing,
+        "config": {"views": views, "fusion": args.fusion,
+                   "preprocessing": args.preprocessing,
                    "guidance": args.guidance, "points": args.points, "seeds": seeds,
+                   "denoise": bool(args.denoise),
                    "tau_squared": TAU_SQ, "tau_euclid_approx": round(TAU_EUCLID_APPROX, 4),
                    "normalization": "subtract mean, divide by max radius (unit sphere)"},
         "weights": prov,
