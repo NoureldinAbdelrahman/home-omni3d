@@ -1,0 +1,29 @@
+{
+  "best_chamfer": 0.045816110654009715,
+  "best_fscore": 0.06494737002584669,
+  "final_chamfer": 0.07533357126845254,
+  "final_fscore": 0.0524473258604606,
+  "n_epochs": 50,
+  "best_chamfer_epoch": 12,
+  "best_fscore_epoch": 8,
+  "weights": {
+    "encoder": {
+      "source": "imagenet",
+      "provenance_log": "[resnet] source=model_zoo:https://download.pytorch.org/models/resnet18-5c106cde.pth sha256=5c106cde386e87d4033832f2996f5493238eda96ccf559d1d62760c4de0613f8 matched=100/100 (fc head re-init to 1024 outputs)"
+    },
+    "decoder": {
+      "source": "shapenet-warmstart",
+      "file": "official/trained_models/atlasnet_singleview_25_squares/network.pth",
+      "sha256": "f7f3c4172a3b6446579a47abd9a36ad7a3472e8593ce037a41c0db4b5104bfb4",
+      "transplant": "Network Decoder weights loaded from  /media/susan/429428ec-710b-483c-9aaa-d0c4b6968baa/home-omni3d/downloads/official/trained_models/atlasnet_singleview_25_squares/network.pth (750/750 tensors)!",
+      "mirror": "https://cloud.enpc.fr/s/z9TxRcxGgeYGDJ4 (official README; gdrive dead)"
+    }
+  },
+  "split": "splits.json test lists (70/15/15, seed 0)",
+  "tau_squared": 0.001,
+  "batch_size": 8,
+  "nb_primitives": 25,
+  "template": "SQUARE",
+  "n_views": 1,
+  "views_pool": "none"
+}
