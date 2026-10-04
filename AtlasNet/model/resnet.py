@@ -202,7 +202,11 @@ def _load_pretrained(model, url_key):
         source = "torchvision:ResNet18_Weights.DEFAULT"
         sha = "torchvision-managed-cache"
     own = model.state_dict()
-    expected = [k for k in own if not k.startswith("fc.")]
+    # num_batches_tracked are step counters, not learned weights; 2017-era
+    # checkpoints predate them, so they are excluded from the assertion.
+    # Everything else (conv/bn weights, biases, running stats) must match.
+    expected = [k for k in own
+                if not k.startswith("fc.") and not k.endswith("num_batches_tracked")]
     matched = {k: v for k, v in state.items()
                if k in own and not k.startswith("fc.") and own[k].shape == v.shape}
     missing = [k for k in expected if k not in matched]
