@@ -1,0 +1,10 @@
+{
+  "object": "candle_candle_002",
+  "psnr": 27.730234139265097,
+  "ssim": 0.8805113881826401,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 203.5
+}

@@ -1,0 +1,10 @@
+{
+  "object": "clock_clock_001",
+  "psnr": 24.169796468825016,
+  "ssim": 0.8472271114587784,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 149.1
+}

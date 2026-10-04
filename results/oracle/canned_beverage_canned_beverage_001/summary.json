@@ -1,0 +1,10 @@
+{
+  "object": "canned_beverage_canned_beverage_001",
+  "psnr": 25.34838663101562,
+  "ssim": 0.9145679175853729,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 200.1
+}

@@ -1,0 +1,10 @@
+{
+  "object": "book_book_002",
+  "psnr": 11.573930909996509,
+  "ssim": 0.6635198444128036,
+  "n_views": 24,
+  "n_test_views": 4,
+  "res": 128,
+  "iters": 2500,
+  "seconds": 104.8
+}
