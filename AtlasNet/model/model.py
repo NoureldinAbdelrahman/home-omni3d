@@ -18,9 +18,14 @@ class EncoderDecoder(nn.Module):
     def __init__(self, opt):
         super(EncoderDecoder, self).__init__()
         self.svr = bool(opt.SVR)
+        self.multiview = self.svr and getattr(opt, "views_pool", "none") != "none"
         if self.svr:
-            # ImageNet-pretrained encoder (fc head rebuilt to bottleneck_size).
-            self.encoder = resnet.resnet18(pretrained=True, num_classes=opt.bottleneck_size)
+            if self.multiview:
+                from model.multiview import MultiViewEncoder
+                self.encoder = MultiViewEncoder(opt, pool=opt.views_pool)
+            else:
+                # ImageNet-pretrained encoder (fc head rebuilt to bottleneck_size).
+                self.encoder = resnet.resnet18(pretrained=True, num_classes=opt.bottleneck_size)
             # Registered as buffers so training, evaluation and generated
             # meshes all apply the same normalization, and it travels inside
             # the saved checkpoint.
@@ -42,8 +47,17 @@ class EncoderDecoder(nn.Module):
         return (x - self.img_mean) / self.img_std
 
     def forward(self, x, train=True):
-        if self.svr and x.dim() == 4:  # single-view images [B,3,H,W]
-            x = self._normalize_image(x)
+        if self.svr:
+            if x.dim() == 5:
+                # Multi-view input [B, K, 3, H, W]: normalize all views, the
+                # (shared) multi-view encoder pools them to one code.
+                assert self.multiview, \
+                    "5D multi-view input needs --views_pool {max,attn}"
+                B, K = x.shape[:2]
+                x = self._normalize_image(x.reshape(B * K, *x.shape[2:])).reshape(
+                    B, K, *x.shape[2:])
+            else:
+                x = self._normalize_image(x)
         return self.decoder(self.encoder(x), train=train)
 
     def generate_mesh(self, x):

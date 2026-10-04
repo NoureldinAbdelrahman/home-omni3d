@@ -211,16 +211,38 @@ class ShapeNet(data.Dataset):
 
         # Image processing
         if self.opt.SVR:
-            if self.train:
-                N = np.random.randint(1, self.num_image_per_object)
-                im = Image.open(join(return_dict['image_path'], ShapeNet.int2str(N) + ".png"))
-                im = self.dataAugmentation(im)  # random crop
+            K = max(1, int(getattr(self.opt, "n_views", 1)))
+            if K == 1:
+                # Original single-view path, byte-identical behavior.
+                if self.train:
+                    N = np.random.randint(1, self.num_image_per_object)
+                    im = Image.open(join(return_dict['image_path'], ShapeNet.int2str(N) + ".png"))
+                    im = self.dataAugmentation(im)  # random crop
+                else:
+                    im = Image.open(join(return_dict['image_path'], ShapeNet.int2str(self.idx_image_val) + ".png"))
+                    im = self.validating(im)  # center crop
+                im = self.transforms(im)  # scale
+                im = im[:3, :, :]
+                return_dict['image'] = im
             else:
-                im = Image.open(join(return_dict['image_path'], ShapeNet.int2str(self.idx_image_val) + ".png"))
-                im = self.validating(im)  # center crop
-            im = self.transforms(im)  # scale
-            im = im[:3, :, :]
-            return_dict['image'] = im
+                # Multi-view: K distinct views stacked as [K, 3, H, W].
+                # Train draws K distinct random views; eval uses K fixed
+                # evenly-spaced views starting at idx_image_val (deterministic,
+                # recorded via n_views in options).
+                if self.train:
+                    idxs = np.random.choice(self.num_image_per_object, size=K, replace=False)
+                    ims = [self.dataAugmentation(Image.open(
+                        join(return_dict['image_path'], ShapeNet.int2str(int(N)) + ".png")))
+                        for N in idxs]
+                else:
+                    step = self.num_image_per_object // K
+                    idxs = [(self.idx_image_val + i * step) % self.num_image_per_object
+                            for i in range(K)]
+                    ims = [self.validating(Image.open(
+                        join(return_dict['image_path'], ShapeNet.int2str(int(N)) + ".png")))
+                        for N in idxs]
+                ims = [self.transforms(im)[:3, :, :] for im in ims]
+                return_dict['image'] = torch.stack(ims, dim=0)
         return return_dict
 
     def __len__(self):
