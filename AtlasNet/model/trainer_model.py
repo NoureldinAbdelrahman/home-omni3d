@@ -46,9 +46,27 @@ class TrainerModel(object):
             opt.SVR = False
             network = EncoderDecoder(opt)
             network = nn.DataParallel(network, device_ids=opt.multi_gpu)
-            network.module.load_state_dict(torch.load(opt.reload_decoder_path, map_location='cuda:0', weights_only=False))
+            full = torch.load(opt.reload_decoder_path, map_location='cuda:0', weights_only=False)
+            # Decoder-only transplant: the checkpoint's encoder (a resnet for
+            # single-view checkpoints, a PointNet for autoencoder ones) need
+            # not match ours — a strict full load would crash on it. Only
+            # decoder.* tensors are taken, and anything less than the complete
+            # decoder raises instead of silently partially loading (rule 4).
+            own_sd = network.module.state_dict()
+            dec = {k: v for k, v in full.items() if k.startswith("decoder.")}
+            own_dec = [k for k in own_sd if k.startswith("decoder.")]
+            missing = [k for k in own_dec if k not in dec or dec[k].shape != own_sd[k].shape]
+            if not dec:
+                raise RuntimeError(
+                    f"[reload-decoder] no decoder.* tensors in {opt.reload_decoder_path}")
+            if missing:
+                raise RuntimeError(
+                    f"[reload-decoder] {len(missing)} decoder tensors missing/mismatched "
+                    f"(showing up to 8): {missing[:8]}")
+            network.module.load_state_dict(dec, strict=False)
             self.network.module.decoder = network.module.decoder
-            yellow_print(f"Network Decoder weights loaded from  {self.opt.reload_decoder_path}!")
+            yellow_print(f"Network Decoder weights loaded from  {self.opt.reload_decoder_path} "
+                         f"({len(dec)}/{len(own_dec)} tensors)!")
 
         else:
             yellow_print("No network weights to reload!")
