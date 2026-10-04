@@ -151,15 +151,15 @@ class TrainerAbstract(object):
         if self.epoch == self.opt.lr_decay_1:
             self.opt.lrate = self.opt.lrate / 10.0
             print(f"First learning rate decay {self.opt.lrate}")
-            self.optimizer = optim.Adam(self.network.parameters(), lr=self.opt.lrate)
+            self.optimizer = optim.Adam(self._trainable_params(), lr=self.opt.lrate)
         if self.epoch == self.opt.lr_decay_2:
             self.opt.lrate = self.opt.lrate / 10.0
             print(f"Second learning rate decay {self.opt.lrate}")
-            self.optimizer = optim.Adam(self.network.parameters(), lr=self.opt.lrate)
+            self.optimizer = optim.Adam(self._trainable_params(), lr=self.opt.lrate)
         if self.epoch == self.opt.lr_decay_3:
             self.opt.lrate = self.opt.lrate / 10.0
             print(f"Third learning rate decay {self.opt.lrate}")
-            self.optimizer = optim.Adam(self.network.parameters(), lr=self.opt.lrate)
+            self.optimizer = optim.Adam(self._trainable_params(), lr=self.opt.lrate)
 
     def increment_epoch(self):
         self.epoch = self.epoch + 1

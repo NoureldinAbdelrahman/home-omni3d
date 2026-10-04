@@ -50,6 +50,24 @@ class TrainerLoss(object):
             self.data.loss_fscore, _, _ = fscore(dist1, dist2)
             self.data.loss_fscore = self.data.loss_fscore.mean()
 
+    def patch_smoothness_loss(self, k=4):
+        """Mean squared distance to the k nearest intra-patch neighbors.
+
+        Penalizes stretched/spiky patches (a failure mode plain Chamfer
+        forgives, since spikes contribute little to the mean) without needing
+        GT normals. Works for any primitive count / template / point count.
+        prims arrive as [B, prim, 3, P] (see fuse_primitives).
+        """
+        prims = self.data.pointsReconstructed_prims.transpose(2, 3).contiguous()
+        B, M, P, _ = prims.shape
+        d = torch.cdist(prims, prims)  # [B, M, P, P]
+        d.diagonal(dim1=-2, dim2=-1).fill_(float("inf"))
+        nn_idx = d.topk(min(k, P - 1), dim=-1, largest=False).indices
+        kk = nn_idx.shape[-1]
+        neigh = torch.gather(prims.unsqueeze(-2).expand(B, M, P, P, 3),
+                             dim=-2, index=nn_idx.unsqueeze(-1).expand(B, M, P, kk, 3))
+        return ((prims.unsqueeze(-1) - neigh).pow(2).sum(-1)).mean()
+
     def metro(self):
         """
         Compute the metro distance on a randomly selected test files.

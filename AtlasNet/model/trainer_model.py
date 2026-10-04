@@ -71,6 +71,13 @@ class TrainerModel(object):
         else:
             yellow_print("No network weights to reload!")
 
+    def _trainable_params(self):
+        """Parameters the optimizer may touch (honors --freeze_encoder)."""
+        if getattr(self.opt, "freeze_encoder", False):
+            return [p for n, p in self.network.named_parameters()
+                    if ".encoder." not in n]
+        return self.network.parameters()
+
     def build_optimizer(self):
         """
         Create optimizer
@@ -80,7 +87,11 @@ class TrainerModel(object):
             yellow_print("only train the Encoder")
             self.optimizer = optim.Adam(self.network.module.encoder.parameters(), lr=self.opt.lrate)
         else:
-            self.optimizer = optim.Adam(self.network.module.parameters(), lr=self.opt.lrate)
+            if getattr(self.opt, "freeze_encoder", False):
+                for p in self.network.module.encoder.parameters():
+                    p.requires_grad_(False)
+                yellow_print("frozen image encoder; training decoder only")
+            self.optimizer = optim.Adam(self._trainable_params(), lr=self.opt.lrate)
 
         if self.opt.reload_optimizer_path != "":
             try:

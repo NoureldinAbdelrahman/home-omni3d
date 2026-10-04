@@ -33,6 +33,14 @@ class TrainerIteration(object):
         self.fuse_primitives()
 
         self.loss_model()  # batch
+        # Optional edge regularization (train only, so validation/test numbers
+        # stay pure-Chamfer comparable across runs).
+        if self.flags.train and getattr(self.opt, "loss_reg", "none") == "edge":
+            reg_w = float(getattr(self.opt, "loss_reg_w", 0.0) or 0.0)
+            if reg_w > 0:
+                reg = self.patch_smoothness_loss()
+                self.data.loss = self.data.loss + reg_w * reg
+                self.log.update("loss_reg", reg.item())
         self.visualize()
 
     def train_iteration(self):
