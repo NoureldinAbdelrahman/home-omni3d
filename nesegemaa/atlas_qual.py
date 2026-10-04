@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """AtlasNet-SVR qualitative + full-split scoring driver (nesegemaa track).
 
-Supersedes the frozen root ``make_qual_atlasnet.py`` (left untouched): same
-I/O contract, plus what the frozen script cannot do:
+Supersedes the removed root ``make_qual_atlasnet.py`` (recoverable from tag
+``milestone-1``): same I/O contract, plus what the old script cannot do:
 
 - ``--weights {best,final}`` (default: ``best``) — loads ``best-model.pth``
   (best validation Chamfer, see ``AtlasNet/training/trainer_abstract.py``).

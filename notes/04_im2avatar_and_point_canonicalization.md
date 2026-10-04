@@ -35,7 +35,8 @@ fixed `K x N` 2D atlas that is deformed into 3D by the latent code. The
 
 Problems observed in practice (and the reason our score is low):
 1. In eval mode, AtlasNet uses **regular points** on each patch — that's what our
-   `make_qual_atlasnet.py` samples. It always *looks* like a nice surface, which can
+   `nesegemaa/atlas_qual.py` samples (it supersedes the removed root
+   `make_qual_atlasnet.py`). It always *looks* like a nice surface, which can
    hide whether the underlying latent code is meaningful.
 2. `--nb_primitives` is ours to choose. K=25 with 100 pts/primitive is
     "full shape" but is easy to underfit with MLPs; the original paper uses

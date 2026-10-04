@@ -12,7 +12,9 @@
 
 ## Background
 
-Our `multiview_nerf_oracle.py` is a **pure-PyTorch** reimplementation of NeRF:
+Our oracle implementation lives on the `ashry` branch
+(`multiview_nerf_oracle.py`; pre-split snapshot in tag `milestone-1`) and is a
+**pure-PyTorch** reimplementation of NeRF:
 - a small MLP `F(x, d) -> (σ, rgb)` per object,
 - volume-rendered from **20 training views**, evaluated on **4 held-out views**,
 - PE L=10 for positions, L=4 for directions (higher than most papers use, fine).

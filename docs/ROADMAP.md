@@ -1,5 +1,12 @@
 # ROADMAP — house-omni3d (DMET 901: 3D Object Generation from 2D Images)
 
+> **Branch scope note (`nesegemaa` only — the text below is the shared team
+> base):** this branch owns **AtlasNet + Point-E**. Pix2Vox code/results live
+> on `mohamed-ayman`, the NeRF oracle on `ashry`; the full pre-split snapshot
+> is tag `milestone-1`. AtlasNet qualitative evals run via
+> `nesegemaa/atlas_qual.py` (root `make_qual_atlasnet.py` was removed; see the
+> tag if you need it). `results/comparison/` here is append-only.
+
 This document is the **single source of truth** for an agent working on the lab PC.
 It explains the pipeline, where every artifact belongs, and exactly where to put
 results. Read it fully before touching anything.

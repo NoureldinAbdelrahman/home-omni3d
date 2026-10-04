@@ -21,7 +21,9 @@
 ### Why this matters for our numbers
 
 1. **We bin the target cloud to a unit sphere**. Published numbers often use
-  a *bounding-box- or unit-ball-normalized* target. Our `make_qual_atlasnet.py`
+  a *bounding-box- or unit-ball-normalized* target. Our AtlasNet scorer
+  (`nesegemaa/atlas_qual.py`; previously root `make_qual_atlasnet.py`, since
+  removed — see tag `milestone-1`)
   uses `unitL2Ball`, matching AtlasNet's training normalization — so the comparison
   is internally consistent, but not directly comparable to published numbers unless
   they use the same normalization.
