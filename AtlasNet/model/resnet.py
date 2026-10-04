@@ -1,5 +1,6 @@
 import torch.nn as nn
 import math
+import hashlib
 import torch.utils.model_zoo as model_zoo
 
 
@@ -154,28 +155,69 @@ class ResNet(nn.Module):
         return x
 
 
+def _cached_hub_path(url):
+    """Local path of a torch.hub-cached download (raises if absent)."""
+    from torch.hub import get_dir
+    from os.path import join, basename
+    from urllib.parse import urlparse
+    return join(get_dir(), "checkpoints", basename(urlparse(url).path))
+
+
+def _sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 def _load_pretrained(model, url_key):
     """Load ImageNet weights into a torchvision-copied ResNet.
 
     Tries the original download URL, then falls back to torchvision. The final
-    ``fc`` head is skipped on purpose (it is rebuilt to ``num_classes``), and any
-    key whose shape differs is skipped rather than crashing the load.
+    ``fc`` head is skipped on purpose (it is rebuilt to ``num_classes``).
+
+    Provenance is asserted, never silent: every expected (non-fc) tensor must
+    match by name AND shape or this raises. The checkpoint SHA256 and the
+    matched/total counts are printed for the training log (the report builder
+    parses this line into the run summary).
     """
+    url = model_urls[url_key]
     try:
-        state = model_zoo.load_url(model_urls[url_key])
+        state = model_zoo.load_url(url)
+        source = "model_zoo:" + url
+        try:
+            sha = _sha256_file(_cached_hub_path(url))
+        except Exception:
+            sha = "unavailable(cache-path-lookup-failed)"
     except Exception as exc:  # network / retired URL -> torchvision fallback
         print(f"[resnet] model_zoo load failed ({exc}); using torchvision weights")
         import torchvision
         weights = {
             'resnet18': torchvision.models.ResNet18_Weights.DEFAULT,
         }.get(url_key)
+        if weights is None:
+            raise RuntimeError(f"[resnet] no torchvision fallback for {url_key}")
         state = torchvision.models.resnet18(weights=weights).state_dict()
+        source = "torchvision:ResNet18_Weights.DEFAULT"
+        sha = "torchvision-managed-cache"
     own = model.state_dict()
+    expected = [k for k in own if not k.startswith("fc.")]
     matched = {k: v for k, v in state.items()
                if k in own and not k.startswith("fc.") and own[k].shape == v.shape}
+    missing = [k for k in expected if k not in matched]
+    if not matched:
+        raise RuntimeError(
+            f"[resnet] ImageNet load produced ZERO matched tensors from {source}; "
+            "refusing to continue silently. Check network / checkpoint compatibility.")
+    if missing:
+        raise RuntimeError(
+            f"[resnet] {len(missing)} expected ImageNet tensors unmatched "
+            f"(showing up to 8): {missing[:8]}. Source: {source}")
     model.load_state_dict(matched, strict=False)
-    print(f"[resnet] loaded {len(matched)} ImageNet tensors (fc head re-init to "
-          f"{model.fc.out_features} outputs)")
+    print(f"[resnet] source={source} sha256={sha} "
+          f"matched={len(matched)}/{len(expected)} "
+          f"(fc head re-init to {model.fc.out_features} outputs)")
     return model
 
 

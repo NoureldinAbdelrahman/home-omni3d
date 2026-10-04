@@ -25,6 +25,14 @@ class TrainerAbstract(object):
         self.get_log_paths()
         self.init_meters()
         self.reset_epoch()
+        # Best-epoch deployment: upstream only keeps the final network.pth,
+        # so a diverging tail (MS1: final val Chamfer 100-1000x worse than best)
+        # would otherwise destroy the deployable weights. Primary key is the
+        # validation Chamfer (the training loss); best F-score is tracked for
+        # the report. Resume starts a fresh best-tracking segment (documented).
+        self.best_val_chamfer = float("inf")
+        self.best_val_epoch = -1
+        self.best_val_fscore = -1.0
         if not opt.demo:
             my_utils.print_arg(self.opt)
 
@@ -50,6 +58,7 @@ class TrainerAbstract(object):
         self.opt.log_path = join(self.opt.dir_name, "log.txt")
         self.opt.optimizer_path = join(self.opt.dir_name, 'optimizer.pth')
         self.opt.model_path = join(self.opt.dir_name, "network.pth")
+        self.opt.best_model_path = join(self.opt.dir_name, "best-model.pth")
         self.opt.reload_optimizer_path = ""
 
         # # If a network is already created in the directory
@@ -89,6 +98,20 @@ class TrainerAbstract(object):
             save_dict = dict(self.opt.__dict__)
             save_dict.pop("device")
             f.write(json.dumps(save_dict))
+
+        # Best-epoch snapshot (see __init__ note). Runs every epoch from the
+        # validation meters already in log_table; cheap (one extra save only
+        # when the best improves).
+        chamfer = log_table.get("loss_val")
+        if chamfer is not None and float(chamfer) < self.best_val_chamfer:
+            self.best_val_chamfer = float(chamfer)
+            self.best_val_epoch = self.epoch + 1
+            torch.save(self.network.state_dict(), self.opt.best_model_path)
+            print(f"new best val chamfer {self.best_val_chamfer:.6f} @ epoch "
+                  f"{self.best_val_epoch} -> {self.opt.best_model_path}")
+        fscore = log_table.get("fscore")
+        if fscore is not None and float(fscore) > self.best_val_fscore:
+            self.best_val_fscore = float(fscore)
 
     def print_iteration_stats(self, loss):
         """
