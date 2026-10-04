@@ -24,6 +24,8 @@ def parser():
     parser.add_argument('--nepoch', type=int, default=150, help='number of epochs to train for')
     parser.add_argument('--start_epoch', type=int, default=0, help='number of epochs to train for')
     parser.add_argument("--random_seed", action="store_true", help="Fix random seed or not")
+    parser.add_argument("--seed", type=int, default=-1,
+                        help="manual seed override for torch/numpy/random (-1 = default seeded-1 behavior)")
     parser.add_argument('--lrate', type=float, default=0.001, help='learning rate')
     parser.add_argument('--lr_decay_1', type=int, default=120, help='learning rate decay 1')
     parser.add_argument('--lr_decay_2', type=int, default=140, help='learning rate decay 2')

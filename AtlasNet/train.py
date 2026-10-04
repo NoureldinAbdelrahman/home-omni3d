@@ -2,6 +2,8 @@ import sys
 import auxiliary.argument_parser as argument_parser
 import auxiliary.my_utils as my_utils
 import time
+import random
+import numpy as np
 import torch
 from auxiliary.my_utils import yellow_print
 
@@ -13,6 +15,13 @@ author : Thibault Groueix 01.11.2019
 opt = argument_parser.parser()
 torch.cuda.set_device(opt.multi_gpu[0])
 my_utils.plant_seeds(random_seed=opt.random_seed)
+if getattr(opt, "seed", -1) >= 0:
+    # Manual seed override (e.g. seeds x2 repeats for the winning config).
+    # Recorded in options.json like every other flag.
+    random.seed(opt.seed)
+    torch.manual_seed(opt.seed)
+    np.random.seed(opt.seed)
+    print(f"manual seed override: {opt.seed}")
 import training.trainer as trainer
 
 trainer = trainer.Trainer(opt)

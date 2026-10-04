@@ -101,7 +101,7 @@ def sha256_file(path):
 
 def weight_provenance(cache_dir):
     """URLs + SHAs of every .pt in the point-e/CLIP cache. No silent anything."""
-    from point_e.models.download import MODEL_NAMES
+    from point_e.models.download import MODEL_PATHS
     rows = []
     suffix = f"_{args.tag}" if args.tag else ""
     trip = args.outdir / f"triplets{suffix}"
@@ -109,7 +109,7 @@ def weight_provenance(cache_dir):
     for pt in sorted(Path(cache_dir).rglob("*.pt")):
         rows.append({"file": pt.name, "bytes": pt.stat().st_size,
                      "sha256": sha256_file(pt)})
-    return {"model_urls": dict(MODEL_NAMES), "clip_model": CLIP_MODEL,
+    return {"model_urls": dict(MODEL_PATHS), "clip_model": CLIP_MODEL,
             "cache_files": rows, "backbone": "frozen", "fallback": "none"}
 
 

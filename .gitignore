@@ -41,3 +41,6 @@ master.html
 .idea/
 .vscode/
 *.swp
+
+# local weight caches (HDD symlinks)
+point_e_model_cache
