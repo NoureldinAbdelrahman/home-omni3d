@@ -1,0 +1,6 @@
+object,category,view,preprocessing,points,mc_resolution,seed,chamfer,fscore,seconds
+medicine_bottle_medicine_bottle_068,medicine_bottle,0,raw,4096,128,0,0.04791575260378081,0.067505,2.2
+cup_cup_003,cup,0,raw,4096,128,0,0.0701816579990429,0.089673,1.0
+teapot_teapot_003,teapot,0,raw,4096,128,0,0.05908931914929129,0.070468,1.1
+hammer_hammer_011,hammer,0,raw,4096,128,0,0.17626196486640863,0.085974,1.1
+shampoo_shampoo_003,shampoo,0,raw,4096,128,0,0.1622973938417495,0.035102,1.1

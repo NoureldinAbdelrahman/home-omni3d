@@ -35,7 +35,7 @@ import torch
 from PIL import Image
 
 TRIPOSR_SRC = "/media/susan/429428ec-710b-483c-9aaa-d0c4b6968baa/home-omni3d/thirdparty/TripoSR"
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent  # repo root (script lives in nesegemaa/triposr/)
 ATL = ROOT / "AtlasNet"
 sys.path.insert(0, TRIPOSR_SRC)
 sys.path.insert(0, str(ATL))
@@ -102,7 +102,7 @@ def main():
     ap.add_argument("--view", type=int, default=0)
     ap.add_argument("--preprocessing", choices=["raw", "masked", "crop"], default="masked")
     ap.add_argument("--points", type=int, default=4096)
-    ap.add_argument("--mc-resolution", type=int, default=256)
+    ap.add_argument("--mc-resolution", type=int, default=128)
     ap.add_argument("--tag", default="")
     ap.add_argument("--outdir", type=Path, default=ROOT / "nesegemaa" / "triposr")
     args = ap.parse_args()
@@ -120,6 +120,8 @@ def main():
         "stabilityai/TripoSR", config_name="config.yaml", weight_name="model.ckpt")
     model.to(device)
     model.eval()
+    if hasattr(model, "renderer") and hasattr(model.renderer, "set_chunk_size"):
+        model.renderer.set_chunk_size(2048)  # fit 11 GB alongside training
 
     splits = json.loads((ATL / "dataset" / "data" / "splits.json").read_text())
     test_lists = {c: sp.get("test", []) for c, sp in splits.items()}

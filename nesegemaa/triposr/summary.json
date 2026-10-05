@@ -1,0 +1,76 @@
+{
+  "method": "TripoSR feed-forward (triplane-NeRF + marching cubes)",
+  "config": {
+    "view": 0,
+    "preprocessing": "masked",
+    "points": 4096,
+    "mc_resolution": 128,
+    "tau_squared": 0.001,
+    "tau_euclid_approx": 0.0316,
+    "normalization": "subtract mean, divide by max radius (unit sphere)"
+  },
+  "weights": {
+    "repo": "stabilityai/TripoSR",
+    "backbone": "frozen",
+    "fallback": "none",
+    "cache_files": [
+      {
+        "file": "model.ckpt",
+        "bytes": 1677246742,
+        "sha256": "429e2c6b22a0923967459de24d67f05962b235f79cde6b032aa7ed2ffcd970ee"
+      },
+      {
+        "file": "config.yaml",
+        "bytes": 987,
+        "sha256": "74ca708ce086bf68e97709ea6b3d91f14717921c04691e84043f0eb8fcc68e62"
+      }
+    ],
+    "marching_cubes": "pymcubes-cpu",
+    "src_commit": "107cefdc244c39106fa830359024f6a2f1c78871"
+  },
+  "n_rows": 5,
+  "n_objects": 5,
+  "micro_chamfer": 0.09820158149025601,
+  "micro_fscore": 0.08756359999999999,
+  "macro_chamfer": 0.09820158149025604,
+  "macro_fscore": 0.0875636,
+  "noise_categories_lt3": [
+    "cup",
+    "hammer",
+    "medicine_bottle",
+    "shampoo",
+    "teapot"
+  ],
+  "per_category": [
+    {
+      "category": "cup",
+      "n": 1,
+      "chamfer": 0.0889766796806367,
+      "fscore": 0.078613
+    },
+    {
+      "category": "hammer",
+      "n": 1,
+      "chamfer": 0.158284738432672,
+      "fscore": 0.106896
+    },
+    {
+      "category": "medicine_bottle",
+      "n": 1,
+      "chamfer": 0.08331780645008555,
+      "fscore": 0.071276
+    },
+    {
+      "category": "shampoo",
+      "n": 1,
+      "chamfer": 0.11138122294242224,
+      "fscore": 0.078353
+    },
+    {
+      "category": "teapot",
+      "n": 1,
+      "chamfer": 0.04904745994546364,
+      "fscore": 0.10268
+    }
+  ]
+}

@@ -11,7 +11,11 @@ lives OUTSIDE this repo at `<hdd>/home-omni3d/thirdparty/TripoSR` (commit
 
 ## Status
 
-- [ ] install (requirements minus `torchmcubes`, then `torchmcubes` separately)
+- [x] install: lean deps from requirements (minus GUI/demo-only pkgs);
+  `torchmcubes` cannot compile here (CMake needs a CUDA>=13 toolchain
+  dialect; only nvcc 12.8 present) -> vendored CPU shim
+  (`nesegemaa/triposr/shim/`, PyMCubes backend, installed as
+  `torchmcubes-cpu-shim`; same Lewiner algorithm, CPU only)
 - [ ] weights prefetch (`stabilityai/TripoSR`, SHA recorded in summary)
 - [ ] `eval_triposr.py` (image-only input, mesh→points sampling, UnitBall +
       squared units + tau 0.001 — identical scoring to the AtlasNet track)

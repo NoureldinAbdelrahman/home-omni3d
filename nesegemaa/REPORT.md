@@ -49,16 +49,21 @@ Protocol (all numbers): splits.json test lists, view `00.png` unless noted, Unit
 
 ## TripoSR sweeps
 
+| tag | view | preprocessing | points | mc_resolution | n_objects | micro_chamfer | micro_fscore | macro_chamfer | macro_fscore | noise |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| default | 0 | masked | 4096 | 128 | 5 | 0.09820158149025601 | 0.08756359999999999 | 0.09820158149025604 | 0.0875636 | cup,hammer,medicine_bottle,shampoo,teapot |
+| crop | 0 | crop | 4096 | 128 | 5 | 0.1097147839204073 | 0.0779122 | 0.1097147839204073 | 0.0779122 | cup,hammer,medicine_bottle,shampoo,teapot |
+| raw | 0 | raw | 4096 | 128 | 5 | 0.10314921769205462 | 0.06974440000000001 | 0.10314921769205461 | 0.0697444 | cup,hammer,medicine_bottle,shampoo,teapot |
 
 ## Cross-model (shared objects)
 
 | object | atlas_run | atlas_ch | atlas_f | pointe_ch | pointe_f | triposr_ch | triposr_f |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| cup_cup_cup_003 | a2_p25_sphere_s7 | None | None | 0.12231496036544376 | 0.058212 | None | None |
-| hammer_hammer_hammer_011 | a2_p25_sphere_s7 | None | None | 0.19395787852503654 | 0.072671 | None | None |
-| medicine_bottle_medicine_bottle_medicine_bottle_068 | a2_p25_sphere_s7 | None | None | 0.16207312387126338 | 0.05494 | None | None |
-| shampoo_shampoo_shampoo_003 | a2_p25_sphere_s7 | None | None | 0.18389601957023 | 0.112409 | None | None |
-| teapot_teapot_teapot_003 | a2_p25_sphere_s7 | None | None | 0.05748694426358795 | 0.074082 | None | None |
+| cup_cup_cup_003 | a2_p25_sphere_s7 | None | None | 0.12231496036544376 | 0.058212 | 0.0889766796806367 | 0.078613 |
+| hammer_hammer_hammer_011 | a2_p25_sphere_s7 | None | None | 0.19395787852503654 | 0.072671 | 0.158284738432672 | 0.106896 |
+| medicine_bottle_medicine_bottle_medicine_bottle_068 | a2_p25_sphere_s7 | None | None | 0.16207312387126338 | 0.05494 | 0.08331780645008555 | 0.071276 |
+| shampoo_shampoo_shampoo_003 | a2_p25_sphere_s7 | None | None | 0.18389601957023 | 0.112409 | 0.11138122294242224 | 0.078353 |
+| teapot_teapot_teapot_003 | a2_p25_sphere_s7 | None | None | 0.05748694426358795 | 0.074082 | 0.04904745994546364 | 0.10268 |
 
 ## Interpretation
 
