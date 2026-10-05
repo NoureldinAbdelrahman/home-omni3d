@@ -1,0 +1,40 @@
+{
+  "best_chamfer": 0.04688040167093277,
+  "best_fscore": 0.08909631354941262,
+  "final_chamfer": 582.8948249816895,
+  "final_fscore": 0.0423554852604866,
+  "n_epochs": 50,
+  "best_chamfer_epoch": 10,
+  "best_fscore_epoch": 10,
+  "weights": {
+    "encoder": {
+      "source": "imagenet",
+      "provenance_log": "[resnet] source=model_zoo:https://download.pytorch.org/models/resnet18-5c106cde.pth sha256=5c106cde386e87d4033832f2996f5493238eda96ccf559d1d62760c4de0613f8 matched=100/100 (fc head re-init to 1024 outputs)"
+    },
+    "decoder": {
+      "source": "scratch"
+    }
+  },
+  "split": "splits.json test lists (70/15/15, seed 0)",
+  "tau_squared": 0.001,
+  "batch_size": 8,
+  "batch_size_test": 32,
+  "nb_primitives": 25,
+  "template": "SQUARE",
+  "n_views": 1,
+  "views_pool": "none",
+  "number_points": 4096,
+  "number_points_eval": 4096,
+  "bottleneck_size": 1024,
+  "lrate": 0.001,
+  "lr_decay": [
+    120,
+    140,
+    145
+  ],
+  "freeze_encoder": false,
+  "loss_reg": "none",
+  "loss_reg_w": 0.0,
+  "aug": [],
+  "seed": -1
+}

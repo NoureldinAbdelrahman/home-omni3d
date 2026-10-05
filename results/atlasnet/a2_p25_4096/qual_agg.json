@@ -1,0 +1,517 @@
+{
+  "run": "a2_p25_4096",
+  "weights": "best-model.pth",
+  "views": [
+    0
+  ],
+  "tau_squared": 0.001,
+  "tau_euclid_approx": 0.0316,
+  "metric_note": "squared-distance units, same as training loss and MS1 summaries",
+  "split": "splits.json test lists",
+  "n_test_objects_total": 260,
+  "by_view": {
+    "0": {
+      "n_objects": 260,
+      "n_categories": 76,
+      "micro_chamfer": 0.0478861337935228,
+      "micro_fscore": 0.10096532550131064,
+      "macro_chamfer": 0.049208601104751996,
+      "macro_fscore": 0.09758345474948842,
+      "noise_categories_lt3": [
+        "battery",
+        "bed",
+        "bowl",
+        "boxed_beverage",
+        "cabinet",
+        "candle",
+        "canned_beverage",
+        "fan",
+        "flash_light",
+        "fork",
+        "glasses",
+        "kennel",
+        "kettle",
+        "keyboard",
+        "laptop",
+        "microwaveoven",
+        "monitor",
+        "ornaments",
+        "pan",
+        "pen",
+        "plant",
+        "plug",
+        "potato_chips",
+        "projector",
+        "razor",
+        "ricecooker",
+        "sofa",
+        "speaker",
+        "stool",
+        "suitcase",
+        "teddy_bear",
+        "thermos",
+        "tvstand",
+        "vase",
+        "watch"
+      ],
+      "per_category": [
+        {
+          "category": "battery",
+          "n": 1,
+          "chamfer": 0.04286308967451567,
+          "fscore": 0.03359605220075775
+        },
+        {
+          "category": "bed",
+          "n": 1,
+          "chamfer": 0.1021490847170196,
+          "fscore": 0.043570040560756314
+        },
+        {
+          "category": "book",
+          "n": 4,
+          "chamfer": 0.021493417856177657,
+          "fscore": 0.15354072833721988
+        },
+        {
+          "category": "bottle",
+          "n": 4,
+          "chamfer": 0.053103308576660686,
+          "fscore": 0.03897949894384109
+        },
+        {
+          "category": "bowl",
+          "n": 2,
+          "chamfer": 0.12322738739638261,
+          "fscore": 0.08326289557429398
+        },
+        {
+          "category": "boxed_beverage",
+          "n": 2,
+          "chamfer": 0.06395245760986329,
+          "fscore": 0.03427692909363726
+        },
+        {
+          "category": "brush",
+          "n": 4,
+          "chamfer": 0.025701587618485715,
+          "fscore": 0.22157941220914112
+        },
+        {
+          "category": "cabinet",
+          "n": 1,
+          "chamfer": 0.02496888610047408,
+          "fscore": 0.09069288894885981
+        },
+        {
+          "category": "candle",
+          "n": 1,
+          "chamfer": 0.027440448187202735,
+          "fscore": 0.0775934924994718
+        },
+        {
+          "category": "candy",
+          "n": 7,
+          "chamfer": 0.05386497792051333,
+          "fscore": 0.08249317260117152
+        },
+        {
+          "category": "canned_beverage",
+          "n": 1,
+          "chamfer": 0.040903993503196553,
+          "fscore": 0.042117105948278
+        },
+        {
+          "category": "chair",
+          "n": 4,
+          "chamfer": 0.05672958951859261,
+          "fscore": 0.07722159501803712
+        },
+        {
+          "category": "chocolate",
+          "n": 4,
+          "chamfer": 0.055576989305712095,
+          "fscore": 0.061912814949963105
+        },
+        {
+          "category": "clock",
+          "n": 9,
+          "chamfer": 0.025210890188355553,
+          "fscore": 0.10657091088298182
+        },
+        {
+          "category": "cup",
+          "n": 6,
+          "chamfer": 0.06846179909698531,
+          "fscore": 0.032204647460428205
+        },
+        {
+          "category": "dish",
+          "n": 3,
+          "chamfer": 0.09867441725487962,
+          "fscore": 0.04158839467240013
+        },
+        {
+          "category": "doll",
+          "n": 13,
+          "chamfer": 0.03581237886615515,
+          "fscore": 0.10262531155330691
+        },
+        {
+          "category": "dustbin",
+          "n": 3,
+          "chamfer": 0.06459326460088728,
+          "fscore": 0.024250616893543252
+        },
+        {
+          "category": "facial_cream",
+          "n": 6,
+          "chamfer": 0.07147287816983657,
+          "fscore": 0.10176615095936252
+        },
+        {
+          "category": "fan",
+          "n": 2,
+          "chamfer": 0.03373003357803109,
+          "fscore": 0.12749298184144886
+        },
+        {
+          "category": "fire_extinguisher",
+          "n": 3,
+          "chamfer": 0.01766003094759437,
+          "fscore": 0.2536819703044432
+        },
+        {
+          "category": "flash_light",
+          "n": 1,
+          "chamfer": 0.01785309923376986,
+          "fscore": 0.2572100409914864
+        },
+        {
+          "category": "fork",
+          "n": 1,
+          "chamfer": 0.1340459450435159,
+          "fscore": 0.010661022983504093
+        },
+        {
+          "category": "glasses",
+          "n": 1,
+          "chamfer": 0.0312783134422181,
+          "fscore": 0.09297499589214181
+        },
+        {
+          "category": "glasses_case",
+          "n": 6,
+          "chamfer": 0.04407844753778815,
+          "fscore": 0.05634999108329805
+        },
+        {
+          "category": "hair_dryer",
+          "n": 6,
+          "chamfer": 0.022501652592292046,
+          "fscore": 0.20772966367199028
+        },
+        {
+          "category": "hairpin",
+          "n": 4,
+          "chamfer": 0.04878266802861743,
+          "fscore": 0.08237026513287013
+        },
+        {
+          "category": "hammer",
+          "n": 3,
+          "chamfer": 0.02985239425347483,
+          "fscore": 0.12955152613241527
+        },
+        {
+          "category": "hand_cream",
+          "n": 6,
+          "chamfer": 0.021239244058906075,
+          "fscore": 0.21899737957658738
+        },
+        {
+          "category": "house",
+          "n": 6,
+          "chamfer": 0.03216257495181707,
+          "fscore": 0.07388799574540374
+        },
+        {
+          "category": "kennel",
+          "n": 1,
+          "chamfer": 0.026873908601898214,
+          "fscore": 0.11107776569006265
+        },
+        {
+          "category": "kettle",
+          "n": 2,
+          "chamfer": 0.05633041010647385,
+          "fscore": 0.023541021814562472
+        },
+        {
+          "category": "keyboard",
+          "n": 2,
+          "chamfer": 0.0466376641399856,
+          "fscore": 0.09728762438239641
+        },
+        {
+          "category": "knife",
+          "n": 4,
+          "chamfer": 0.03094842173565024,
+          "fscore": 0.18039176155366707
+        },
+        {
+          "category": "laptop",
+          "n": 1,
+          "chamfer": 0.020996870846899152,
+          "fscore": 0.14883217060464213
+        },
+        {
+          "category": "light",
+          "n": 6,
+          "chamfer": 0.09591249024555874,
+          "fscore": 0.040946444885257026
+        },
+        {
+          "category": "lipstick",
+          "n": 4,
+          "chamfer": 0.02161555005066814,
+          "fscore": 0.19330136057297012
+        },
+        {
+          "category": "medicine_bottle",
+          "n": 12,
+          "chamfer": 0.09192768637468728,
+          "fscore": 0.0336372340227088
+        },
+        {
+          "category": "microwaveoven",
+          "n": 1,
+          "chamfer": 0.04157665181471157,
+          "fscore": 0.04018863087447546
+        },
+        {
+          "category": "monitor",
+          "n": 1,
+          "chamfer": 0.14264209654605323,
+          "fscore": 0.009477674810446505
+        },
+        {
+          "category": "mouse",
+          "n": 4,
+          "chamfer": 0.02578547291906662,
+          "fscore": 0.10140200154548576
+        },
+        {
+          "category": "ornaments",
+          "n": 1,
+          "chamfer": 0.014178958743014024,
+          "fscore": 0.18715962905836017
+        },
+        {
+          "category": "pan",
+          "n": 1,
+          "chamfer": 0.09692426895140303,
+          "fscore": 0.03885348373172619
+        },
+        {
+          "category": "pen",
+          "n": 1,
+          "chamfer": 0.018561812344582696,
+          "fscore": 0.2873293977214747
+        },
+        {
+          "category": "pillow",
+          "n": 6,
+          "chamfer": 0.023766059628444382,
+          "fscore": 0.1448607325100195
+        },
+        {
+          "category": "plant",
+          "n": 2,
+          "chamfer": 0.04930468029566974,
+          "fscore": 0.09402816992406327
+        },
+        {
+          "category": "plug",
+          "n": 1,
+          "chamfer": 0.03823533923280956,
+          "fscore": 0.04368029739776952
+        },
+        {
+          "category": "popcorn",
+          "n": 6,
+          "chamfer": 0.0857187126985955,
+          "fscore": 0.019229235328429076
+        },
+        {
+          "category": "potato_chips",
+          "n": 2,
+          "chamfer": 0.06400225370341506,
+          "fscore": 0.11602375667260392
+        },
+        {
+          "category": "power_strip",
+          "n": 5,
+          "chamfer": 0.04756307062521035,
+          "fscore": 0.1388431485427073
+        },
+        {
+          "category": "projector",
+          "n": 2,
+          "chamfer": 0.11260464701000752,
+          "fscore": 0.011243730612178756
+        },
+        {
+          "category": "puff",
+          "n": 3,
+          "chamfer": 0.07756933873787202,
+          "fscore": 0.025354763117919746
+        },
+        {
+          "category": "razor",
+          "n": 2,
+          "chamfer": 0.03881782916762595,
+          "fscore": 0.09386704101767701
+        },
+        {
+          "category": "red_wine_glass",
+          "n": 3,
+          "chamfer": 0.03670260457078337,
+          "fscore": 0.09590402848959624
+        },
+        {
+          "category": "remote_control",
+          "n": 5,
+          "chamfer": 0.021204688661853183,
+          "fscore": 0.17503007377056962
+        },
+        {
+          "category": "ricecooker",
+          "n": 1,
+          "chamfer": 0.08985470826232397,
+          "fscore": 0.013352432085904321
+        },
+        {
+          "category": "scissor",
+          "n": 3,
+          "chamfer": 0.025497759350412773,
+          "fscore": 0.176246111347942
+        },
+        {
+          "category": "shampoo",
+          "n": 6,
+          "chamfer": 0.043729958397205226,
+          "fscore": 0.14991255070494802
+        },
+        {
+          "category": "soap",
+          "n": 6,
+          "chamfer": 0.039276886442203354,
+          "fscore": 0.06676661409284715
+        },
+        {
+          "category": "sofa",
+          "n": 2,
+          "chamfer": 0.04089695187133051,
+          "fscore": 0.07589698202655723
+        },
+        {
+          "category": "speaker",
+          "n": 1,
+          "chamfer": 0.044113626982818344,
+          "fscore": 0.06294848662920138
+        },
+        {
+          "category": "stool",
+          "n": 2,
+          "chamfer": 0.1166495567906499,
+          "fscore": 0.040423406957816106
+        },
+        {
+          "category": "suitcase",
+          "n": 1,
+          "chamfer": 0.04788697154763139,
+          "fscore": 0.019941905191394542
+        },
+        {
+          "category": "table",
+          "n": 4,
+          "chamfer": 0.03377847900626751,
+          "fscore": 0.09957533595737603
+        },
+        {
+          "category": "tape_measure",
+          "n": 3,
+          "chamfer": 0.047269952351485546,
+          "fscore": 0.025736390858208502
+        },
+        {
+          "category": "teapot",
+          "n": 6,
+          "chamfer": 0.05213948904561381,
+          "fscore": 0.05225059190858636
+        },
+        {
+          "category": "teddy_bear",
+          "n": 2,
+          "chamfer": 0.022029112813199813,
+          "fscore": 0.1406410577049751
+        },
+        {
+          "category": "thermos",
+          "n": 1,
+          "chamfer": 0.023432778170328836,
+          "fscore": 0.08199310975410638
+        },
+        {
+          "category": "timer",
+          "n": 3,
+          "chamfer": 0.02362279236783932,
+          "fscore": 0.12972460245879744
+        },
+        {
+          "category": "tissue",
+          "n": 8,
+          "chamfer": 0.049002886962831595,
+          "fscore": 0.06122828043718253
+        },
+        {
+          "category": "tooth_brush",
+          "n": 4,
+          "chamfer": 0.044849782286623605,
+          "fscore": 0.04692233061392734
+        },
+        {
+          "category": "tooth_paste",
+          "n": 6,
+          "chamfer": 0.020147956412517532,
+          "fscore": 0.237024085707952
+        },
+        {
+          "category": "tvstand",
+          "n": 1,
+          "chamfer": 0.0237234223380021,
+          "fscore": 0.08727330201192528
+        },
+        {
+          "category": "umbrella",
+          "n": 3,
+          "chamfer": 0.02125125549287064,
+          "fscore": 0.2419841294574501
+        },
+        {
+          "category": "vase",
+          "n": 2,
+          "chamfer": 0.02200395553369673,
+          "fscore": 0.1406994075971889
+        },
+        {
+          "category": "watch",
+          "n": 2,
+          "chamfer": 0.09290866395243888,
+          "fscore": 0.053559776142022196
+        }
+      ]
+    }
+  }
+}

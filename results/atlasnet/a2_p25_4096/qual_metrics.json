@@ -1,0 +1,2082 @@
+[
+  {
+    "category": "battery",
+    "object": "battery_003",
+    "view": 0,
+    "chamfer": 0.04286308967451567,
+    "fscore": 0.03359605220075775,
+    "n_points": 3600
+  },
+  {
+    "category": "bed",
+    "object": "bed_002",
+    "view": 0,
+    "chamfer": 0.1021490847170196,
+    "fscore": 0.043570040560756314,
+    "n_points": 3600
+  },
+  {
+    "category": "book",
+    "object": "book_005",
+    "view": 0,
+    "chamfer": 0.023827286206655723,
+    "fscore": 0.1583829969378684,
+    "n_points": 3600
+  },
+  {
+    "category": "book",
+    "object": "book_011",
+    "view": 0,
+    "chamfer": 0.01996326217604629,
+    "fscore": 0.15094950921738773,
+    "n_points": 3600
+  },
+  {
+    "category": "book",
+    "object": "book_021",
+    "view": 0,
+    "chamfer": 0.022124852508499205,
+    "fscore": 0.15651293856167645,
+    "n_points": 3600
+  },
+  {
+    "category": "book",
+    "object": "book_026",
+    "view": 0,
+    "chamfer": 0.02005827053350941,
+    "fscore": 0.148317468631947,
+    "n_points": 3600
+  },
+  {
+    "category": "bottle",
+    "object": "bottle_040",
+    "view": 0,
+    "chamfer": 0.08022731171811427,
+    "fscore": 0.017506733358984224,
+    "n_points": 3600
+  },
+  {
+    "category": "bottle",
+    "object": "bottle_046",
+    "view": 0,
+    "chamfer": 0.05434984564086906,
+    "fscore": 0.02285265705750234,
+    "n_points": 3600
+  },
+  {
+    "category": "bottle",
+    "object": "bottle_047",
+    "view": 0,
+    "chamfer": 0.05287135645502761,
+    "fscore": 0.028752338102219305,
+    "n_points": 3600
+  },
+  {
+    "category": "bottle",
+    "object": "bottle_055",
+    "view": 0,
+    "chamfer": 0.024964720492631785,
+    "fscore": 0.0868062672566585,
+    "n_points": 3600
+  },
+  {
+    "category": "bowl",
+    "object": "bowl_003",
+    "view": 0,
+    "chamfer": 0.12292265981576271,
+    "fscore": 0.0753022662523948,
+    "n_points": 3600
+  },
+  {
+    "category": "bowl",
+    "object": "bowl_015",
+    "view": 0,
+    "chamfer": 0.1235321149770025,
+    "fscore": 0.09122352489619316,
+    "n_points": 3600
+  },
+  {
+    "category": "boxed_beverage",
+    "object": "boxed_beverage_005",
+    "view": 0,
+    "chamfer": 0.03226987035693757,
+    "fscore": 0.053616751269035534,
+    "n_points": 3600
+  },
+  {
+    "category": "boxed_beverage",
+    "object": "boxed_beverage_007",
+    "view": 0,
+    "chamfer": 0.09563504486278902,
+    "fscore": 0.014937106918238994,
+    "n_points": 3600
+  },
+  {
+    "category": "brush",
+    "object": "brush_005",
+    "view": 0,
+    "chamfer": 0.035274036513485124,
+    "fscore": 0.0913122084813214,
+    "n_points": 3600
+  },
+  {
+    "category": "brush",
+    "object": "brush_011",
+    "view": 0,
+    "chamfer": 0.01925855069777209,
+    "fscore": 0.3429232017685,
+    "n_points": 3600
+  },
+  {
+    "category": "brush",
+    "object": "brush_012",
+    "view": 0,
+    "chamfer": 0.027872210650996168,
+    "fscore": 0.22259479340071708,
+    "n_points": 3600
+  },
+  {
+    "category": "brush",
+    "object": "brush_020",
+    "view": 0,
+    "chamfer": 0.020401552611689484,
+    "fscore": 0.22948744518602604,
+    "n_points": 3600
+  },
+  {
+    "category": "cabinet",
+    "object": "cabinet_005",
+    "view": 0,
+    "chamfer": 0.02496888610047408,
+    "fscore": 0.09069288894885981,
+    "n_points": 3600
+  },
+  {
+    "category": "candle",
+    "object": "candle_006",
+    "view": 0,
+    "chamfer": 0.027440448187202735,
+    "fscore": 0.0775934924994718,
+    "n_points": 3600
+  },
+  {
+    "category": "candy",
+    "object": "candy_003",
+    "view": 0,
+    "chamfer": 0.1681450311556138,
+    "fscore": 0.007016912558474271,
+    "n_points": 3600
+  },
+  {
+    "category": "candy",
+    "object": "candy_004",
+    "view": 0,
+    "chamfer": 0.020311624357085528,
+    "fscore": 0.1566293588751634,
+    "n_points": 3600
+  },
+  {
+    "category": "candy",
+    "object": "candy_005",
+    "view": 0,
+    "chamfer": 0.04009122934239027,
+    "fscore": 0.13975158662154902,
+    "n_points": 3600
+  },
+  {
+    "category": "candy",
+    "object": "candy_013",
+    "view": 0,
+    "chamfer": 0.03839323560159827,
+    "fscore": 0.07022105544779614,
+    "n_points": 3600
+  },
+  {
+    "category": "candy",
+    "object": "candy_021",
+    "view": 0,
+    "chamfer": 0.036103052753488775,
+    "fscore": 0.03256830776129921,
+    "n_points": 3600
+  },
+  {
+    "category": "candy",
+    "object": "candy_025",
+    "view": 0,
+    "chamfer": 0.03449325356865164,
+    "fscore": 0.08575966693590792,
+    "n_points": 3600
+  },
+  {
+    "category": "candy",
+    "object": "candy_044",
+    "view": 0,
+    "chamfer": 0.03951741866476503,
+    "fscore": 0.0855053200080107,
+    "n_points": 3600
+  },
+  {
+    "category": "canned_beverage",
+    "object": "canned_beverage_002",
+    "view": 0,
+    "chamfer": 0.040903993503196553,
+    "fscore": 0.042117105948278,
+    "n_points": 3600
+  },
+  {
+    "category": "chair",
+    "object": "chair_005",
+    "view": 0,
+    "chamfer": 0.05511230904829521,
+    "fscore": 0.029477219241956933,
+    "n_points": 3600
+  },
+  {
+    "category": "chair",
+    "object": "chair_012",
+    "view": 0,
+    "chamfer": 0.022190443727409078,
+    "fscore": 0.19841707505242914,
+    "n_points": 3600
+  },
+  {
+    "category": "chair",
+    "object": "chair_017",
+    "view": 0,
+    "chamfer": 0.0826586744442936,
+    "fscore": 0.03210170746379159,
+    "n_points": 3600
+  },
+  {
+    "category": "chair",
+    "object": "chair_021",
+    "view": 0,
+    "chamfer": 0.06695693085437254,
+    "fscore": 0.04889037831397081,
+    "n_points": 3600
+  },
+  {
+    "category": "chocolate",
+    "object": "chocolate_003",
+    "view": 0,
+    "chamfer": 0.11737379972834334,
+    "fscore": 0.012057451770192918,
+    "n_points": 3600
+  },
+  {
+    "category": "chocolate",
+    "object": "chocolate_012",
+    "view": 0,
+    "chamfer": 0.04228014537850161,
+    "fscore": 0.07224865440784761,
+    "n_points": 3600
+  },
+  {
+    "category": "chocolate",
+    "object": "chocolate_024",
+    "view": 0,
+    "chamfer": 0.04144783368912973,
+    "fscore": 0.043938307030129124,
+    "n_points": 3600
+  },
+  {
+    "category": "chocolate",
+    "object": "chocolate_029",
+    "view": 0,
+    "chamfer": 0.021206178426873706,
+    "fscore": 0.11940684659168277,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_005",
+    "view": 0,
+    "chamfer": 0.023832536902081307,
+    "fscore": 0.10022568830150427,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_009",
+    "view": 0,
+    "chamfer": 0.02699080520128666,
+    "fscore": 0.08370590057987695,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_018",
+    "view": 0,
+    "chamfer": 0.017360208927671615,
+    "fscore": 0.11292746324425311,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_022",
+    "view": 0,
+    "chamfer": 0.019500567792570807,
+    "fscore": 0.13378174593675946,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_029",
+    "view": 0,
+    "chamfer": 0.02392846103984743,
+    "fscore": 0.13334141927411658,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_036",
+    "view": 0,
+    "chamfer": 0.014138634601532111,
+    "fscore": 0.1489213087364208,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_044",
+    "view": 0,
+    "chamfer": 0.06306507738136363,
+    "fscore": 0.022341888175985335,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_053",
+    "view": 0,
+    "chamfer": 0.01625870525912567,
+    "fscore": 0.12958139534883722,
+    "n_points": 3600
+  },
+  {
+    "category": "clock",
+    "object": "clock_054",
+    "view": 0,
+    "chamfer": 0.021823014589720736,
+    "fscore": 0.0943113883490825,
+    "n_points": 3600
+  },
+  {
+    "category": "cup",
+    "object": "cup_003",
+    "view": 0,
+    "chamfer": 0.053318404543895866,
+    "fscore": 0.02456065413717354,
+    "n_points": 3600
+  },
+  {
+    "category": "cup",
+    "object": "cup_004",
+    "view": 0,
+    "chamfer": 0.08506224152814015,
+    "fscore": 0.02077862557597979,
+    "n_points": 3600
+  },
+  {
+    "category": "cup",
+    "object": "cup_005",
+    "view": 0,
+    "chamfer": 0.06973230823262137,
+    "fscore": 0.07829064458717017,
+    "n_points": 3600
+  },
+  {
+    "category": "cup",
+    "object": "cup_011",
+    "view": 0,
+    "chamfer": 0.0737227360766114,
+    "fscore": 0.021790196840492906,
+    "n_points": 3600
+  },
+  {
+    "category": "cup",
+    "object": "cup_021",
+    "view": 0,
+    "chamfer": 0.08105507193598704,
+    "fscore": 0.01776917663617171,
+    "n_points": 3600
+  },
+  {
+    "category": "cup",
+    "object": "cup_022",
+    "view": 0,
+    "chamfer": 0.04788003226465606,
+    "fscore": 0.030038586985581123,
+    "n_points": 3600
+  },
+  {
+    "category": "dish",
+    "object": "dish_003",
+    "view": 0,
+    "chamfer": 0.11450861133571409,
+    "fscore": 0.031349669055866114,
+    "n_points": 3600
+  },
+  {
+    "category": "dish",
+    "object": "dish_004",
+    "view": 0,
+    "chamfer": 0.08757072722404732,
+    "fscore": 0.038661333912783674,
+    "n_points": 3600
+  },
+  {
+    "category": "dish",
+    "object": "dish_011",
+    "view": 0,
+    "chamfer": 0.09394391320487744,
+    "fscore": 0.05475418104855059,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_006",
+    "view": 0,
+    "chamfer": 0.06674472468781703,
+    "fscore": 0.030616279478438126,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_010",
+    "view": 0,
+    "chamfer": 0.03610659742161813,
+    "fscore": 0.08424687023912035,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_012",
+    "view": 0,
+    "chamfer": 0.021970627169751556,
+    "fscore": 0.1165968905036794,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_014",
+    "view": 0,
+    "chamfer": 0.013102113083240427,
+    "fscore": 0.21440286304843859,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_020",
+    "view": 0,
+    "chamfer": 0.0352383109157062,
+    "fscore": 0.13147554105900247,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_022",
+    "view": 0,
+    "chamfer": 0.018857167421238483,
+    "fscore": 0.13799998886748974,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_029",
+    "view": 0,
+    "chamfer": 0.0190768449880275,
+    "fscore": 0.1804090715113089,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_041",
+    "view": 0,
+    "chamfer": 0.05947660561208869,
+    "fscore": 0.03293201133144476,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_045",
+    "view": 0,
+    "chamfer": 0.054230145112034854,
+    "fscore": 0.03645124310381887,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_046",
+    "view": 0,
+    "chamfer": 0.026107802616196316,
+    "fscore": 0.10075541037158023,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_055",
+    "view": 0,
+    "chamfer": 0.054021950035347384,
+    "fscore": 0.01884451641549351,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_072",
+    "view": 0,
+    "chamfer": 0.03966760509822131,
+    "fscore": 0.06210748503774224,
+    "n_points": 3600
+  },
+  {
+    "category": "doll",
+    "object": "doll_073",
+    "view": 0,
+    "chamfer": 0.020960431098729082,
+    "fscore": 0.18729087922543255,
+    "n_points": 3600
+  },
+  {
+    "category": "dustbin",
+    "object": "dustbin_005",
+    "view": 0,
+    "chamfer": 0.06942998159884371,
+    "fscore": 0.023374888691006235,
+    "n_points": 3600
+  },
+  {
+    "category": "dustbin",
+    "object": "dustbin_007",
+    "view": 0,
+    "chamfer": 0.06335419179423225,
+    "fscore": 0.023753936366597894,
+    "n_points": 3600
+  },
+  {
+    "category": "dustbin",
+    "object": "dustbin_020",
+    "view": 0,
+    "chamfer": 0.06099562040958586,
+    "fscore": 0.02562302562302562,
+    "n_points": 3600
+  },
+  {
+    "category": "facial_cream",
+    "object": "facial_cream_003",
+    "view": 0,
+    "chamfer": 0.019831270258805322,
+    "fscore": 0.1529515335232881,
+    "n_points": 3600
+  },
+  {
+    "category": "facial_cream",
+    "object": "facial_cream_004",
+    "view": 0,
+    "chamfer": 0.22024150238567236,
+    "fscore": 0.0060975609756097554,
+    "n_points": 3600
+  },
+  {
+    "category": "facial_cream",
+    "object": "facial_cream_005",
+    "view": 0,
+    "chamfer": 0.01886859840792658,
+    "fscore": 0.24325309401930925,
+    "n_points": 3600
+  },
+  {
+    "category": "facial_cream",
+    "object": "facial_cream_011",
+    "view": 0,
+    "chamfer": 0.02503657128864548,
+    "fscore": 0.08305300851825728,
+    "n_points": 3600
+  },
+  {
+    "category": "facial_cream",
+    "object": "facial_cream_021",
+    "view": 0,
+    "chamfer": 0.12098211702224027,
+    "fscore": 0.0077240318747378725,
+    "n_points": 3600
+  },
+  {
+    "category": "facial_cream",
+    "object": "facial_cream_022",
+    "view": 0,
+    "chamfer": 0.023877209655729363,
+    "fscore": 0.11751767684497287,
+    "n_points": 3600
+  },
+  {
+    "category": "fan",
+    "object": "fan_003",
+    "view": 0,
+    "chamfer": 0.03324501708869453,
+    "fscore": 0.1433299427508338,
+    "n_points": 3600
+  },
+  {
+    "category": "fan",
+    "object": "fan_012",
+    "view": 0,
+    "chamfer": 0.034215050067367636,
+    "fscore": 0.11165602093206395,
+    "n_points": 3600
+  },
+  {
+    "category": "fire_extinguisher",
+    "object": "fire_extinguisher_003",
+    "view": 0,
+    "chamfer": 0.016723115527274564,
+    "fscore": 0.23110927458633612,
+    "n_points": 3600
+  },
+  {
+    "category": "fire_extinguisher",
+    "object": "fire_extinguisher_004",
+    "view": 0,
+    "chamfer": 0.018520401991003528,
+    "fscore": 0.2757841055874804,
+    "n_points": 3600
+  },
+  {
+    "category": "fire_extinguisher",
+    "object": "fire_extinguisher_012",
+    "view": 0,
+    "chamfer": 0.017736575324505024,
+    "fscore": 0.2541525307395132,
+    "n_points": 3600
+  },
+  {
+    "category": "flash_light",
+    "object": "flash_light_003",
+    "view": 0,
+    "chamfer": 0.01785309923376986,
+    "fscore": 0.2572100409914864,
+    "n_points": 3600
+  },
+  {
+    "category": "fork",
+    "object": "fork_003",
+    "view": 0,
+    "chamfer": 0.1340459450435159,
+    "fscore": 0.010661022983504093,
+    "n_points": 3600
+  },
+  {
+    "category": "glasses",
+    "object": "glasses_003",
+    "view": 0,
+    "chamfer": 0.0312783134422181,
+    "fscore": 0.09297499589214181,
+    "n_points": 3600
+  },
+  {
+    "category": "glasses_case",
+    "object": "glasses_case_003",
+    "view": 0,
+    "chamfer": 0.04836190434527861,
+    "fscore": 0.04801560307810042,
+    "n_points": 3600
+  },
+  {
+    "category": "glasses_case",
+    "object": "glasses_case_004",
+    "view": 0,
+    "chamfer": 0.06499456631357767,
+    "fscore": 0.049800193751513684,
+    "n_points": 3600
+  },
+  {
+    "category": "glasses_case",
+    "object": "glasses_case_005",
+    "view": 0,
+    "chamfer": 0.0372031844776472,
+    "fscore": 0.0679274973773167,
+    "n_points": 3600
+  },
+  {
+    "category": "glasses_case",
+    "object": "glasses_case_019",
+    "view": 0,
+    "chamfer": 0.03800314513905963,
+    "fscore": 0.05425875400054756,
+    "n_points": 3600
+  },
+  {
+    "category": "glasses_case",
+    "object": "glasses_case_021",
+    "view": 0,
+    "chamfer": 0.037633791340033744,
+    "fscore": 0.060807310936806275,
+    "n_points": 3600
+  },
+  {
+    "category": "glasses_case",
+    "object": "glasses_case_036",
+    "view": 0,
+    "chamfer": 0.038274093611132064,
+    "fscore": 0.0572905873555037,
+    "n_points": 3600
+  },
+  {
+    "category": "hair_dryer",
+    "object": "hair_dryer_003",
+    "view": 0,
+    "chamfer": 0.022028961878640133,
+    "fscore": 0.20002287282708145,
+    "n_points": 3600
+  },
+  {
+    "category": "hair_dryer",
+    "object": "hair_dryer_004",
+    "view": 0,
+    "chamfer": 0.025925275811647785,
+    "fscore": 0.17527819350804622,
+    "n_points": 3600
+  },
+  {
+    "category": "hair_dryer",
+    "object": "hair_dryer_005",
+    "view": 0,
+    "chamfer": 0.02136192332263891,
+    "fscore": 0.20369039060627844,
+    "n_points": 3600
+  },
+  {
+    "category": "hair_dryer",
+    "object": "hair_dryer_011",
+    "view": 0,
+    "chamfer": 0.023977263874302192,
+    "fscore": 0.24218180354195276,
+    "n_points": 3600
+  },
+  {
+    "category": "hair_dryer",
+    "object": "hair_dryer_021",
+    "view": 0,
+    "chamfer": 0.022509108627140964,
+    "fscore": 0.21254148990929908,
+    "n_points": 3600
+  },
+  {
+    "category": "hair_dryer",
+    "object": "hair_dryer_022",
+    "view": 0,
+    "chamfer": 0.019207382039382288,
+    "fscore": 0.2126632316392838,
+    "n_points": 3600
+  },
+  {
+    "category": "hairpin",
+    "object": "hairpin_005",
+    "view": 0,
+    "chamfer": 0.029558426445284065,
+    "fscore": 0.11075818525850874,
+    "n_points": 3600
+  },
+  {
+    "category": "hairpin",
+    "object": "hairpin_011",
+    "view": 0,
+    "chamfer": 0.08809112589557247,
+    "fscore": 0.036454015997244085,
+    "n_points": 3600
+  },
+  {
+    "category": "hairpin",
+    "object": "hairpin_012",
+    "view": 0,
+    "chamfer": 0.0532935361022407,
+    "fscore": 0.05661022097349837,
+    "n_points": 3600
+  },
+  {
+    "category": "hairpin",
+    "object": "hairpin_022",
+    "view": 0,
+    "chamfer": 0.02418758367137249,
+    "fscore": 0.12565863830222934,
+    "n_points": 3600
+  },
+  {
+    "category": "hammer",
+    "object": "hammer_011",
+    "view": 0,
+    "chamfer": 0.025961181918337357,
+    "fscore": 0.158506075768406,
+    "n_points": 3600
+  },
+  {
+    "category": "hammer",
+    "object": "hammer_018",
+    "view": 0,
+    "chamfer": 0.04124151993543747,
+    "fscore": 0.08896113696777792,
+    "n_points": 3600
+  },
+  {
+    "category": "hammer",
+    "object": "hammer_021",
+    "view": 0,
+    "chamfer": 0.022354480906649654,
+    "fscore": 0.14118736566106188,
+    "n_points": 3600
+  },
+  {
+    "category": "hand_cream",
+    "object": "hand_cream_003",
+    "view": 0,
+    "chamfer": 0.018063420909105257,
+    "fscore": 0.2445901933603085,
+    "n_points": 3600
+  },
+  {
+    "category": "hand_cream",
+    "object": "hand_cream_004",
+    "view": 0,
+    "chamfer": 0.017521720797798505,
+    "fscore": 0.21764925464470175,
+    "n_points": 3600
+  },
+  {
+    "category": "hand_cream",
+    "object": "hand_cream_005",
+    "view": 0,
+    "chamfer": 0.019756726698066485,
+    "fscore": 0.27562833522011276,
+    "n_points": 3600
+  },
+  {
+    "category": "hand_cream",
+    "object": "hand_cream_011",
+    "view": 0,
+    "chamfer": 0.02251147820538181,
+    "fscore": 0.21303551645816787,
+    "n_points": 3600
+  },
+  {
+    "category": "hand_cream",
+    "object": "hand_cream_022",
+    "view": 0,
+    "chamfer": 0.031541279693960256,
+    "fscore": 0.18723289302017523,
+    "n_points": 3600
+  },
+  {
+    "category": "hand_cream",
+    "object": "hand_cream_023",
+    "view": 0,
+    "chamfer": 0.018040838049124146,
+    "fscore": 0.1758480847560581,
+    "n_points": 3600
+  },
+  {
+    "category": "house",
+    "object": "house_003",
+    "view": 0,
+    "chamfer": 0.03990914426232375,
+    "fscore": 0.05118837321342541,
+    "n_points": 3600
+  },
+  {
+    "category": "house",
+    "object": "house_005",
+    "view": 0,
+    "chamfer": 0.03587271659179127,
+    "fscore": 0.04873076417203736,
+    "n_points": 3600
+  },
+  {
+    "category": "house",
+    "object": "house_021",
+    "view": 0,
+    "chamfer": 0.03149623485123105,
+    "fscore": 0.08458674184401786,
+    "n_points": 3600
+  },
+  {
+    "category": "house",
+    "object": "house_022",
+    "view": 0,
+    "chamfer": 0.028731895396260552,
+    "fscore": 0.09873264374242849,
+    "n_points": 3600
+  },
+  {
+    "category": "house",
+    "object": "house_023",
+    "view": 0,
+    "chamfer": 0.01821993961724384,
+    "fscore": 0.12405927655805032,
+    "n_points": 3600
+  },
+  {
+    "category": "house",
+    "object": "house_042",
+    "view": 0,
+    "chamfer": 0.03874551899205196,
+    "fscore": 0.036030174942463036,
+    "n_points": 3600
+  },
+  {
+    "category": "kennel",
+    "object": "kennel_003",
+    "view": 0,
+    "chamfer": 0.026873908601898214,
+    "fscore": 0.11107776569006265,
+    "n_points": 3600
+  },
+  {
+    "category": "kettle",
+    "object": "kettle_003",
+    "view": 0,
+    "chamfer": 0.05346133691663263,
+    "fscore": 0.02581109157743328,
+    "n_points": 3600
+  },
+  {
+    "category": "kettle",
+    "object": "kettle_016",
+    "view": 0,
+    "chamfer": 0.05919948329631507,
+    "fscore": 0.021270952051691664,
+    "n_points": 3600
+  },
+  {
+    "category": "keyboard",
+    "object": "keyboard_003",
+    "view": 0,
+    "chamfer": 0.030107039896556338,
+    "fscore": 0.16093015724039472,
+    "n_points": 3600
+  },
+  {
+    "category": "keyboard",
+    "object": "keyboard_012",
+    "view": 0,
+    "chamfer": 0.06316828838341486,
+    "fscore": 0.0336450915243981,
+    "n_points": 3600
+  },
+  {
+    "category": "knife",
+    "object": "knife_005",
+    "view": 0,
+    "chamfer": 0.029911068682850254,
+    "fscore": 0.2305345769834651,
+    "n_points": 3600
+  },
+  {
+    "category": "knife",
+    "object": "knife_012",
+    "view": 0,
+    "chamfer": 0.025393411710012893,
+    "fscore": 0.24626061088790416,
+    "n_points": 3600
+  },
+  {
+    "category": "knife",
+    "object": "knife_017",
+    "view": 0,
+    "chamfer": 0.03496121672756536,
+    "fscore": 0.11979170628913113,
+    "n_points": 3600
+  },
+  {
+    "category": "knife",
+    "object": "knife_021",
+    "view": 0,
+    "chamfer": 0.03352798982217244,
+    "fscore": 0.12498015205416788,
+    "n_points": 3600
+  },
+  {
+    "category": "laptop",
+    "object": "laptop_004",
+    "view": 0,
+    "chamfer": 0.020996870846899152,
+    "fscore": 0.14883217060464213,
+    "n_points": 3600
+  },
+  {
+    "category": "light",
+    "object": "light_003",
+    "view": 0,
+    "chamfer": 0.019284443387499958,
+    "fscore": 0.12143540010937295,
+    "n_points": 3600
+  },
+  {
+    "category": "light",
+    "object": "light_004",
+    "view": 0,
+    "chamfer": 0.034737553884029784,
+    "fscore": 0.047185430463576164,
+    "n_points": 3600
+  },
+  {
+    "category": "light",
+    "object": "light_005",
+    "view": 0,
+    "chamfer": 0.16275430145224337,
+    "fscore": 0.006851681252878858,
+    "n_points": 3600
+  },
+  {
+    "category": "light",
+    "object": "light_011",
+    "view": 0,
+    "chamfer": 0.19978892103185683,
+    "fscore": 0.006407606448945845,
+    "n_points": 3600
+  },
+  {
+    "category": "light",
+    "object": "light_021",
+    "view": 0,
+    "chamfer": 0.03487676469340549,
+    "fscore": 0.05124853284833618,
+    "n_points": 3600
+  },
+  {
+    "category": "light",
+    "object": "light_022",
+    "view": 0,
+    "chamfer": 0.12403295702431688,
+    "fscore": 0.012550018188432157,
+    "n_points": 3600
+  },
+  {
+    "category": "lipstick",
+    "object": "lipstick_005",
+    "view": 0,
+    "chamfer": 0.025038371094927864,
+    "fscore": 0.20891499439112554,
+    "n_points": 3600
+  },
+  {
+    "category": "lipstick",
+    "object": "lipstick_011",
+    "view": 0,
+    "chamfer": 0.022437409971285995,
+    "fscore": 0.12329330572203259,
+    "n_points": 3600
+  },
+  {
+    "category": "lipstick",
+    "object": "lipstick_012",
+    "view": 0,
+    "chamfer": 0.018832338131588792,
+    "fscore": 0.29181085585027383,
+    "n_points": 3600
+  },
+  {
+    "category": "lipstick",
+    "object": "lipstick_025",
+    "view": 0,
+    "chamfer": 0.020154081004869893,
+    "fscore": 0.1491862863284484,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_006",
+    "view": 0,
+    "chamfer": 0.10826685438988656,
+    "fscore": 0.012095003951180966,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_009",
+    "view": 0,
+    "chamfer": 0.15907655937999665,
+    "fscore": 0.006318449873631003,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_017",
+    "view": 0,
+    "chamfer": 0.11780699512238277,
+    "fscore": 0.01516194869412272,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_035",
+    "view": 0,
+    "chamfer": 0.11897091142311904,
+    "fscore": 0.01226878067195168,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_040",
+    "view": 0,
+    "chamfer": 0.09955835770266894,
+    "fscore": 0.01299803648858709,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_044",
+    "view": 0,
+    "chamfer": 0.06915204583380145,
+    "fscore": 0.01971642485840639,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_050",
+    "view": 0,
+    "chamfer": 0.030955426904584138,
+    "fscore": 0.061197423266388794,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_052",
+    "view": 0,
+    "chamfer": 0.019327088306662285,
+    "fscore": 0.17809214940729143,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_056",
+    "view": 0,
+    "chamfer": 0.14241132686608143,
+    "fscore": 0.011841484847185908,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_068",
+    "view": 0,
+    "chamfer": 0.10997839313970656,
+    "fscore": 0.01361573373676248,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_071",
+    "view": 0,
+    "chamfer": 0.04218287315419623,
+    "fscore": 0.03719722055641019,
+    "n_points": 3600
+  },
+  {
+    "category": "medicine_bottle",
+    "object": "medicine_bottle_072",
+    "view": 0,
+    "chamfer": 0.08544540427316118,
+    "fscore": 0.023144151920586966,
+    "n_points": 3600
+  },
+  {
+    "category": "microwaveoven",
+    "object": "microwaveoven_005",
+    "view": 0,
+    "chamfer": 0.04157665181471157,
+    "fscore": 0.04018863087447546,
+    "n_points": 3600
+  },
+  {
+    "category": "monitor",
+    "object": "monitor_003",
+    "view": 0,
+    "chamfer": 0.14264209654605323,
+    "fscore": 0.009477674810446505,
+    "n_points": 3600
+  },
+  {
+    "category": "mouse",
+    "object": "mouse_003",
+    "view": 0,
+    "chamfer": 0.029247395584553054,
+    "fscore": 0.09017304216421228,
+    "n_points": 3600
+  },
+  {
+    "category": "mouse",
+    "object": "mouse_012",
+    "view": 0,
+    "chamfer": 0.019984432470563453,
+    "fscore": 0.11220964002266225,
+    "n_points": 3600
+  },
+  {
+    "category": "mouse",
+    "object": "mouse_022",
+    "view": 0,
+    "chamfer": 0.02423019452238196,
+    "fscore": 0.11476916853401452,
+    "n_points": 3600
+  },
+  {
+    "category": "mouse",
+    "object": "mouse_028",
+    "view": 0,
+    "chamfer": 0.02967986909876802,
+    "fscore": 0.08845615546105401,
+    "n_points": 3600
+  },
+  {
+    "category": "ornaments",
+    "object": "ornaments_006",
+    "view": 0,
+    "chamfer": 0.014178958743014024,
+    "fscore": 0.18715962905836017,
+    "n_points": 3600
+  },
+  {
+    "category": "pan",
+    "object": "pan_003",
+    "view": 0,
+    "chamfer": 0.09692426895140303,
+    "fscore": 0.03885348373172619,
+    "n_points": 3600
+  },
+  {
+    "category": "pen",
+    "object": "pen_004",
+    "view": 0,
+    "chamfer": 0.018561812344582696,
+    "fscore": 0.2873293977214747,
+    "n_points": 3600
+  },
+  {
+    "category": "pillow",
+    "object": "pillow_003",
+    "view": 0,
+    "chamfer": 0.026001358243810654,
+    "fscore": 0.15309561572448172,
+    "n_points": 3600
+  },
+  {
+    "category": "pillow",
+    "object": "pillow_004",
+    "view": 0,
+    "chamfer": 0.019220857032817874,
+    "fscore": 0.17861528991605385,
+    "n_points": 3600
+  },
+  {
+    "category": "pillow",
+    "object": "pillow_005",
+    "view": 0,
+    "chamfer": 0.020652607812189715,
+    "fscore": 0.18234301000442324,
+    "n_points": 3600
+  },
+  {
+    "category": "pillow",
+    "object": "pillow_011",
+    "view": 0,
+    "chamfer": 0.018758693894594787,
+    "fscore": 0.16378279745800037,
+    "n_points": 3600
+  },
+  {
+    "category": "pillow",
+    "object": "pillow_021",
+    "view": 0,
+    "chamfer": 0.03075532497706418,
+    "fscore": 0.10771102355800946,
+    "n_points": 3600
+  },
+  {
+    "category": "pillow",
+    "object": "pillow_022",
+    "view": 0,
+    "chamfer": 0.02720751581018907,
+    "fscore": 0.08361665839914835,
+    "n_points": 3600
+  },
+  {
+    "category": "plant",
+    "object": "plant_003",
+    "view": 0,
+    "chamfer": 0.028449189668864318,
+    "fscore": 0.12894337693592564,
+    "n_points": 3600
+  },
+  {
+    "category": "plant",
+    "object": "plant_004",
+    "view": 0,
+    "chamfer": 0.07016017092247517,
+    "fscore": 0.059112962912200875,
+    "n_points": 3600
+  },
+  {
+    "category": "plug",
+    "object": "plug_002",
+    "view": 0,
+    "chamfer": 0.03823533923280956,
+    "fscore": 0.04368029739776952,
+    "n_points": 3600
+  },
+  {
+    "category": "popcorn",
+    "object": "popcorn_005",
+    "view": 0,
+    "chamfer": 0.07517507402061117,
+    "fscore": 0.018045513808225673,
+    "n_points": 3600
+  },
+  {
+    "category": "popcorn",
+    "object": "popcorn_022",
+    "view": 0,
+    "chamfer": 0.11601768559650259,
+    "fscore": 0.012079923384990424,
+    "n_points": 3600
+  },
+  {
+    "category": "popcorn",
+    "object": "popcorn_025",
+    "view": 0,
+    "chamfer": 0.10826601312903125,
+    "fscore": 0.009291270527225585,
+    "n_points": 3600
+  },
+  {
+    "category": "popcorn",
+    "object": "popcorn_027",
+    "view": 0,
+    "chamfer": 0.08197920521962775,
+    "fscore": 0.013620818428397342,
+    "n_points": 3600
+  },
+  {
+    "category": "popcorn",
+    "object": "popcorn_028",
+    "view": 0,
+    "chamfer": 0.042807210187843135,
+    "fscore": 0.04781251757296294,
+    "n_points": 3600
+  },
+  {
+    "category": "popcorn",
+    "object": "popcorn_035",
+    "view": 0,
+    "chamfer": 0.09006708803795718,
+    "fscore": 0.014525368248772505,
+    "n_points": 3600
+  },
+  {
+    "category": "potato_chips",
+    "object": "potato_chips_005",
+    "view": 0,
+    "chamfer": 0.10015195084520559,
+    "fscore": 0.03645420955397203,
+    "n_points": 3600
+  },
+  {
+    "category": "potato_chips",
+    "object": "potato_chips_007",
+    "view": 0,
+    "chamfer": 0.027852556561624518,
+    "fscore": 0.19559330379123582,
+    "n_points": 3600
+  },
+  {
+    "category": "power_strip",
+    "object": "power_strip_003",
+    "view": 0,
+    "chamfer": 0.12572744826713042,
+    "fscore": 0.008914421553090333,
+    "n_points": 3600
+  },
+  {
+    "category": "power_strip",
+    "object": "power_strip_004",
+    "view": 0,
+    "chamfer": 0.016610964430457176,
+    "fscore": 0.23404497560773652,
+    "n_points": 3600
+  },
+  {
+    "category": "power_strip",
+    "object": "power_strip_005",
+    "view": 0,
+    "chamfer": 0.01975333995345796,
+    "fscore": 0.26842833919079334,
+    "n_points": 3600
+  },
+  {
+    "category": "power_strip",
+    "object": "power_strip_031",
+    "view": 0,
+    "chamfer": 0.05954644767458876,
+    "fscore": 0.024238119028289516,
+    "n_points": 3600
+  },
+  {
+    "category": "power_strip",
+    "object": "power_strip_034",
+    "view": 0,
+    "chamfer": 0.01617715280041742,
+    "fscore": 0.15858988733362675,
+    "n_points": 3600
+  },
+  {
+    "category": "projector",
+    "object": "projector_005",
+    "view": 0,
+    "chamfer": 0.11848439065912295,
+    "fscore": 0.007828091666093181,
+    "n_points": 3600
+  },
+  {
+    "category": "projector",
+    "object": "projector_007",
+    "view": 0,
+    "chamfer": 0.10672490336089212,
+    "fscore": 0.01465936955826433,
+    "n_points": 3600
+  },
+  {
+    "category": "puff",
+    "object": "puff_014",
+    "view": 0,
+    "chamfer": 0.07737420010473735,
+    "fscore": 0.02634648440697389,
+    "n_points": 3600
+  },
+  {
+    "category": "puff",
+    "object": "puff_022",
+    "view": 0,
+    "chamfer": 0.05959797463230004,
+    "fscore": 0.03536672341600332,
+    "n_points": 3600
+  },
+  {
+    "category": "puff",
+    "object": "puff_025",
+    "view": 0,
+    "chamfer": 0.09573584147657867,
+    "fscore": 0.014351081530782031,
+    "n_points": 3600
+  },
+  {
+    "category": "razor",
+    "object": "razor_003",
+    "view": 0,
+    "chamfer": 0.03756495953236129,
+    "fscore": 0.11156698753353322,
+    "n_points": 3600
+  },
+  {
+    "category": "razor",
+    "object": "razor_010",
+    "view": 0,
+    "chamfer": 0.040070698802890624,
+    "fscore": 0.07616709450182078,
+    "n_points": 3600
+  },
+  {
+    "category": "red_wine_glass",
+    "object": "red_wine_glass_011",
+    "view": 0,
+    "chamfer": 0.0477054659287741,
+    "fscore": 0.05275117392719328,
+    "n_points": 3600
+  },
+  {
+    "category": "red_wine_glass",
+    "object": "red_wine_glass_019",
+    "view": 0,
+    "chamfer": 0.04306396199475274,
+    "fscore": 0.06627648297176643,
+    "n_points": 3600
+  },
+  {
+    "category": "red_wine_glass",
+    "object": "red_wine_glass_025",
+    "view": 0,
+    "chamfer": 0.019338385788823253,
+    "fscore": 0.16868442856982904,
+    "n_points": 3600
+  },
+  {
+    "category": "remote_control",
+    "object": "remote_control_003",
+    "view": 0,
+    "chamfer": 0.01675903065031131,
+    "fscore": 0.1983888752756677,
+    "n_points": 3600
+  },
+  {
+    "category": "remote_control",
+    "object": "remote_control_012",
+    "view": 0,
+    "chamfer": 0.016651225918384516,
+    "fscore": 0.22925066056545793,
+    "n_points": 3600
+  },
+  {
+    "category": "remote_control",
+    "object": "remote_control_020",
+    "view": 0,
+    "chamfer": 0.016599650595630448,
+    "fscore": 0.18175373254321625,
+    "n_points": 3600
+  },
+  {
+    "category": "remote_control",
+    "object": "remote_control_024",
+    "view": 0,
+    "chamfer": 0.014205214665703297,
+    "fscore": 0.23675641427543304,
+    "n_points": 3600
+  },
+  {
+    "category": "remote_control",
+    "object": "remote_control_026",
+    "view": 0,
+    "chamfer": 0.04180832147923634,
+    "fscore": 0.02900068619307306,
+    "n_points": 3600
+  },
+  {
+    "category": "ricecooker",
+    "object": "ricecooker_005",
+    "view": 0,
+    "chamfer": 0.08985470826232397,
+    "fscore": 0.013352432085904321,
+    "n_points": 3600
+  },
+  {
+    "category": "scissor",
+    "object": "scissor_003",
+    "view": 0,
+    "chamfer": 0.026356916974426766,
+    "fscore": 0.13380736910148677,
+    "n_points": 3600
+  },
+  {
+    "category": "scissor",
+    "object": "scissor_004",
+    "view": 0,
+    "chamfer": 0.030337116810817442,
+    "fscore": 0.14928667701520804,
+    "n_points": 3600
+  },
+  {
+    "category": "scissor",
+    "object": "scissor_011",
+    "view": 0,
+    "chamfer": 0.019799244265994116,
+    "fscore": 0.2456442879271312,
+    "n_points": 3600
+  },
+  {
+    "category": "shampoo",
+    "object": "shampoo_003",
+    "view": 0,
+    "chamfer": 0.02522650463378127,
+    "fscore": 0.09494574528840663,
+    "n_points": 3600
+  },
+  {
+    "category": "shampoo",
+    "object": "shampoo_004",
+    "view": 0,
+    "chamfer": 0.021940650167438173,
+    "fscore": 0.13982806369720746,
+    "n_points": 3600
+  },
+  {
+    "category": "shampoo",
+    "object": "shampoo_005",
+    "view": 0,
+    "chamfer": 0.018206994889753775,
+    "fscore": 0.2680617447529142,
+    "n_points": 3600
+  },
+  {
+    "category": "shampoo",
+    "object": "shampoo_011",
+    "view": 0,
+    "chamfer": 0.01860972452849685,
+    "fscore": 0.21370175549781353,
+    "n_points": 3600
+  },
+  {
+    "category": "shampoo",
+    "object": "shampoo_021",
+    "view": 0,
+    "chamfer": 0.15932785813769518,
+    "fscore": 0.006851681252878858,
+    "n_points": 3600
+  },
+  {
+    "category": "shampoo",
+    "object": "shampoo_022",
+    "view": 0,
+    "chamfer": 0.01906801802606613,
+    "fscore": 0.17608631374046743,
+    "n_points": 3600
+  },
+  {
+    "category": "soap",
+    "object": "soap_003",
+    "view": 0,
+    "chamfer": 0.03707390130339906,
+    "fscore": 0.06511688548202844,
+    "n_points": 3600
+  },
+  {
+    "category": "soap",
+    "object": "soap_004",
+    "view": 0,
+    "chamfer": 0.054120261260671806,
+    "fscore": 0.024843432910729487,
+    "n_points": 3600
+  },
+  {
+    "category": "soap",
+    "object": "soap_005",
+    "view": 0,
+    "chamfer": 0.03746792060415635,
+    "fscore": 0.06422999814680662,
+    "n_points": 3600
+  },
+  {
+    "category": "soap",
+    "object": "soap_019",
+    "view": 0,
+    "chamfer": 0.03929853127533127,
+    "fscore": 0.07450892634251764,
+    "n_points": 3600
+  },
+  {
+    "category": "soap",
+    "object": "soap_021",
+    "view": 0,
+    "chamfer": 0.02549363975291729,
+    "fscore": 0.12352738842548802,
+    "n_points": 3600
+  },
+  {
+    "category": "soap",
+    "object": "soap_035",
+    "view": 0,
+    "chamfer": 0.04220706445674436,
+    "fscore": 0.048373053249512625,
+    "n_points": 3600
+  },
+  {
+    "category": "sofa",
+    "object": "sofa_003",
+    "view": 0,
+    "chamfer": 0.04885566541039311,
+    "fscore": 0.08454550409418223,
+    "n_points": 3600
+  },
+  {
+    "category": "sofa",
+    "object": "sofa_004",
+    "view": 0,
+    "chamfer": 0.032938238332267916,
+    "fscore": 0.06724845995893224,
+    "n_points": 3600
+  },
+  {
+    "category": "speaker",
+    "object": "speaker_005",
+    "view": 0,
+    "chamfer": 0.044113626982818344,
+    "fscore": 0.06294848662920138,
+    "n_points": 3600
+  },
+  {
+    "category": "stool",
+    "object": "stool_005",
+    "view": 0,
+    "chamfer": 0.06585040919494635,
+    "fscore": 0.0707768608877015,
+    "n_points": 3600
+  },
+  {
+    "category": "stool",
+    "object": "stool_007",
+    "view": 0,
+    "chamfer": 0.16744870438635345,
+    "fscore": 0.010069953027930702,
+    "n_points": 3600
+  },
+  {
+    "category": "suitcase",
+    "object": "suitcase_005",
+    "view": 0,
+    "chamfer": 0.04788697154763139,
+    "fscore": 0.019941905191394542,
+    "n_points": 3600
+  },
+  {
+    "category": "table",
+    "object": "table_005",
+    "view": 0,
+    "chamfer": 0.016757877719778335,
+    "fscore": 0.18101980895388742,
+    "n_points": 3600
+  },
+  {
+    "category": "table",
+    "object": "table_015",
+    "view": 0,
+    "chamfer": 0.04754163359321334,
+    "fscore": 0.030102095695666985,
+    "n_points": 3600
+  },
+  {
+    "category": "table",
+    "object": "table_023",
+    "view": 0,
+    "chamfer": 0.02776305239172678,
+    "fscore": 0.102871386976059,
+    "n_points": 3600
+  },
+  {
+    "category": "table",
+    "object": "table_026",
+    "view": 0,
+    "chamfer": 0.04305135232035156,
+    "fscore": 0.08430805220389068,
+    "n_points": 3600
+  },
+  {
+    "category": "tape_measure",
+    "object": "tape_measure_006",
+    "view": 0,
+    "chamfer": 0.03934605236514662,
+    "fscore": 0.029496299018321168,
+    "n_points": 3600
+  },
+  {
+    "category": "tape_measure",
+    "object": "tape_measure_021",
+    "view": 0,
+    "chamfer": 0.053003159747283826,
+    "fscore": 0.022861428294948714,
+    "n_points": 3600
+  },
+  {
+    "category": "tape_measure",
+    "object": "tape_measure_023",
+    "view": 0,
+    "chamfer": 0.04946064494202619,
+    "fscore": 0.024851445261355624,
+    "n_points": 3600
+  },
+  {
+    "category": "teapot",
+    "object": "teapot_003",
+    "view": 0,
+    "chamfer": 0.03144520319578937,
+    "fscore": 0.09934210279303599,
+    "n_points": 3600
+  },
+  {
+    "category": "teapot",
+    "object": "teapot_004",
+    "view": 0,
+    "chamfer": 0.0808063942851047,
+    "fscore": 0.01741506074269795,
+    "n_points": 3600
+  },
+  {
+    "category": "teapot",
+    "object": "teapot_005",
+    "view": 0,
+    "chamfer": 0.06623779859935847,
+    "fscore": 0.022553307818480046,
+    "n_points": 3600
+  },
+  {
+    "category": "teapot",
+    "object": "teapot_011",
+    "view": 0,
+    "chamfer": 0.03492391906228143,
+    "fscore": 0.09868402107869957,
+    "n_points": 3600
+  },
+  {
+    "category": "teapot",
+    "object": "teapot_021",
+    "view": 0,
+    "chamfer": 0.04298688609989219,
+    "fscore": 0.05269789279412659,
+    "n_points": 3600
+  },
+  {
+    "category": "teapot",
+    "object": "teapot_022",
+    "view": 0,
+    "chamfer": 0.05643673303125675,
+    "fscore": 0.022811166224478027,
+    "n_points": 3600
+  },
+  {
+    "category": "teddy_bear",
+    "object": "teddy_bear_005",
+    "view": 0,
+    "chamfer": 0.026168533781659925,
+    "fscore": 0.12041589656971552,
+    "n_points": 3600
+  },
+  {
+    "category": "teddy_bear",
+    "object": "teddy_bear_007",
+    "view": 0,
+    "chamfer": 0.0178896918447397,
+    "fscore": 0.16086621884023464,
+    "n_points": 3600
+  },
+  {
+    "category": "thermos",
+    "object": "thermos_004",
+    "view": 0,
+    "chamfer": 0.023432778170328836,
+    "fscore": 0.08199310975410638,
+    "n_points": 3600
+  },
+  {
+    "category": "timer",
+    "object": "timer_011",
+    "view": 0,
+    "chamfer": 0.017060108897799704,
+    "fscore": 0.19601740574136114,
+    "n_points": 3600
+  },
+  {
+    "category": "timer",
+    "object": "timer_017",
+    "view": 0,
+    "chamfer": 0.019271944211437318,
+    "fscore": 0.1378713796001951,
+    "n_points": 3600
+  },
+  {
+    "category": "timer",
+    "object": "timer_020",
+    "view": 0,
+    "chamfer": 0.03453632399428094,
+    "fscore": 0.055285022034836026,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_005",
+    "view": 0,
+    "chamfer": 0.03748462515689521,
+    "fscore": 0.08769718210592412,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_011",
+    "view": 0,
+    "chamfer": 0.034142571495012,
+    "fscore": 0.10309571404193671,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_012",
+    "view": 0,
+    "chamfer": 0.03047998061334467,
+    "fscore": 0.08272005833177894,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_019",
+    "view": 0,
+    "chamfer": 0.04089349494360899,
+    "fscore": 0.05486284289276808,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_028",
+    "view": 0,
+    "chamfer": 0.053271948952244616,
+    "fscore": 0.0226293876965042,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_033",
+    "view": 0,
+    "chamfer": 0.0671850274881899,
+    "fscore": 0.0318955042527339,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_041",
+    "view": 0,
+    "chamfer": 0.09185767138939097,
+    "fscore": 0.03798666868656264,
+    "n_points": 3600
+  },
+  {
+    "category": "tissue",
+    "object": "tissue_050",
+    "view": 0,
+    "chamfer": 0.03670777566396642,
+    "fscore": 0.06893888548925166,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_brush",
+    "object": "tooth_brush_005",
+    "view": 0,
+    "chamfer": 0.04523435113755772,
+    "fscore": 0.043457262209089124,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_brush",
+    "object": "tooth_brush_011",
+    "view": 0,
+    "chamfer": 0.04544281997901073,
+    "fscore": 0.04432810211451927,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_brush",
+    "object": "tooth_brush_012",
+    "view": 0,
+    "chamfer": 0.04508373588472802,
+    "fscore": 0.04730065619407437,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_brush",
+    "object": "tooth_brush_020",
+    "view": 0,
+    "chamfer": 0.04363822214519795,
+    "fscore": 0.0526033019380266,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_paste",
+    "object": "tooth_paste_003",
+    "view": 0,
+    "chamfer": 0.018536063905522284,
+    "fscore": 0.2554994658286529,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_paste",
+    "object": "tooth_paste_005",
+    "view": 0,
+    "chamfer": 0.022649966555785016,
+    "fscore": 0.2508093401294944,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_paste",
+    "object": "tooth_paste_012",
+    "view": 0,
+    "chamfer": 0.017159169110514613,
+    "fscore": 0.2067347502070108,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_paste",
+    "object": "tooth_paste_024",
+    "view": 0,
+    "chamfer": 0.022498031794005863,
+    "fscore": 0.23559299333953088,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_paste",
+    "object": "tooth_paste_026",
+    "view": 0,
+    "chamfer": 0.017701915532346683,
+    "fscore": 0.21981055697584773,
+    "n_points": 3600
+  },
+  {
+    "category": "tooth_paste",
+    "object": "tooth_paste_029",
+    "view": 0,
+    "chamfer": 0.022342591576930745,
+    "fscore": 0.2536974077671752,
+    "n_points": 3600
+  },
+  {
+    "category": "tvstand",
+    "object": "tvstand_003",
+    "view": 0,
+    "chamfer": 0.0237234223380021,
+    "fscore": 0.08727330201192528,
+    "n_points": 3600
+  },
+  {
+    "category": "umbrella",
+    "object": "umbrella_005",
+    "view": 0,
+    "chamfer": 0.03002104388725334,
+    "fscore": 0.1682502421659684,
+    "n_points": 3600
+  },
+  {
+    "category": "umbrella",
+    "object": "umbrella_007",
+    "view": 0,
+    "chamfer": 0.016177608640137415,
+    "fscore": 0.2915778819518432,
+    "n_points": 3600
+  },
+  {
+    "category": "umbrella",
+    "object": "umbrella_020",
+    "view": 0,
+    "chamfer": 0.01755511395122117,
+    "fscore": 0.2661242642545387,
+    "n_points": 3600
+  },
+  {
+    "category": "vase",
+    "object": "vase_003",
+    "view": 0,
+    "chamfer": 0.019517595718839938,
+    "fscore": 0.14768758214547648,
+    "n_points": 3600
+  },
+  {
+    "category": "vase",
+    "object": "vase_012",
+    "view": 0,
+    "chamfer": 0.02449031534855353,
+    "fscore": 0.13371123304890134,
+    "n_points": 3600
+  },
+  {
+    "category": "watch",
+    "object": "watch_003",
+    "view": 0,
+    "chamfer": 0.1566009448956165,
+    "fscore": 0.011266598113291903,
+    "n_points": 3600
+  },
+  {
+    "category": "watch",
+    "object": "watch_012",
+    "view": 0,
+    "chamfer": 0.029216383009261285,
+    "fscore": 0.09585295417075249,
+    "n_points": 3600
+  }
+]
