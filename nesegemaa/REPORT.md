@@ -59,11 +59,11 @@ Protocol (all numbers): splits.json test lists, view `00.png` unless noted, Unit
 
 | object | atlas_run | atlas_ch | atlas_f | pointe_ch | pointe_f | triposr_ch | triposr_f |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| cup_cup_cup_003 | a2_p25_sphere_s7 | None | None | 0.12231496036544376 | 0.058212 | 0.0889766796806367 | 0.078613 |
-| hammer_hammer_hammer_011 | a2_p25_sphere_s7 | None | None | 0.19395787852503654 | 0.072671 | 0.158284738432672 | 0.106896 |
-| medicine_bottle_medicine_bottle_medicine_bottle_068 | a2_p25_sphere_s7 | None | None | 0.16207312387126338 | 0.05494 | 0.08331780645008555 | 0.071276 |
-| shampoo_shampoo_shampoo_003 | a2_p25_sphere_s7 | None | None | 0.18389601957023 | 0.112409 | 0.11138122294242224 | 0.078353 |
-| teapot_teapot_teapot_003 | a2_p25_sphere_s7 | None | None | 0.05748694426358795 | 0.074082 | 0.04904745994546364 | 0.10268 |
+| cup_cup_003 | a2_p25_sphere_s7 | 0.01271540539993973 | 0.30408388184934637 | 0.12231496036544376 | 0.058212 | 0.0889766796806367 | 0.078613 |
+| hammer_hammer_011 | a2_p25_sphere_s7 | 0.04039657617589024 | 0.11378251884741587 | 0.19395787852503654 | 0.072671 | 0.158284738432672 | 0.106896 |
+| medicine_bottle_medicine_bottle_068 | a2_p25_sphere_s7 | 0.07484982794340346 | 0.04558537024685491 | 0.16207312387126338 | 0.05494 | 0.08331780645008555 | 0.071276 |
+| shampoo_shampoo_003 | a2_p25_sphere_s7 | 0.011733729480746155 | 0.43445457075300914 | 0.18389601957023 | 0.112409 | 0.11138122294242224 | 0.078353 |
+| teapot_teapot_003 | a2_p25_sphere_s7 | 0.012690148160550637 | 0.3760394522053049 | 0.05748694426358795 | 0.074082 | 0.04904745994546364 | 0.10268 |
 
 ## Interpretation
 

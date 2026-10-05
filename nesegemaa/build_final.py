@@ -81,12 +81,23 @@ def main():
         NES / "ablation_triposr.csv", "triposr")
 
     # ---- cross table: per-object join on shared panel objects ----
+    # Object-id dialects differ by track: atlas stores the bare render stem
+    # ("cup_003") while pointe/triposr doubled it ("cup_cup_003"). Normalize
+    # by collapsing exactly one doubled "cat_cat_" prefix.
     import csv as _csv
+
+    def _norm(cat, obj):
+        cat, obj = str(cat), str(obj)
+        dbl = cat + "_" + cat + "_"
+        if obj.startswith(dbl):
+            return (cat, obj[len(cat) + 1:])
+        return (cat, obj)
+
     atlas_qm = {}
     for qp in sorted((ROOT / "results" / "atlasnet").glob("*/qual_metrics.json")):
         try:
             for r in json.loads(Path(qp).read_text()):
-                atlas_qm.setdefault((r["category"], r["object"]), []).append(
+                atlas_qm.setdefault(_norm(r["category"], r["object"]), []).append(
                     (qp.parent.name, r["chamfer"], r["fscore"]))
         except Exception:
             pass
@@ -96,7 +107,7 @@ def main():
             with open(rp) as f:
                 for r in _csv.DictReader(f):
                     if rp.stem == "results":
-                        pointe_pc[(r["category"], r["object"])] = (
+                        pointe_pc[_norm(r["category"], r["object"])] = (
                             float(r["chamfer"]), float(r["fscore"]))
         except Exception:
             pass
@@ -105,7 +116,7 @@ def main():
             with open(rp) as f:
                 for r in _csv.DictReader(f):
                     if rp.stem == "results":
-                        tripoSR_pc[(r["category"], r["object"])] = (
+                        tripoSR_pc[_norm(r["category"], r["object"])] = (
                             float(r["chamfer"]), float(r["fscore"]))
         except Exception:
             pass
