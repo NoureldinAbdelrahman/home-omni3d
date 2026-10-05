@@ -1,0 +1,97 @@
+{
+  "method": "Point-E faithful (base40M-imagevec -> upsample)",
+  "config": {
+    "views": [
+      0
+    ],
+    "fusion": "first",
+    "preprocessing": "raw",
+    "guidance": 3.0,
+    "points": 4096,
+    "seeds": [
+      0
+    ],
+    "denoise": false,
+    "tau_squared": 0.001,
+    "tau_euclid_approx": 0.0316,
+    "normalization": "subtract mean, divide by max radius (unit sphere)"
+  },
+  "weights": {
+    "model_urls": {
+      "base40M-imagevec": "https://openaipublic.azureedge.net/main/point-e/base_40m_imagevec.pt",
+      "base40M-textvec": "https://openaipublic.azureedge.net/main/point-e/base_40m_textvec.pt",
+      "base40M-uncond": "https://openaipublic.azureedge.net/main/point-e/base_40m_uncond.pt",
+      "base40M": "https://openaipublic.azureedge.net/main/point-e/base_40m.pt",
+      "base300M": "https://openaipublic.azureedge.net/main/point-e/base_300m.pt",
+      "base1B": "https://openaipublic.azureedge.net/main/point-e/base_1b.pt",
+      "upsample": "https://openaipublic.azureedge.net/main/point-e/upsample_40m.pt",
+      "sdf": "https://openaipublic.azureedge.net/main/point-e/sdf.pt",
+      "pointnet": "https://openaipublic.azureedge.net/main/point-e/pointnet.pt"
+    },
+    "clip_model": "ViT-L/14",
+    "cache_files": [
+      {
+        "file": "ViT-L-14.pt",
+        "bytes": 932768134,
+        "sha256": "b8cca3fd41ae0c99ba7e8951adf17d267cdb84cd88be6f7c2e0eca1737a03836"
+      },
+      {
+        "file": "base_40m_imagevec.pt",
+        "bytes": 161385413,
+        "sha256": "ce89e973acbbc0c43b0fd46c152ae88d1f1dfebc756a5aa911602e6945f156c3"
+      },
+      {
+        "file": "upsample_40m.pt",
+        "bytes": 161934137,
+        "sha256": "07881c369ee0bef1a45b8ff1f464626a099a6023eef4197e4a445f5dce37ed20"
+      }
+    ],
+    "backbone": "frozen",
+    "fallback": "none"
+  },
+  "n_rows": 5,
+  "n_objects": 5,
+  "micro_chamfer": 0.14035585705807435,
+  "micro_fscore": 0.07553299999999999,
+  "macro_chamfer": 0.14035585705807435,
+  "macro_fscore": 0.07553299999999999,
+  "noise_categories_lt3": [
+    "cup",
+    "hammer",
+    "medicine_bottle",
+    "shampoo",
+    "teapot"
+  ],
+  "per_category": [
+    {
+      "category": "cup",
+      "n": 1,
+      "chamfer": 0.1256413210617664,
+      "fscore": 0.072488
+    },
+    {
+      "category": "hammer",
+      "n": 1,
+      "chamfer": 0.18496985205574556,
+      "fscore": 0.074694
+    },
+    {
+      "category": "medicine_bottle",
+      "n": 1,
+      "chamfer": 0.15328439311623032,
+      "fscore": 0.058333
+    },
+    {
+      "category": "shampoo",
+      "n": 1,
+      "chamfer": 0.1826400976484788,
+      "fscore": 0.089604
+    },
+    {
+      "category": "teapot",
+      "n": 1,
+      "chamfer": 0.05524362140815068,
+      "fscore": 0.082546
+    }
+  ]
+}
