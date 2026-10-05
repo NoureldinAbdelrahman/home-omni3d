@@ -64,9 +64,14 @@ class TrainerLoss(object):
         d.diagonal(dim1=-2, dim2=-1).fill_(float("inf"))
         nn_idx = d.topk(min(k, P - 1), dim=-1, largest=False).indices
         kk = nn_idx.shape[-1]
-        neigh = torch.gather(prims.unsqueeze(-2).expand(B, M, P, P, 3),
-                             dim=-2, index=nn_idx.unsqueeze(-1).expand(B, M, P, kk, 3))
-        return ((prims.unsqueeze(-2) - neigh).pow(2).sum(-1)).mean()
+        # src[b,m,s,t,:] must equal prims[b,m,t,:]: unsqueeze the KEY dim
+        # (dim 2), not the query dim. NOTE: .contiguous() is load-bearing —
+        # torch.gather silently ignores the index on stride-0 (expanded)
+        # dims, returning broadcast copies (both verified numerically).
+        src = prims.unsqueeze(2).expand(B, M, P, P, 3).contiguous()
+        neigh = torch.gather(src, dim=3,
+                             index=nn_idx.unsqueeze(-1).expand(B, M, P, kk, 3))
+        return ((prims.unsqueeze(3) - neigh).pow(2).sum(-1)).mean()
 
     def metro(self):
         """
