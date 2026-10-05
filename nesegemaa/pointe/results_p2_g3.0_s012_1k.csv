@@ -1,0 +1,16 @@
+object,category,view,fusion,preprocessing,guidance,points,seed,denoise,chamfer,fscore,seconds
+medicine_bottle_medicine_bottle_068,medicine_bottle,0,first,masked,3.0,1024,0,False,0.16135361667430223,0.03317,4.5
+medicine_bottle_medicine_bottle_068,medicine_bottle,0,first,masked,3.0,1024,1,False,0.1489218759156989,0.031298,4.0
+medicine_bottle_medicine_bottle_068,medicine_bottle,0,first,masked,3.0,1024,2,False,0.15912181631672023,0.037983,4.1
+cup_cup_003,cup,0,first,masked,3.0,1024,0,False,0.11686044112601476,0.039707,4.3
+cup_cup_003,cup,0,first,masked,3.0,1024,1,False,0.1302082212394851,0.037316,4.7
+cup_cup_003,cup,0,first,masked,3.0,1024,2,False,0.12226766193995738,0.027696,4.7
+teapot_teapot_003,teapot,0,first,masked,3.0,1024,0,False,0.06556902822951742,0.031264,4.8
+teapot_teapot_003,teapot,0,first,masked,3.0,1024,1,False,0.046252557350579565,0.064453,4.7
+teapot_teapot_003,teapot,0,first,masked,3.0,1024,2,False,0.049158430395432606,0.08376,4.8
+hammer_hammer_011,hammer,0,first,masked,3.0,1024,0,False,0.1894321451586763,0.067521,4.8
+hammer_hammer_011,hammer,0,first,masked,3.0,1024,1,False,0.18785815866369754,0.080254,4.9
+hammer_hammer_011,hammer,0,first,masked,3.0,1024,2,False,0.2005217364977697,0.062207,4.9
+shampoo_shampoo_003,shampoo,0,first,masked,3.0,1024,0,False,0.18682835948455226,0.083597,4.9
+shampoo_shampoo_003,shampoo,0,first,masked,3.0,1024,1,False,0.19801539997565343,0.059882,4.9
+shampoo_shampoo_003,shampoo,0,first,masked,3.0,1024,2,False,0.20961352482727777,0.07487,4.9

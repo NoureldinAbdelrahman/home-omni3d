@@ -173,6 +173,7 @@ def main():
         print("[pointe] loading upsample ...", flush=True)
         up_model, up_diff = load_stage("upsample")
         stages.append((up_model, up_diff, 4096 - 1024, 1.0))
+    n_stages = len(stages)
     sampler = PointCloudSampler(
         device=device,
         models=[s[0] for s in stages],
@@ -180,6 +181,14 @@ def main():
         num_points=[s[2] for s in stages],
         aux_channels=["R", "G", "B"],
         guidance_scale=[s[3] for s in stages],
+        # Explicit per-stage sequences: the sampler only auto-expands them
+        # for multi-stage setups, so single-stage (1024-pt) calls must pass
+        # length-1 lists or the constructor asserts. Values = point-e defaults.
+        use_karras=[True] * n_stages,
+        karras_steps=[64] * n_stages,
+        sigma_min=[1e-3] * n_stages,
+        sigma_max=([120, 160])[:n_stages],
+        s_churn=([3, 0])[:n_stages],
     )
     cache_dir = str(default_cache_dir())
     prov = weight_provenance(cache_dir)
