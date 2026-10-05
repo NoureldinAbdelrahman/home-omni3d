@@ -2,7 +2,7 @@
   "category": "teapot",
   "object": "teapot_003",
   "view": 0,
-  "chamfer": 0.019178027334914867,
-  "fscore": 0.13113228022373133,
-  "n_points": 2500
+  "chamfer": 0.01221591386167194,
+  "fscore": 0.26903952084417465,
+  "n_points": 64050
 }
