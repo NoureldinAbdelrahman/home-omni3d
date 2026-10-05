@@ -66,7 +66,7 @@ class TrainerLoss(object):
         kk = nn_idx.shape[-1]
         neigh = torch.gather(prims.unsqueeze(-2).expand(B, M, P, P, 3),
                              dim=-2, index=nn_idx.unsqueeze(-1).expand(B, M, P, kk, 3))
-        return ((prims.unsqueeze(-1) - neigh).pow(2).sum(-1)).mean()
+        return ((prims.unsqueeze(-2) - neigh).pow(2).sum(-1)).mean()
 
     def metro(self):
         """
