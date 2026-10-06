@@ -9,7 +9,7 @@ Team 3D reconstruction from 2D images (DMET 901). Home subset of [OmniObject3D](
 | Branch | Owner | Models |
 |--------|-------|--------|
 | `mohamed-ayman` | Mohamed Ayman | Pix2Vox, Pix2Vox++ |
-| `ashry` | Ashry | Pixel2Mesh, DeepSDF, 3DGS, Nvidia NeRF |
+| `ashry` | Ashry | NeuS, 3DGS, Nvidia NeRF |
 | `hamdy` | Hamdy | TripoSR |
 | `nesegemaa` | Nesegemaa | Point-E, AtlasNet |
 | `bones` | Bones | COLMAP, additive-subtractive |
