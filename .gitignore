@@ -41,3 +41,13 @@ master.html
 .idea/
 .vscode/
 *.swp
+
+# --- Ashry reconstruction experiments ---
+ashry/**/__pycache__/
+ashry/**/*.log
+ashry/**/*.deb
+ashry/*/results/*
+ashry/*/results/**/*
+!ashry/benchmark/results/benchmark_v1.json
+ashry/tools/qualitative/
+ashry/3dgs/qualitative/
