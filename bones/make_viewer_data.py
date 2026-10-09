@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pack COLMAP results into compact files for the 3D web viewer (bones/viewer/).
 
-Writes to ``--out`` (default bones/work/viewer/data):
+Writes to ``--out`` (default bones/viewer/data):
 * manifest.json        - every object's metrics (known + sfm), cameras, offsets
 * pts/<cat>.json       - {"b64": base64 of int16 xyz} (scale 1/32767, render frame) for GT, known, sfm
 * img/<cat>.webp       - one 256px photo per object, in a horizontal strip
@@ -51,7 +51,7 @@ def quant(P):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=Path, default=ROOT / "bones/work/viewer/data")
+    ap.add_argument("--out", type=Path, default=ROOT / "bones/viewer/data")
     a = ap.parse_args()
     (a.out / "pts").mkdir(parents=True, exist_ok=True)
     (a.out / "img").mkdir(parents=True, exist_ok=True)

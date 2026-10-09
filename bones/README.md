@@ -31,6 +31,23 @@ python bones/eval_clouds.py results/colmap/sparse_known
 
 `bones/work/` (COLMAP databases, sparse models, points) is gitignored.
 
+### 3D viewer
+
+`bones/viewer/` is a self-contained web page: rotate each object's GT cloud and
+both COLMAP clouds in 3D, see the 24 cameras (which ones blind SfM linked), the
+photo, per-object scores and a per-category chart. Its data (`viewer/data/`,
+~19 MB) is committed, so it runs straight from a checkout:
+
+```bash
+python -m http.server 8765 -d bones/viewer   # then open http://localhost:8765
+```
+
+It must be served over HTTP (opening `index.html` as a file blocks the data
+fetch). Deep links: `http://localhost:8765/#chair__chair_001`. After a new run,
+rebuild the data with `python bones/make_viewer_data.py`;
+`python bones/viewer/screenshot.py` takes headless desktop/dark/phone shots and
+reports page errors.
+
 ### Reading the numbers
 
 - GT clouds have 4096 points, ~1.6% of the object radius apart, so even a

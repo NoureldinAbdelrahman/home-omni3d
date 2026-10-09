@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>COLMAP Sparse Viewer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -104,7 +105,7 @@ td.num { padding-left: 10px; }
 .chart-head { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; justify-content: space-between; }
 .legend { display: flex; gap: 14px; font-size: 0.8rem; color: var(--muted); }
 #chart { width: 100%; overflow-x: auto; position: relative; }
-#chart svg { display: block; width: 100%; min-width: 420px; }
+#chart svg { display: block; width: 100%; min-width: 560px; }
 #chart text { fill: var(--muted); font: 11px var(--f-body); }
 #chart .axis text { font-family: var(--f-mono); font-size: 10px; }
 #chart .grid line { stroke: var(--line); }
@@ -266,7 +267,7 @@ td.num { padding-left: 10px; }
   function applyVisibility() {
     layers.gt.visible = $("l-gt").checked; layers.known.visible = $("l-known").checked;
     layers.sfm.visible = $("l-sfm").checked; camGroup.visible = $("l-cams").checked;
-    if (camGroup.visible && camera.position.length() < 2.2) camera.position.setLength(3.6);
+    if (camGroup.visible && camera.position.length() < 3.4) camera.position.setLength(4.2);
   }
   function resize() {
     const w = stage.clientWidth, h = stage.clientHeight;
@@ -393,7 +394,7 @@ td.num { padding-left: 10px; }
   /* ---------- per-category dot plot ---------- */
   function renderChart() {
     const cats = M.categories.filter((c) => c.f5_known != null).slice().sort((a, b) => b.f5_known - a.f5_known);
-    const W = 640, rowH = 17, top = 26, left = 128, right = 64, H = top + cats.length * rowH + 8;
+    const W = 640, rowH = 17, top = 26, left = 128, right = 84, H = top + cats.length * rowH + 8;
     const x = (v) => left + v * (W - left - right);
     const ns = "http://www.w3.org/2000/svg";
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="F-score at 5 percent per category, true cameras versus blind SfM">`;
@@ -409,7 +410,7 @@ td.num { padding-left: 10px; }
         <line x1="${Math.min(a, b)}" x2="${Math.max(a, b)}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="2"/>
         <circle cx="${a}" cy="${y}" r="4.5" fill="var(--blind)" stroke="var(--panel)" stroke-width="2"/>
         <circle cx="${b}" cy="${y}" r="4.5" fill="var(--known)" stroke="var(--panel)" stroke-width="2"/>
-        <text class="num" x="${W - right + 8}" y="${y + 3.5}" style="font-family:var(--f-mono);font-size:10px">${f2(c.f5_known)} · ${f2(c.f5_sfm)}</text>
+        <text class="num" x="${W - right + 8}" y="${y + 3.5}" style="font-family:var(--f-mono);font-size:10px">${f2(c.f5_known)} / ${f2(c.f5_sfm)}</text>
       </g>`;
     });
     s += `</svg>`;
