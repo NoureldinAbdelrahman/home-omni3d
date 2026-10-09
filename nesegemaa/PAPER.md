@@ -22,9 +22,12 @@ TripoSR (3 configs) under one shared protocol. Main findings: (1) a SPHERE
 template beats SQUARE by ~40% Chamfer (0.0361 vs 0.0572); (2) 3 pooled views
 beat 1, 5, and 8; (3) a frozen ImageNet encoder beats finetuning while staying
 stable; (4) best validation always lands in epochs 2–24 while finals routinely
-explode, so best-epoch snapshots are mandatory; (5) our AtlasNet ignores its
-input image (ablation). All runs, weight provenance, and per-object numbers
-are committed alongside the code.
+explode, so best-epoch snapshots are mandatory; (5) a Tatarchenko
+input-dependence test on the earlier MS1 checkpoint found **no measurable
+image dependence** (F≈0.003 noise floor) — so the winner's edge should be read
+as the best *shape prior fitted to our categories*, not yet as proven
+per-instance reconstruction. All runs, weight provenance, and per-object
+numbers are committed alongside the code.
 
 ---
 
@@ -251,10 +254,21 @@ objects, 11M encoder parameters overfit while the decoder does the work.
 Anisotropic-scale augmentation is the only mild augmentation win (0.0444);
 rotation/flips/lr-3e-4/batch-size are neutral-to-negative, all recorded.
 
-**AtlasNet ignores its input** (Tatarchenko test on the MS1 checkpoint:
-zeroed/shuffled images score identically, F≈0.003). Caveat: at F≈0.003 the
-model sits at the noise floor, so the test can only say "no *measurable*
-dependence" — a model this weak has little signal to ablate away.
+**Best scores ≠ image conditioning (the tension, stated).** AtlasNet posts the
+best numbers in this report, yet a Tatarchenko input-dependence test
+(`results/ablation/image_usage.json`) on the **MS1 checkpoint**
+(`svr25_pretrained`) scores real/constant/shuffled images almost identically
+(Chamfer 0.229/0.233/0.229, F≈0.003): no *measurable* dependence on the input.
+These claims are compatible, for three reasons: (a) Chamfer is an average
+nearest-neighbour distance, so a *category-average* shape scores well against
+any instance — exactly the trap Tatarchenko et al. identify; (b) AtlasNet was
+trained on these 76 categories while Point-E/TripoSR are zero-shot, so a fitted
+prior beats unfitted ones even without reading the image; (c) that test ran on
+an old model sitting at its noise floor — the current winner
+(`a2_p25_sphere_s7`, F=0.146) **has not been retested**. Until it is, read
+"AtlasNet is best" as "best prior under this protocol", not "reconstructs what
+it sees". Retest recipe: real vs constant vs shuffled inputs on
+`a2_p25_sphere_s7`, same 260-object split.
 
 **Best-epoch is the model.** Best F lands at epochs 2–24 in *every* run while
 finals routinely explode 100–1000× (worst recorded: 173,187). Upstream keeps
@@ -279,6 +293,9 @@ brute force); Point-E denoising null (0.1441 vs 0.1439); bottleneck 512 hurts;
 
 ## 7. Limitations and future work
 
+- **Input-dependence of the winning AtlasNet is untested** — the Tatarchenko
+  probe ran only on the old MS1 checkpoint. Until `a2_p25_sphere_s7` passes
+  real-vs-shuffled, "best" means best prior, not proven reconstruction.
 - Test sets are tiny for 35 categories (<3 objects) — all small-n claims are
   flagged, but the macro means still wobble.
 - AtlasNet's pre-snapshot best-F checkpoints are lost (notably the 76-cat
@@ -286,8 +303,9 @@ brute force); Point-E denoising null (0.1441 vs 0.1439); bottleneck 512 hurts;
 - Point-E/TripoSR evaluated on 5 shared objects only (diffusion/mesh cost);
   the panel is fixed for comparability.
 - Single GPU (11 GB) capped batch sizes and the Point-E seed counts.
-- Next, in order: class-balanced sampling for the tail, and a proper 24-view
-  winner run *if* K=8-style scaling ever reopens.
+- Next, in order: retest input-dependence on `a2_p25_sphere_s7`, then
+  class-balanced sampling for the tail, and a proper 24-view winner run *if*
+  K=8-style scaling ever reopens.
 
 ---
 
@@ -299,8 +317,11 @@ handling** (pretrained encoder actually loaded, warm-started decoder),
 **three pooled views**, **sphere topology**, and **freezing an
 over-parameterized encoder** — taking AtlasNet from 0.059/0.088 to
 0.035/0.146 Chamfer/F. Frozen foundation models trail the trained specialist
-but TripoSR leads Point-E on strict matching; neither reads as image-starved
-on this panel the way our AtlasNet does. All code, weight provenance,
+but TripoSR leads Point-E on strict matching. That lead is a *shape-prior*
+lead: our input-dependence test (on the pre-winner checkpoint) found AtlasNet
+measurably blind to its image, so the trained specialist has not yet shown it
+reconstructs instances rather than category averages — the open question of
+this report. All code, weight provenance,
 per-object numbers, and null results are committed.
 
 ---
