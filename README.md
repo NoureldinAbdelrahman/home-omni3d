@@ -1,194 +1,54 @@
 # home-omni3d
 
-Bedroom/house subset of [OmniObject3D](https://opendatalab.com/OpenDataLab/OmniObject3D) bridged into **Pix2Vox** and **AtlasNet** for single-view 3D reconstruction (DMET 901).
+Team 3D reconstruction from 2D images (DMET 901). Home subset of [OmniObject3D](https://opendatalab.com/OpenDataLab/OmniObject3D): **76 categories** (18 bedroom + 58 house extras, auto-discovered — see `AtlasNet/dataset/data/taxonomy.json` on model branches), ~1,700 objects × 24 views + point clouds.
 
-Download 24-view Blender renders + point clouds for home categories (18 bedroom + 32 extra house), convert them into each model’s expected layout, and train / evaluate baselines on a GPU box.
+`main` is the shared base (data pipeline, docs, comparison). Model work lives on owner branches and merges back when done. MS1 snapshot: `tag milestone-1`.
 
-## Contents
+## Branches
 
-| Path | Role |
-|------|------|
-| `download_bedroom_subset.py` | Fetch renders + HDF5 point clouds from OpenDataLab |
-| `download_house_extra.py` | Fetch **32 extra house categories** (kitchen / bath / utility) |
-| `bedroom_categories.py` | Original 18-category subset + aliases (`lamp`→`light`, etc.) |
-| `house_extra_categories.py` | Extra house category list (32) |
-| `bedroom_omni_dataset.py` | Generic PyTorch loader over `dataset/` |
-| `prepare_model_data.py` | Convert `dataset/` → Pix2Vox and AtlasNet layouts |
-| `Pix2Vox/` | Vendored [Pix2Vox](https://github.com/hzxie/Pix2Vox) (voxel recon) |
-| `AtlasNet/` | Vendored [AtlasNet](https://github.com/ThibaultGROUEIX/AtlasNet) (point / surface gen) |
-| `dataset/` | **Data placeholder** (gitignored) |
-| `requirements.txt`, `install_openxlab.sh` | Environment |
+| Branch | Owner | Models |
+|--------|-------|--------|
+| `mohamed-ayman` | Mohamed Ayman | Pix2Vox, Pix2Vox++ |
+| `ashry` | Ashry | Pixel2Mesh, DeepSDF, 3DGS, Nvidia NeRF |
+| `hamdy` | Hamdy | TripoSR |
+| `nesegemaa` | Nesegemaa | Point-E, AtlasNet |
+| `bones` | Bones | COLMAP, additive-subtractive |
 
-### Original bedroom categories (18)
+Each branch = base + owner's code under `<owner>/` + owner's results. Work only in your own folder.
 
-`bed`, `pillow`, `chair`, `light`, `cabinet`, `table`, `sofa`, `stool`, `clock`, `tvstand`, `vase`, `tissue`, `teddy_bear`, `doll`, `plant`, `fan`, `suitcase`, `hair_dryer`
+## Base layout
 
-### Extra house categories (32)
-
-Kitchen: `kettle`, `microwaveoven`, `ricecooker`, `pan`, `dish`, `cup`, `bowl`, `bottle`, `teapot`, `thermos`, `timer`  
-Living/desk: `remote_control`, `speaker`, `projector`, `keyboard`, `laptop`, `monitor`, `mouse`, `power_strip`, `plug`  
-Bathroom: `shampoo`, `soap`, `tooth_brush`, `tooth_paste`, `razor`, `medicine_bottle`  
-Utility: `dustbin`, `fire_extinguisher`, `flash_light`, `hammer`, `scissor`, `umbrella`
+`download_bedroom_subset.py` / `download_house_extra.py` (fetch data), `bedroom_categories.py` / `house_extra_categories.py` (18 + 32 named lists), `bedroom_omni_dataset.py` + `prepare_model_data.py` (loaders, model-input conversion), `docs/` (ROADMAP, METRICS, briefs), `notes/` (reading notes), `notebooks/dataset_analysis.ipynb` (analysis + comparison figures), `results/comparison/` + `results/ablation/` (joint outputs).
 
 ## Setup
 
-Requires **Python 3.10–3.14** (tested on 3.14). Avoid 3.14.1 — `torchvision` has no wheel for it.
+Requires Python 3.10–3.14 (not 3.14.1):
 
 ```bash
-git clone https://github.com/NoureldinAbdelrahman/home-omni3d.git
-cd home-omni3d
-
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-./install_openxlab.sh          # openxlab without its broken setuptools pin
+./install_openxlab.sh   # drops openxlab's broken setuptools pin; `pip check` must pass
 ```
 
-Optional OpenDataLab auth (or use `--use-fallback-keys`):
+## Data
 
 ```bash
-export OPENXLAB_AK=...
-export OPENXLAB_SK=...
+python download_house_extra.py --include-bedroom --output-dir dataset --point-count 4096
+python prepare_model_data.py --target both   # or: pix2vox | atlasnet
 ```
 
-### Troubleshooting
+Writes `dataset/renders/<cat>/<obj>/{000..023}.png` + `dataset/point_clouds/<cat>/<obj>.npy`. `dataset/` is gitignored — copy it between machines or re-download. Never commit `dataset/`, `*.pth`, or `AtlasNet/log/` / `Pix2Vox/output/`.
 
-If `pip install -r requirements.txt` fails, first confirm your interpreter:
+> **Point-cloud pairing fix.** Datasets downloaded before this fix have ~95% of `point_clouds/<cat>/<obj>.npy` files holding a *different* object of the same category (the old downloader assumed the unnamed HDF5 rows were in sorted ID order; they are not). The shapes are intact, only the names are shuffled. Repair an existing copy offline, then rebuild model inputs and retrain/re-evaluate anything that used point clouds or voxels:
+>
+> ```bash
+> python fix_point_cloud_names.py --dry-run   # report only
+> python fix_point_cloud_names.py             # rename in place (idempotent)
+> python prepare_model_data.py --target both
+> ```
+>
+> New downloads use the named per-object PLY archive and are correct as downloaded.
 
-```bash
-python -V   # need 3.10–3.14 (not 3.14.1)
-```
+## Results
 
-A resolution error like `Could not find a version that satisfies the requirement
-visdom>=0.3` means an old pin was used: `visdom 0.3.0` requires Python ≥3.12.
-`git pull` and retry — `visdom` is no longer a required dependency. It is only
-used by AtlasNet for optional live plots and is not needed for training. Install
-it separately if you want the plots: `pip install visdom`.
-
-After `./install_openxlab.sh`, `pip check` should report **no broken
-requirements**. openxlab pins `setuptools~=60.2.0`, which can never coexist with
-**torch's `setuptools>=77`**; since openxlab never imports setuptools at runtime,
-the installer drops that one `Requires-Dist` line from openxlab's installed
-metadata and pins `tqdm`/`filelock` to its ranges.
-
-Failed installs are safe to retry:
-
-```bash
-git pull
-pip install -r requirements.txt
-./install_openxlab.sh
-```
-
-## Download data
-
-```bash
-# plan only (original 18 bedroom categories)
-python download_bedroom_subset.py --dry-run
-
-# full bedroom subset (~9 GB under dataset/)
-python download_bedroom_subset.py --output-dir dataset --point-count 4096
-
-# --- on a lab PC before the bedroom dump arrives ---
-# list the 32 extra house categories
-python download_house_extra.py --list
-
-# plan
-python download_house_extra.py --dry-run
-
-# download extras into dataset/ (skips anything already local)
-python download_house_extra.py --output-dir dataset --point-count 4096
-
-# optional: auth if you have no cached login
-python download_house_extra.py --use-fallback-keys
-```
-
-Layout written under `dataset/`:
-
-```
-dataset/
-├── renders/<category>/<object_id>/{000..023}.png + transforms.json
-└── point_clouds/<category>/<object_id>.npy
-```
-
-When you later copy the bedroom `dataset/` onto the same machine, both trees merge; re-run `prepare_model_data.py` so taxonomies cover every category on disk.
-
-## Prepare model inputs
-
-```bash
-python prepare_model_data.py --target both
-# or: --target pix2vox | --target atlasnet
-# or pin a subset:
-python prepare_model_data.py --categories kettle soap laptop
-```
-
-Categories are **auto-discovered** from `dataset/point_clouds/` and `dataset/renders/` (bedroom first, then sorted extras).
-
-This fills (gitignored) placeholders:
-
-- `Pix2Vox/datasets/OmniObject3D/` — taxonomy JSON, `00.png`–`23.png` renders, 32³ `.mat` voxels  
-- `AtlasNet/dataset/data/` — `taxonomy.json`, `.npy` point clouds, render tree  
-
-Symlinks point back into `dataset/`; copy the whole tree when moving machines, or re-run download + prepare.
-
-## Train
-
-### Pix2Vox (image → 32³ voxels)
-
-```bash
-cd Pix2Vox
-python runner.py --epoch 50 --batch-size 8 --gpu 0
-# eval a checkpoint
-python runner.py --test --weights ./output/checkpoints/<run>/best-ckpt.pth --batch-size 8
-```
-
-### AtlasNet
-
-Single-view (image-conditioned):
-
-```bash
-cd AtlasNet
-python train.py \
-  --class_choice bed chair cabinet light table doll clock pillow \
-  --SVR --no_metro --nepoch 50 --batch_size 8 \
-  --template_type SPHERE --dir_name log/svr_full --workers 2
-```
-
-Autoencoder (point cloud → surface):
-
-```bash
-python train.py \
-  --class_choice bed chair cabinet light table doll clock pillow \
-  --no_metro --nepoch 50 --batch_size 8 \
-  --template_type SPHERE --dir_name log/ae_full --workers 2
-```
-
-Checkpoints land in `Pix2Vox/output/` and `AtlasNet/log/` (both gitignored).
-
-## Moving machines / placeholders
-
-Data is **not** in git. On a new machine:
-
-1. Clone the repo.  
-2. Either copy `dataset/` + prepared model dirs into the `.gitkeep` folders, **or** re-run download + `prepare_model_data.py`.  
-3. Install deps and train.
-
-Placeholder roots:
-
-- `dataset/.gitkeep`  
-- `Pix2Vox/datasets/OmniObject3D/.gitkeep`  
-- `AtlasNet/dataset/data/.gitkeep`  
-
-## Notes
-
-- **Pix2Vox** patches: relative OmniObject paths in `config.py`, NumPy 2 / matplotlib / `torch.load(weights_only=False)` fixes, HWC tensorboard images.  
-- **AtlasNet** patches: pure-Python `pymesh` shim, pure-PyTorch Chamfer fallback (no `nvcc`), PLY mesh reader, non-fatal HTML report.  
-- Metrics (per milestone): IoU (Pix2Vox); Chamfer / F-score (AtlasNet); optional COV / MMD / FID.
-
-## License
-
-- Pipeline scripts: see repo.  
-- Pix2Vox / AtlasNet: keep their upstream licenses under each subdirectory.
-
----
-
-DMET 901 — 3D Object Generation from 2D Images.
+Per-model outputs stay on owner branches (`results/<model>/`, `results/qualitative/`). Joint comparison lives on `main` under `results/comparison/` (regenerated by the notebook). Metrics: IoU (voxels), Chamfer / F-score@1% (surfaces); see `docs/METRICS.md`.
