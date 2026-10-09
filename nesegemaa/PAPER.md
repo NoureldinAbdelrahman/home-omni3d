@@ -142,6 +142,8 @@ stability win in the project (final validation 15.3 → 0.04).
 
 ## 6. Experiments and results
 
+![headline](figures/fig_headline.png)
+
 ### 6.1 AtlasNet — every training run (24)
 
 | run | what changed vs A0a | best Chamfer (@ep) | best F (@ep) |
@@ -173,6 +175,8 @@ stability win in the project (final validation 15.3 → 0.04).
 
 Headline: SPHERE-25 is the winner on both metrics (0.0348/0.1463, both seeds
 agree); frozen encoder is second (0.0421/0.1064) with the most stable tail.
+
+![atlasnet ablation](figures/fig_atlasnet_ablation.png)
 
 ### 6.2 Point-E — every eval (12)
 
@@ -221,6 +225,8 @@ objects); Point-E/TripoSR are zero-shot. The trained specialist wins on
 Chamfer everywhere and on F everywhere except teapot — where all three agree
 it's an easy, blobby shape.
 
+![cross objects](figures/fig_cross_objects.png)
+
 ### 6.5–6.8 Findings (one paragraph each)
 
 **Pretrained encoders + warm-started decoders.** The encoder switch stabilized
@@ -255,6 +261,8 @@ finals routinely explode 100–1000× (worst recorded: 173,187). Upstream keeps
 only the final weights, so without our `best-model.pth` snapshots there would
 be nothing deployable — including the 76-cat run whose best-F weights (ep 10)
 no longer exist.
+
+![best vs final](figures/fig_best_vs_final.png)
 
 ### 6.9 Null results (kept on purpose)
 
@@ -333,9 +341,15 @@ report (see `mohamed-ayman` branch).
 
 ## Appendix C — figure index
 
-AtlasNet runs: `run_comparison_atlasnet.png`; training curves:
-`atlasnet_curves.png`; qualitative pred-vs-expected triplets:
-`results/comparison/figures/qualitative/atlasnet_compare.png` + per-object
-data in `results/qualitative/atlasnet/`. Cross-model:
-`nesegemaa/figures/cross_models.png`. Dataset context figures remain under
-`results/comparison/figures/` (shared team base).
+Report figures (`nesegemaa/figures/`, regenerable via
+`python figures/make_report_figures.py` from the committed CSVs):
+
+- `fig_headline.png` — best config per model, Chamfer + F side by side
+- `fig_atlasnet_ablation.png` — all AtlasNet runs sorted, colored by knob family
+- `fig_best_vs_final.png` — overfitting scatter (why best-epoch snapshots matter)
+- `fig_cross_objects.png` — 5 shared objects × 3 models, grouped bars
+
+Legacy/dataset figures remain under `results/comparison/figures/`
+(`run_comparison_atlasnet.png`, `atlasnet_curves.png`, qualitative triplets in
+`qualitative/atlasnet_compare.png`, `dataset_examples.png`,
+`longtail_lorenz.png`). Cross-model qualitative: `figures/cross_models.png`.
