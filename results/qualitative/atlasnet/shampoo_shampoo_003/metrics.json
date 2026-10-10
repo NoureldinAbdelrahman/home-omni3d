@@ -2,7 +2,7 @@
   "category": "shampoo",
   "object": "shampoo_003",
   "view": 0,
-  "chamfer": 0.011733729480746155,
-  "fscore": 0.43445457075300914,
-  "n_points": 64050
+  "chamfer": 0.04113317139933357,
+  "fscore": 0.03328050713153724,
+  "n_points": 2500
 }
