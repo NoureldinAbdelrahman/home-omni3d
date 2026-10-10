@@ -41,3 +41,9 @@ master.html
 .idea/
 .vscode/
 *.swp
+
+# --- bones: COLMAP scratch workspaces ---
+bones/work/
+
+# --- viewer: local screenshots ---
+viewer/.screenshots/
