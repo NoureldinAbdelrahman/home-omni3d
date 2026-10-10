@@ -41,3 +41,6 @@ master.html
 .idea/
 .vscode/
 *.swp
+
+# --- viewer: local screenshots ---
+viewer/.screenshots/
