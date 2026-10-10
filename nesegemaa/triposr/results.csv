@@ -1,6 +1,6 @@
 object,category,view,preprocessing,points,mc_resolution,seed,chamfer,fscore,seconds
-medicine_bottle_medicine_bottle_068,medicine_bottle,0,masked,4096,128,0,0.07933377557123358,0.090381,3.7
-cup_cup_003,cup,0,masked,4096,128,0,0.09589077525286738,0.074103,2.1
-teapot_teapot_003,teapot,0,masked,4096,128,0,0.03418912711528214,0.119223,2.1
-hammer_hammer_011,hammer,0,masked,4096,128,0,0.16473804304845183,0.121297,2.1
-shampoo_shampoo_003,shampoo,0,masked,4096,128,0,0.12223297970421232,0.079699,2.2
+medicine_bottle_medicine_bottle_068,medicine_bottle,0,masked,4096,128,0,0.07953003197105919,0.095453,3.3
+cup_cup_003,cup,0,masked,4096,128,0,0.09440701112212085,0.072458,1.7
+teapot_teapot_003,teapot,0,masked,4096,128,0,0.035005603507256663,0.128733,1.7
+hammer_hammer_011,hammer,0,masked,4096,128,0,0.16023575031733592,0.133347,1.8
+shampoo_shampoo_003,shampoo,0,masked,4096,128,0,0.11538578981468056,0.077896,1.8

@@ -30,10 +30,10 @@
   },
   "n_rows": 5,
   "n_objects": 5,
-  "micro_chamfer": 0.10314921769205462,
-  "micro_fscore": 0.06974440000000001,
-  "macro_chamfer": 0.10314921769205461,
-  "macro_fscore": 0.0697444,
+  "micro_chamfer": 0.1257322609877544,
+  "micro_fscore": 0.0697706,
+  "macro_chamfer": 0.12573226098775442,
+  "macro_fscore": 0.0697706,
   "noise_categories_lt3": [
     "cup",
     "hammer",
@@ -45,32 +45,32 @@
     {
       "category": "cup",
       "n": 1,
-      "chamfer": 0.0701816579990429,
-      "fscore": 0.089673
+      "chamfer": 0.07627319445149806,
+      "fscore": 0.079075
     },
     {
       "category": "hammer",
       "n": 1,
-      "chamfer": 0.17626196486640863,
-      "fscore": 0.085974
+      "chamfer": 0.2529956100127949,
+      "fscore": 0.032052
     },
     {
       "category": "medicine_bottle",
       "n": 1,
-      "chamfer": 0.04791575260378081,
-      "fscore": 0.067505
+      "chamfer": 0.04238398257520197,
+      "fscore": 0.096541
     },
     {
       "category": "shampoo",
       "n": 1,
-      "chamfer": 0.1622973938417495,
-      "fscore": 0.035102
+      "chamfer": 0.21669488540107434,
+      "fscore": 0.032407
     },
     {
       "category": "teapot",
       "n": 1,
-      "chamfer": 0.05908931914929129,
-      "fscore": 0.070468
+      "chamfer": 0.040313632498202724,
+      "fscore": 0.108778
     }
   ]
 }
