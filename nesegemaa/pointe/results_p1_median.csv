@@ -1,6 +1,6 @@
 object,category,view,fusion,preprocessing,guidance,points,seed,denoise,chamfer,fscore,seconds
-medicine_bottle_medicine_bottle_068,medicine_bottle,-1,median-of-3,masked,3.0,4096,0,False,0.14069159701571549,0.062309,119.7
-cup_cup_003,cup,-1,median-of-3,masked,3.0,4096,0,False,0.1203094561196193,0.060816,124.3
-teapot_teapot_003,teapot,-1,median-of-3,masked,3.0,4096,0,False,0.050409910522221574,0.032814,124.4
-hammer_hammer_011,hammer,-1,median-of-3,masked,3.0,4096,0,False,0.18983794147787553,0.087231,124.2
-shampoo_shampoo_003,shampoo,-1,median-of-3,masked,3.0,4096,0,False,0.17514172149901952,0.092006,126.8
+medicine_bottle_medicine_bottle_068,medicine_bottle,-1,median-of-3,masked,3.0,4096,0,False,0.13419188496635154,0.072762,136.4
+cup_cup_003,cup,-1,median-of-3,masked,3.0,4096,0,False,0.10446306427975682,0.089429,135.5
+teapot_teapot_003,teapot,-1,median-of-3,masked,3.0,4096,0,False,0.05651960279171346,0.103182,140.4
+hammer_hammer_011,hammer,-1,median-of-3,masked,3.0,4096,0,False,0.45317688970259673,0.059726,143.1
+shampoo_shampoo_003,shampoo,-1,median-of-3,masked,3.0,4096,0,False,0.24341573451008996,0.06841,143.5
