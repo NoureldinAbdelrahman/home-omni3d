@@ -1,0 +1,4 @@
+tag,view,preprocessing,points,mc_resolution,n_objects,micro_chamfer,micro_fscore,macro_chamfer,macro_fscore,noise
+default,0,masked,4096,128,5,0.09820158149025601,0.08756359999999999,0.09820158149025604,0.0875636,"cup,hammer,medicine_bottle,shampoo,teapot"
+crop,0,crop,4096,128,5,0.1097147839204073,0.0779122,0.1097147839204073,0.0779122,"cup,hammer,medicine_bottle,shampoo,teapot"
+raw,0,raw,4096,128,5,0.10314921769205462,0.06974440000000001,0.10314921769205461,0.0697444,"cup,hammer,medicine_bottle,shampoo,teapot"
