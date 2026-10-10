@@ -44,3 +44,6 @@ master.html
 
 # local weight caches (HDD symlinks)
 point_e_model_cache
+
+# --- viewer: local screenshots ---
+viewer/.screenshots/
