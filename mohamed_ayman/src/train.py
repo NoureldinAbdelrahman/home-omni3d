@@ -236,22 +236,31 @@ def main():
         )
 
         # Checkpoint logic
-        is_best = (val_res["metric"] > best_metric) if args.model == "pix2vox" else (val_res["metric"] < best_metric)
+        is_best = (val_res["metric"] > best_metric) if "pix2vox" in args.model else (val_res["metric"] < best_metric)
         if is_best:
             best_metric = val_res["metric"]
             best_path = os.path.join(args.save_dir, f"{run_tag}_best.pth")
-            torch.save({
+            ckpt_dict = {
                 "epoch": epoch,
                 "model_state_dict": model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
                 "best_metric": best_metric,
                 "model_type": args.model,
                 "num_views": args.num_views
-            }, best_path)
+            }
+            torch.save(ckpt_dict, best_path)
             print(f"  -> Saved new best model ({metric_name}: {best_metric:.4f}) to {best_path}")
+            if "pix2vox" in args.model:
+                canonical_path = os.path.join(args.save_dir, f"pix2vox_{args.num_views}views_{args.subset}_best.pth")
+                if canonical_path != best_path:
+                    torch.save(ckpt_dict, canonical_path)
 
     # Save latest and history
     torch.save(model.state_dict(), os.path.join(args.save_dir, f"{run_tag}_latest.pth"))
+    if "pix2vox" in args.model:
+        canonical_latest = os.path.join(args.save_dir, f"pix2vox_{args.num_views}views_{args.subset}_latest.pth")
+        if canonical_latest != os.path.join(args.save_dir, f"{run_tag}_latest.pth"):
+            torch.save(model.state_dict(), canonical_latest)
     with open(os.path.join(args.save_dir, f"{run_tag}_history.json"), "w") as f:
         json.dump(history, f, indent=2)
 
