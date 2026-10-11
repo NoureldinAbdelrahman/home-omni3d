@@ -2,7 +2,7 @@
   "category": "medicine_bottle",
   "object": "medicine_bottle_068",
   "view": 0,
-  "chamfer": 0.06932077160452339,
-  "fscore": 0.0418563008281728,
-  "n_points": 2500
+  "chamfer": 0.024229899533997602,
+  "fscore": 0.1114832435297787,
+  "n_points": 64050
 }

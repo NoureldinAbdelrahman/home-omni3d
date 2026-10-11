@@ -2,7 +2,7 @@
   "category": "cup",
   "object": "cup_003",
   "view": 0,
-  "chamfer": 0.03790573018679469,
-  "fscore": 0.0388951242041696,
-  "n_points": 2500
+  "chamfer": 0.0193967250016871,
+  "fscore": 0.20162363971295663,
+  "n_points": 64050
 }
