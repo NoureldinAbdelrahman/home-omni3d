@@ -1,11 +1,11 @@
 {
-  "best_chamfer": 0.0831894502043724,
-  "best_fscore": 0.07906718138191435,
-  "final_chamfer": 0.4178321750627624,
-  "final_fscore": 0.05585579408539666,
+  "best_chamfer": 0.04793103080656794,
+  "best_fscore": 0.07829489145014021,
+  "final_chamfer": 0.04793103080656794,
+  "final_fscore": 0.06028931298189693,
   "n_epochs": 50,
-  "best_chamfer_epoch": 24,
-  "best_fscore_epoch": 8,
+  "best_chamfer_epoch": 50,
+  "best_fscore_epoch": 27,
   "weights": {
     "encoder": {
       "source": "imagenet",
