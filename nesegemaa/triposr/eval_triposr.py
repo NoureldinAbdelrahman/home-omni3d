@@ -26,6 +26,7 @@ with micro/macro and <3-object noise flags).
 import argparse
 import hashlib
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -34,7 +35,15 @@ import numpy as np
 import torch
 from PIL import Image
 
-TRIPOSR_SRC = "/media/susan/429428ec-710b-483c-9aaa-d0c4b6968baa/home-omni3d/thirdparty/TripoSR"
+TRIPOSR_SRC = os.environ.get(
+    "TRIPOSR_SRC",
+    "/media/susan/429428ec-710b-483c-9aaa-d0c4b6968baa/home-omni3d/thirdparty/TripoSR",
+)
+# In-repo fallback (used on machines where thirdparty/ was synced, e.g. server).
+if not Path(TRIPOSR_SRC).is_dir():
+    _fallback = Path(__file__).resolve().parent.parent.parent / "thirdparty" / "TripoSR"
+    if _fallback.is_dir():
+        TRIPOSR_SRC = str(_fallback)
 ROOT = Path(__file__).resolve().parent.parent.parent  # repo root (script lives in nesegemaa/triposr/)
 ATL = ROOT / "AtlasNet"
 sys.path.insert(0, TRIPOSR_SRC)
@@ -103,6 +112,12 @@ def main():
     ap.add_argument("--preprocessing", choices=["raw", "masked", "crop"], default="masked")
     ap.add_argument("--points", type=int, default=4096)
     ap.add_argument("--mc-resolution", type=int, default=128)
+    ap.add_argument("--mesh-cleanup", choices=["none", "largest"], default="none",
+                    help="none = faithful TripoSR output (default, keeps published "
+                         "numbers comparable); largest = keep only the largest "
+                         "connected mesh component before sampling, which drops "
+                         "detached marching-cubes flash/fin artifacts. GT-blind. "
+                         "Use a separate --tag when enabled")
     ap.add_argument("--tag", default="")
     ap.add_argument("--outdir", type=Path, default=ROOT / "nesegemaa" / "triposr")
     args = ap.parse_args()
@@ -161,6 +176,34 @@ def main():
             scene_codes = model([pil], device=device)
             mesh = model.extract_mesh(scene_codes, has_vertex_color=False,
                                       resolution=args.mc_resolution)[0]
+        if args.mesh_cleanup == "largest":
+            # Keep the largest connected face component (drops detached
+            # marching-cubes flash/fin sheets). Implemented on the face
+            # incidence graph with scipy only: trimesh 4.0.5's own
+            # mesh.split() path calls ndarray.ptp(), removed in NumPy 2.0.
+            from scipy import sparse
+            from scipy.sparse import csgraph
+            faces = np.asarray(mesh.faces)
+            n_faces = len(faces)
+            if n_faces:
+                e = np.sort(
+                    faces[:, [[0, 1], [1, 2], [2, 0]]].reshape(-1, 2), axis=1)
+                _, inv = np.unique(e, axis=0, return_inverse=True)
+                frow = np.repeat(np.arange(n_faces), 3)
+                b = sparse.csr_matrix(
+                    (np.ones(3 * n_faces), (frow, inv)))
+                adj = b @ b.T
+                adj.data[:] = 1.0
+                adj.setdiag(0)
+                adj.eliminate_zeros()
+                _, labels = csgraph.connected_components(adj, directed=False)
+                counts = np.bincount(labels)
+                if len(counts) > 1:
+                    keep = labels == int(np.argmax(counts))
+                    mesh = trimesh.Trimesh(vertices=np.asarray(mesh.vertices),
+                                          faces=faces[keep], process=True)
+                    print(f"  mesh-cleanup: kept {keep.sum()}/{n_faces} faces",
+                          flush=True)
         pts = np.asarray(trimesh.sample.sample_surface(mesh, args.points)[0],
                          dtype=np.float64)
         pred = unit_ball(pts)
@@ -169,7 +212,8 @@ def main():
         rows.append({
             "object": f"{cat}_{obj}", "category": cat, "view": args.view,
             "preprocessing": args.preprocessing, "points": args.points,
-            "mc_resolution": args.mc_resolution, "seed": 0,
+            "mc_resolution": args.mc_resolution,
+            "mesh_cleanup": args.mesh_cleanup, "seed": 0,
             "chamfer": chamfer, "fscore": round(fscore, 6),
             "seconds": round(dt, 1),
         })
@@ -202,6 +246,7 @@ def main():
         "method": "TripoSR feed-forward (triplane-NeRF + marching cubes)",
         "config": {"view": args.view, "preprocessing": args.preprocessing,
                    "points": args.points, "mc_resolution": args.mc_resolution,
+                   "mesh_cleanup": args.mesh_cleanup,
                    "tau_squared": TAU_SQ,
                    "tau_euclid_approx": round(TAU_EUCLID_APPROX, 4),
                    "normalization": "subtract mean, divide by max radius (unit sphere)"},

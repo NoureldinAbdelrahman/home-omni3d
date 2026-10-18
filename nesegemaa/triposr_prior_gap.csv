@@ -1,0 +1,11 @@
+object,model,raw_chamfer,aligned_chamfer,gap,raw_f,aligned_f
+cup_cup_003,triposr,0.0944,0.1079,-0.0135,0.0725,0.0669
+cup_cup_003,atlasnet_s123,0.0253,0.0227,0.0026,0.113,0.15
+hammer_hammer_011,triposr,0.1602,0.1279,0.0323,0.1333,0.1309
+hammer_hammer_011,atlasnet_s123,0.0499,0.0455,0.0045,0.0709,0.1369
+medicine_bottle_medicine_bottle_068,triposr,0.0795,0.0874,-0.0078,0.0955,0.0853
+medicine_bottle_medicine_bottle_068,atlasnet_s123,0.0311,0.0293,0.0018,0.0771,0.1454
+shampoo_shampoo_003,triposr,0.1154,0.0589,0.0565,0.0779,0.1522
+shampoo_shampoo_003,atlasnet_s123,0.0273,0.0259,0.0014,0.1464,0.1634
+teapot_teapot_003,triposr,0.035,0.0307,0.0043,0.1287,0.1491
+teapot_teapot_003,atlasnet_s123,0.033,0.0217,0.0112,0.0735,0.151

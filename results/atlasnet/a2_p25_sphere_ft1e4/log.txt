@@ -1,0 +1,15 @@
+json_stats: {"epoch": 1, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.04052726185654063, "loss_val": 0.040915989213519625, "fscore": 0.09888739718331231}
+json_stats: {"epoch": 2, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.040022312361444976, "loss_val": 0.040006773132416934, "fscore": 0.09613274037837982}
+json_stats: {"epoch": 3, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03952785918640124, "loss_val": 0.036343872961070806, "fscore": 0.0965629443526268}
+json_stats: {"epoch": 4, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03986524313537253, "loss_val": 0.03433692062066661, "fscore": 0.11141269240114424}
+json_stats: {"epoch": 5, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03964504862606928, "loss_val": 0.0388910300615761, "fscore": 0.09272376240955459}
+json_stats: {"epoch": 6, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.04049394180293422, "loss_val": 0.040468205180433064, "fscore": 0.08696975724564658}
+json_stats: {"epoch": 7, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.040259267883123576, "loss_val": 0.03860848748849498, "fscore": 0.09811937229500876}
+json_stats: {"epoch": 8, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.04004711002061093, "loss_val": 0.0386303189314074, "fscore": 0.09433147890700234}
+json_stats: {"epoch": 9, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.04022731718833785, "loss_val": 0.037853877163595624, "fscore": 0.09597308478421634}
+json_stats: {"epoch": 10, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03992649244547293, "loss_val": 0.03328360906905598, "fscore": 0.11228669517570072}
+json_stats: {"epoch": 11, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03937733383547213, "loss_val": 0.04184556028081311, "fscore": 0.10216517912016974}
+json_stats: {"epoch": 12, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03913118462455836, "loss_val": 0.039338602787918515, "fscore": 0.10100826703839832}
+json_stats: {"epoch": 13, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03942304543798437, "loss_val": 0.03936148414181338, "fscore": 0.10138621181249619}
+json_stats: {"epoch": 14, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.039959371643694674, "loss_val": 0.04189406335353851, "fscore": 0.09631896764039993}
+json_stats: {"epoch": 15, "lr": 0.0001, "env": "Atlasneta2_p25_sphere_ft1e4", "loss_train_total": 0.03974356941526403, "loss_val": 0.037498417413896985, "fscore": 0.09818642917606565}

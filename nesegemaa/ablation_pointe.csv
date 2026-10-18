@@ -1,5 +1,6 @@
 tag,views,fusion,preprocessing,guidance,points,seeds,denoise,n_objects,micro_chamfer,micro_fscore,macro_chamfer,macro_fscore,noise
 default,[0],first,masked,3.0,4096,[0],False,5,0.20332672438583033,0.07868939999999999,0.20332672438583033,0.0786894,"cup,hammer,medicine_bottle,shampoo,teapot"
+full,[0],first,masked,3.0,4096,[0],False,260,0.18586522189172333,0.08207231923076923,0.1864965178377708,0.08029583233163036,"battery,bed,bowl,boxed_beverage,cabinet,candle,canned_beverage,fan,flash_light,fork,glasses,kennel,kettle,keyboard,laptop,microwaveoven,monitor,ornaments,pan,pen,plant,plug,potato_chips,projector,razor,ricecooker,sofa,speaker,stool,suitcase,teddy_bear,thermos,tvstand,vase,watch"
 p1_best,"[0, 8, 16]",best,masked,3.0,4096,[0],False,5,0.19411219153044254,0.07886499999999999,0.19411219153044257,0.07886499999999999,"cup,hammer,medicine_bottle,shampoo,teapot"
 p1_median,"[0, 8, 16]",median,masked,3.0,4096,[0],False,5,0.19835343525010168,0.0787018,0.19835343525010168,0.0787018,"cup,hammer,medicine_bottle,shampoo,teapot"
 p1_v12,[12],first,masked,3.0,4096,[0],False,5,0.20713764280562788,0.08070639999999998,0.20713764280562788,0.0807064,"cup,hammer,medicine_bottle,shampoo,teapot"

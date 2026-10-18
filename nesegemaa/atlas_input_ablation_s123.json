@@ -1,0 +1,19 @@
+{
+  "run": "a2_p25_sphere_s123",
+  "weights": "best-model.pth",
+  "n": 260,
+  "tau_squared": 0.001,
+  "split": "splits.json test lists, view 0",
+  "real": {
+    "micro_chamfer": 0.03319607922193552,
+    "micro_fscore": 0.16107294922756388
+  },
+  "constant": {
+    "micro_chamfer": 0.03997586600451573,
+    "micro_fscore": 0.14605781294305922
+  },
+  "shuffled": {
+    "micro_chamfer": 0.03947101853892896,
+    "micro_fscore": 0.15909839519945215
+  }
+}

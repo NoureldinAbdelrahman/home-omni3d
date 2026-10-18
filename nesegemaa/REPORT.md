@@ -35,6 +35,7 @@ Protocol (all numbers): splits.json test lists, view `00.png` unless noted, Unit
 | tag | views | fusion | preprocessing | guidance | points | seeds | denoise | n_objects | micro_chamfer | micro_fscore | macro_chamfer | macro_fscore | noise |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | default | [0] | first | masked | 3.0 | 4096 | [0] | False | 5 | 0.20332672438583033 | 0.07868939999999999 | 0.20332672438583033 | 0.0786894 | cup,hammer,medicine_bottle,shampoo,teapot |
+| full | [0] | first | masked | 3.0 | 4096 | [0] | False | 260 | 0.18586522189172333 | 0.08207231923076923 | 0.1864965178377708 | 0.08029583233163036 | battery,bed,bowl,boxed_beverage,cabinet,candle,canned_beverage,fan,flash_light,fork,glasses,kennel,kettle,keyboard,laptop,microwaveoven,monitor,ornaments,pan,pen,plant,plug,potato_chips,projector,razor,ricecooker,sofa,speaker,stool,suitcase,teddy_bear,thermos,tvstand,vase,watch |
 | p1_best | [0, 8, 16] | best | masked | 3.0 | 4096 | [0] | False | 5 | 0.19411219153044254 | 0.07886499999999999 | 0.19411219153044257 | 0.07886499999999999 | cup,hammer,medicine_bottle,shampoo,teapot |
 | p1_median | [0, 8, 16] | median | masked | 3.0 | 4096 | [0] | False | 5 | 0.19835343525010168 | 0.0787018 | 0.19835343525010168 | 0.0787018 | cup,hammer,medicine_bottle,shampoo,teapot |
 | p1_v12 | [12] | first | masked | 3.0 | 4096 | [0] | False | 5 | 0.20713764280562788 | 0.08070639999999998 | 0.20713764280562788 | 0.0807064 | cup,hammer,medicine_bottle,shampoo,teapot |
@@ -53,6 +54,10 @@ Protocol (all numbers): splits.json test lists, view `00.png` unless noted, Unit
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | default | 0 | masked | 4096 | 128 | 5 | 0.09691283734649064 | 0.1015774 | 0.09691283734649063 | 0.1015774 | cup,hammer,medicine_bottle,shampoo,teapot |
 | crop | 0 | crop | 4096 | 128 | 5 | 0.12632828721896522 | 0.07211700000000001 | 0.12632828721896522 | 0.072117 | cup,hammer,medicine_bottle,shampoo,teapot |
+| full | 0 | masked | 4096 | 128 | 260 | 0.12890147753466752 | 0.08919789999999993 | 0.12376128056349535 | 0.0896529813195063 | battery,bed,bowl,boxed,cabinet,candle,canned,fan,flash,fork,kennel,kettle,keyboard,laptop,microwaveoven,monitor,ornaments,pan,pen,plant,plug,potato,projector,razor,ricecooker,sofa,speaker,stool,suitcase,teddy,thermos,tvstand,vase,watch |
+| full_crop | 0 | crop | 4096 | 128 | 260 | 0.13745785353439757 | 0.07146995769230771 | 0.13586629165782238 | 0.0719432275752401 | battery,bed,bowl,boxed,cabinet,candle,canned,fan,flash,fork,kennel,kettle,keyboard,laptop,microwaveoven,monitor,ornaments,pan,pen,plant,plug,potato,projector,razor,ricecooker,sofa,speaker,stool,suitcase,teddy,thermos,tvstand,vase,watch |
+| full_masked_clean | 0 | masked | 4096 | 128 | 260 | 0.1297411360042074 | 0.08855178461538461 | 0.12468465577301115 | 0.08924383626167377 | battery,bed,bowl,boxed,cabinet,candle,canned,fan,flash,fork,kennel,kettle,keyboard,laptop,microwaveoven,monitor,ornaments,pan,pen,plant,plug,potato,projector,razor,ricecooker,sofa,speaker,stool,suitcase,teddy,thermos,tvstand,vase,watch |
+| full_raw | 0 | raw | 4096 | 128 | 260 | 0.13222936532249768 | 0.07145038846153848 | 0.13184269152763914 | 0.07216556084422332 | battery,bed,bowl,boxed,cabinet,candle,canned,fan,flash,fork,kennel,kettle,keyboard,laptop,microwaveoven,monitor,ornaments,pan,pen,plant,plug,potato,projector,razor,ricecooker,sofa,speaker,stool,suitcase,teddy,thermos,tvstand,vase,watch |
 | raw | 0 | raw | 4096 | 128 | 5 | 0.1257322609877544 | 0.0697706 | 0.12573226098775442 | 0.0697706 | cup,hammer,medicine_bottle,shampoo,teapot |
 
 ## Cross-model (shared objects)

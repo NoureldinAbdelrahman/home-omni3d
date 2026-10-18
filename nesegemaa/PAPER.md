@@ -231,6 +231,29 @@ validation (0.0676) and then **exploded on the full test split** (micro 130)
 because of a few catastrophic objects (`fork_003` at 24k); attention pooling at
 K=8 is unstable, not merely weaker.
 
+> **Audit note — point-density confound (2026-10-14).** `SphereTemplate`
+> ignores its `npoints` argument and always returns a 2562-vertex icosphere,
+> so every SPHERE eval prediction holds **64,050 points** vs 2,500 for every
+> SQUARE run (and 4,096 for Point-E/TripoSR GT-matched clouds). Chamfer/F are
+> density-sensitive (denser preds cover more GT points), so the SPHERE margin
+> above mixes topology gain with sampling gain. Equalized rescoring of the
+> winner on the full 260-object split: 64k → 0.0332/0.1611; subsampled 2,500
+> → **0.0409/0.0727**; subsampled 4,096 → 0.0384/0.0896. At matched 2,500
+> points the Chamfer win over the SQUARE baseline shrinks to ~11% (0.0409 vs
+> 0.0462) and the F win reverses (0.0727 vs 0.0889). Cross-model F claims in
+> §6.4 shift accordingly (at matched 4,096 pts AtlasNet leads F on 2/5, not
+> 4/5 — TripoSR takes hammer, medicine_bottle, teapot). Chamfer ordering is
+> unaffected at any density. Future grids should fix eval point counts before
+> comparing topologies.
+>
+> Low-LR finetune (2026-10-17, `a2_p25_sphere_ft1e4`): resume of the winner's
+> best-model weights, lr 1e-4 × 15 epochs, fresh optimizer (required a
+> one-line fix in `AtlasNet/model/trainer_model.py` — `--reload_model_path`
+> crashed on DataParallel `module.`-prefixed checkpoints). Best val 0.03328
+> @ep10; full-split qual 0.0326/0.1610 vs winner 0.0332/0.1611 — a marginal
+> Chamfer gain (~2%), F flat. The winner was already near its ceiling under
+> this protocol.
+
 ![atlasnet ablation](figures/fig_atlasnet_ablation.png)
 
 ### 6.2 Point-E — every eval (12)
@@ -258,6 +281,10 @@ the corrected data keeps that margin; 4k ≫ 1k on F (0.076 vs 0.049); guidance
 and denoising are flat (≤0.01). All deltas are small: Point-E's output is
 dominated by what the frozen model already knows.
 
+> **Full-split retest (2026-10-17).** Default config on all 260 test objects
+> (`--tag full`, ~46 s/object): **0.1859**/0.0821 vs panel 0.2033/0.0787.
+> Same story at scale: outputs are prior-dominated, deltas small.
+
 ### 6.3 TripoSR — every eval (3)
 
 | tag | preprocessing | micro Chamfer | micro F |
@@ -268,6 +295,15 @@ dominated by what the frozen model already knows.
 
 Masked wins clearly and, unlike pre-fix, also leads on F. TripoSR remains the
 stronger frozen baseline on strict matching (F 0.102 vs Point-E's 0.086).
+
+> **Full-split retest (2026-10-17, same weights, no retraining).** Default
+> masked on all 260 test objects: **0.1289**/0.0892 (panel: 0.0969/0.1016) —
+> the tail categories are harder, as expected. Ordering preserved
+> (masked < raw 0.1322/0.0715 < crop 0.1375/0.0715). Mesh-cleanup variant
+> (`largest` connected component, GT-blind): 0.1297/0.0886, i.e. **no-op** —
+> the fin/flash artifacts are *attached* sheets, not detached parts, so
+> component filtering cannot remove them. Cleaning them needs extraction-time
+> changes (threshold/meshing) or training, not post-hoc filtering.
 
 ### 6.4 Cross-model, same 5 objects, same protocol
 
@@ -333,25 +369,36 @@ The ablation tables record all of these.
 
 ![run comparison](../results/comparison/figures/run_comparison_atlasnet.png)
 
-### 6.10 The input-dependence question (open)
+### 6.10 The input-dependence question (retested post-fix)
 
 A Tatarchenko-style probe (`results/ablation/image_usage.json`) on the **MS1
 checkpoint** (`svr25_pretrained`) scored real/constant/shuffled images almost
 identically (Chamfer 0.229/0.233/0.229; F≈0.003): no *measurable* image
 dependence. That test predates the dataset fix and is now doubly suspect: with
 1608/1695 image→cloud pairs shuffled during training, ignoring the image was
-the *optimal* strategy the model could learn. The corrected winner
-(`a2_p25_sphere_s123`) has not yet been retested; until it is, read "AtlasNet
-is best" as "best prior fitted to these categories under this protocol", not
-"reconstructs the instance it sees". Retest recipe: real vs constant vs
-shuffled inputs on `a2_p25_sphere_s123`, same 260-object split.
+the *optimal* strategy the model could learn.
+
+**Retest on the corrected winner** (`a2_p25_sphere_s123`, best-model weights,
+full 260-object split, view 0; `nesegemaa/atlas_input_ablation.py` →
+`nesegemaa/atlas_input_ablation_s123.json`): real **0.0332**/0.1611 vs
+constant-gray 0.0400/0.1461 vs shuffled-image 0.0395/0.1591 (Chamfer/F).
+The winner *does* read its input — the true image beats both ablations by
+~17% Chamfer — but the gap is modest and shuffled ≈ constant with F nearly
+flat, so a large category-prior component remains. Read "AtlasNet is best" as
+"best prior *plus* weak instance conditioning under this protocol", not as
+strong per-instance reconstruction.
 
 ---
 
 ## 7. Limitations and future work
 
-- **Input-dependence of the post-fix winner is untested** (§6.10) — the only
-  probe ran on a pre-fix checkpoint trained on shuffled pairs.
+- **Input-dependence of the post-fix winner is retested** (§6.10): real
+  inputs beat constant/shuffled by ~17% Chamfer, but shuffled ≈ constant —
+  weak instance conditioning on top of a strong category prior.
+- **Eval point counts differ by track** (audit note in §6.1): SPHERE AtlasNet
+  64,050 vs SQUARE 2,500 vs Point-E/TripoSR 4,096. Chamfer ordering survives
+  density matching; F-score margins do not — treat F deltas across tracks as
+  provisional until the eval grid is re-run at fixed counts.
 - Test sets are tiny for 35 categories (<3 objects) — flagged, but macro means
   still wobble.
 - AtlasNet attention pooling is unstable at K=8 on a few objects (fork, fan).
@@ -430,3 +477,25 @@ Legacy/dataset figures remain under `results/comparison/figures/`
 `qualitative/atlasnet_compare.png`, `dataset_examples.png`,
 `longtail_lorenz.png`). Cross-model qualitative: `figures/cross_models.png`.
 Interactive: `python viewer/view.py` (runs exported under `viewer/runs/`).
+The AtlasNet winner run (`nesegemaa__atlasnet__a2_p25_sphere_s123`) covers the
+full 260-object test split (view 0), plus its low-LR finetune
+(`..._a2_p25_sphere_ft1e4`); Point-E and TripoSR now also have full-260 runs
+(`..._full`) alongside the original 5-object panels. All viewer clouds are
+capped at 4096 points/object (deterministic per-object subsample,
+`export_to_viewer --points`; the SPHERE winner's full 64k preds would
+otherwise out-draw the 4k GT 16×). The earlier 5-object `a0_svr25_warmdec`
+export was removed; it had also been orphaned by the old shared-triplets
+layout (every qual run overwrote the same 5 panel dirs — fixed by per-run
+triplets in `atlas_qual.py`).
+Viewer scores use its own Euclidean
+Chamfer-L1/bbox-frame protocol, so they are not numerically comparable to the
+squared-distance/UnitBall numbers in §6.
+
+> **Aligned viewer variants (visualization only).** `*_aligned` runs rigidly
+> ICP-align predictions onto GT (`nesegemaa/align.py`, transform recorded per
+> object) so shape can be judged without the pose confound; raw runs are kept
+> alongside and paper metrics never use alignment. Notably, Point-E's hammer
+> (viewer Chamfer 0.87 → 0.10) and shampoo (0.56 → 0.11) collapses are
+> ~90° pose errors — the shapes were always reasonable. TripoSR's gaps shrink
+> less (shampoo 0.38 → 0.27), i.e. more shape-level deviation. See
+> `nesegemaa/triposr_prior_gap.csv` for the metric-frame version of this test.

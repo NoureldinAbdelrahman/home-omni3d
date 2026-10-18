@@ -37,9 +37,15 @@ class TrainerModel(object):
         """
         if self.opt.reload_model_path != "":
             yellow_print(f"Network weights loaded from  {self.opt.reload_model_path}!")
-            # print(self.network.state_dict().keys())
-            # print(torch.load(self.opt.reload_model_path).keys())
-            self.network.module.load_state_dict(torch.load(self.opt.reload_model_path, map_location='cuda:0', weights_only=False))
+            # Checkpoints saved from the DataParallel trainer carry a "module."
+            # prefix; the load target here is the unwrapped module, so strip
+            # the prefix when present (strict load still raises on any real
+            # mismatch — no silent partial restores).
+            full = torch.load(self.opt.reload_model_path, map_location='cuda:0', weights_only=False)
+            if isinstance(full, dict) and full and all(
+                    k.startswith("module.") for k in full.keys()):
+                full = {k[len("module."):]: v for k, v in full.items()}
+            self.network.module.load_state_dict(full)
 
         elif self.opt.reload_decoder_path != "":
             opt = deepcopy(self.opt)

@@ -84,8 +84,15 @@ def main():
     ap.add_argument("--panel", nargs="+", default=None,
                     help="'cat:obj' pairs for figure triplets; default: the 5 MS1 objects "
                          "(falls back to the category's test[0] with a printed note)")
-    ap.add_argument("--out", type=Path, default=ROOT / "results" / "qualitative" / "atlasnet")
+    ap.add_argument("--out", type=Path, default=ROOT / "results" / "qualitative" / "atlasnet",
+                    help="triplets root; per-run triplets go to <out>/<run>/ so "
+                         "consecutive runs never overwrite each other (previously "
+                         "every run wrote <out>/<cat>_<obj>/ and only the last "
+                         "run's panel survived)")
     args = ap.parse_args()
+    # Per-run triplets dir: fixes the old shared-dir clobbering where each
+    # qual run overwrote the previous run's pred.npy/gt.npy/metrics.json and
+    # viewer exports built from <out> only ever saw the last run's panel.
 
     views = [int(v) for v in args.eval_views.split(",") if v.strip() != ""]
     assert views, "--eval_views must list at least one view index"
@@ -144,6 +151,8 @@ def main():
 
     per_object_rows = []
     args.out.mkdir(parents=True, exist_ok=True)
+    panel_dir = args.out / args.run
+    panel_dir.mkdir(parents=True, exist_ok=True)
     for v in views:
         for cat, objs in sorted(test_lists.items()):
             for obj in objs:
@@ -163,7 +172,7 @@ def main():
                     "n_points": int(pred.shape[0]),
                 })
                 if (cat, obj) in panel and v == views[0]:
-                    outd = args.out / f"{cat}_{obj}"
+                    outd = panel_dir / f"{cat}_{obj}"
                     outd.mkdir(parents=True, exist_ok=True)
                     np.save(outd / "pred.npy", pred.astype(np.float32))
                     np.save(outd / "gt.npy", gt.astype(np.float32))
@@ -219,7 +228,7 @@ def main():
         "by_view": by_view,
     }
     (res_dir / "qual_agg.json").write_text(json.dumps(agg, indent=2) + "\n")
-    print("wrote", res_dir / "qual_agg.json", "+", args.out)
+    print("wrote", res_dir / "qual_agg.json", "+", panel_dir)
 
 
 if __name__ == "__main__":

@@ -26,6 +26,7 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -34,7 +35,9 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "viewer"))
+sys.path.insert(0, str(ROOT / "nesegemaa"))
 from export import ViewerRun, load_gt_raw  # noqa: E402
+from align import icp_align, subsample  # noqa: E402
 
 MODELS = {"atlasnet": "AtlasNet", "point-e": "Point-E", "triposr": "TripoSR"}
 
@@ -84,10 +87,29 @@ def main():
     ap.add_argument("--label", default=None)
     ap.add_argument("--notes", default="")
     ap.add_argument("--limit", type=int, default=0, help="max objects (0 = all)")
+    ap.add_argument("--points", type=int, default=4096,
+                    help="cap points shown per object, deterministic per-object "
+                         "subsample (0 = keep all). Default 4096 matches the GT "
+                         "clouds so dense SPHERE outputs (64k) don't out-draw "
+                         "everything else in the viewer")
+    ap.add_argument("--align", choices=["none", "icp"], default="none",
+                    help="none = raw prediction (honest pose); icp = rigid "
+                         "Kabsch-ICP onto GT for *visual* comparison only. "
+                         "Aligned exports must use a separate --name and never "
+                         "replace raw runs")
+    ap.add_argument("--icp-iters", type=int, default=25)
     args = ap.parse_args()
 
+    # Accept both layouts: legacy triplets directly under --triplets
+    # (<cat>_<obj>/pred.npy) and per-run triplets one level down
+    # (<run>/<cat>_<obj>/pred.npy, written by atlas_qual since the
+    # shared-dir clobbering fix). Deeper nesting is not searched: the
+    # folder structure stays flat by design.
     dirs = sorted(p for p in args.triplets.iterdir()
                   if p.is_dir() and (p / "pred.npy").is_file())
+    if not dirs:
+        dirs = sorted(p for p in args.triplets.glob("*/*")
+                      if p.is_dir() and (p / "pred.npy").is_file())
     if args.limit:
         dirs = dirs[:args.limit]
     if not dirs:
@@ -99,9 +121,24 @@ def main():
     for d in dirs:
         obj_id, m = resolve_object(d)
         pred = np.load(d / "pred.npy").astype(np.float64)
+        n_full = len(pred)
+        pred = subsample(pred, args.points, obj_id)
+        info = {"view": m.get("view", 0), "points_shown": len(pred)}
+        if n_full != len(pred):
+            info["points_full"] = n_full
+        if args.align == "icp":
+            # Align in the normalized (metrics) frame, then map through the
+            # same GT stats as everything else. GT-blind w.r.t. shape: a
+            # rigid transform only, recorded below.
+            gt_n = np.load(d / "gt.npy").astype(np.float64) \
+                if (d / "gt.npy").is_file() else None
+            if gt_n is None:
+                raise SystemExit(f"--align icp needs {d}/gt.npy (scoring-only cloud)")
+            pred, T = icp_align(pred, gt_n, iters=args.icp_iters)
+            info["aligned"] = f"icp-{args.icp_iters}iter"
+            info["T_row0"] = [round(float(v), 4) for v in T[0]]
         center, radius = gt_normalization(obj_id)
         pred_raw = pred * radius + center  # undo our normalization -> raw frame
-        info = {"view": m.get("view", 0)}
         if "chamfer" in m:
             info["panel_chamfer"] = round(float(m["chamfer"]), 5)
         if "fscore" in m:

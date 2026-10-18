@@ -47,3 +47,13 @@ point_e_model_cache
 
 # --- viewer: local screenshots ---
 viewer/.screenshots/
+
+# --- Full-split qualitative triplets (bulky regenerable intermediates) ---
+# Per-object scores live in the committed results_*.csv/summary_*.json files
+# and the visuals in viewer/runs/; the .npy clouds rebuild via
+# nesegemaa/atlas_qual.py (GPU, weights in AtlasNet/log/) or the
+# pointe/triposr faithful_eval.py scripts. Legacy 5-object panel triplets
+# stay tracked (already committed before this rule).
+results/qualitative/atlasnet/*/
+nesegemaa/pointe/triplets_full/
+nesegemaa/triposr/triplets_full*/
