@@ -81,14 +81,12 @@ def initialize_colors(
         projected = torch.einsum("cij,cnj->cni", Ks, camera_points)
         pixels = projected[..., :2] / camera_points[..., 2:].clamp_min(1e-6)
         height, width = images.shape[1:3]
-        x = pixels[..., 0].round().long()
-        y = pixels[..., 1].round().long()
         visible = (
             (camera_points[..., 2] > 0)
-            & (x >= 0)
-            & (x < width)
-            & (y >= 0)
-            & (y < height)
+            & (pixels[..., 0] >= 0)
+            & (pixels[..., 0] <= width - 1)
+            & (pixels[..., 1] >= 0)
+            & (pixels[..., 1] <= height - 1)
         )
         colors = torch.full((n, 3), 0.5, device=points.device)
         sums = torch.zeros_like(colors)
@@ -96,7 +94,16 @@ def initialize_colors(
         for camera in range(len(images)):
             valid = visible[camera]
             if valid.any():
-                samples = images[camera, y[camera, valid], x[camera, valid]]
+                sample_grid = pixels[camera, valid].clone()
+                sample_grid[:, 0] = sample_grid[:, 0] / max(width - 1, 1) * 2 - 1
+                sample_grid[:, 1] = sample_grid[:, 1] / max(height - 1, 1) * 2 - 1
+                samples = F.grid_sample(
+                    images[camera].permute(2, 0, 1).unsqueeze(0),
+                    sample_grid.view(1, 1, -1, 2),
+                    mode="bilinear",
+                    padding_mode="border",
+                    align_corners=True,
+                )[0, :, 0].T
                 sums[valid] += samples
                 counts[valid] += 1
         return torch.where(counts > 0, sums / counts.clamp_min(1), colors)
@@ -194,6 +201,23 @@ def render_views(
         save_render(output_dir / name, image)
 
 
+def masked_rgb_loss(
+    rendered: Tensor,
+    target: Tensor,
+    foreground: Tensor,
+    foreground_weight: float,
+    background_weight: float,
+) -> Tensor:
+    """Prioritize object appearance while retaining a background penalty."""
+    weights = torch.where(
+        foreground[..., None] > 0.5,
+        torch.as_tensor(foreground_weight, device=rendered.device),
+        torch.as_tensor(background_weight, device=rendered.device),
+    )
+    error = (rendered - target).abs()
+    return (error * weights).sum() / weights.sum().clamp_min(1.0)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--object", default="battery/battery_001")
@@ -213,18 +237,32 @@ def main() -> None:
     parser.add_argument(
         "--max-opacity-logit",
         type=float,
-        default=2.0,
+        default=1.25,
         help="Maximum opacity logit used during this conservative prototype run.",
     )
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--sh-degree", type=int, default=1, choices=(1,))
     parser.add_argument("--foreground-weight", type=float, default=0.1)
+    parser.add_argument(
+        "--foreground-rgb-weight",
+        type=float,
+        default=2.0,
+        help="Relative RGB loss weight for object pixels.",
+    )
+    parser.add_argument(
+        "--background-rgb-weight",
+        type=float,
+        default=0.75,
+        help="Relative RGB loss weight for background pixels.",
+    )
     parser.add_argument("--refine-start", type=int, default=500)
     parser.add_argument("--refine-stop", type=int, default=9000)
     parser.add_argument("--refine-every", type=int, default=100)
     parser.add_argument("--init-points", type=int, default=4096)
     parser.add_argument("--visual-hull-candidates", type=int, default=150000)
     parser.add_argument("--visual-hull-min-views", type=int, default=4)
+    parser.add_argument("--views-per-step", type=int, default=4)
+    parser.add_argument("--opacity-init", type=float, default=-4.0)
     args = parser.parse_args()
 
     torch.manual_seed(args.seed)
@@ -261,7 +299,7 @@ def main() -> None:
         torch.tensor([1.0, 0.0, 0.0, 0.0], device=device).repeat(n, 1)
     )
     scales = torch.nn.Parameter(initial_scales)
-    opacities = torch.nn.Parameter(torch.full((n,), -4.0, device=device))
+    opacities = torch.nn.Parameter(torch.full((n,), args.opacity_init, device=device))
     # gsplat's SH convention uses a DC coefficient that is shifted by 0.5
     # and scaled by the degree-zero SH constant during rendering.
     sh = torch.zeros((n, 4, 3), device=device)
@@ -303,7 +341,7 @@ def main() -> None:
     for iteration in range(1, args.iterations + 1):
         for optimizer in optimizers.values():
             optimizer.zero_grad(set_to_none=True)
-        indices = torch.randperm(len(images), device=device)[: min(4, len(images))]
+        indices = torch.randperm(len(images), device=device)[: min(args.views_per_step, len(images))]
         renders, alphas, info = rasterization(
             params["means"],
             F.normalize(params["quats"], dim=-1),
@@ -321,7 +359,13 @@ def main() -> None:
         )
         target_images = images[indices]
         foreground = (target_images.max(dim=-1).values > 0.02).float()
-        loss_rgb = F.l1_loss(renders[..., :3], target_images)
+        loss_rgb = masked_rgb_loss(
+            renders[..., :3],
+            target_images,
+            foreground,
+            args.foreground_rgb_weight,
+            args.background_rgb_weight,
+        )
         loss_fg = F.binary_cross_entropy(
             alphas[..., 0].clamp(1e-4, 1 - 1e-4), foreground
         )
@@ -391,6 +435,8 @@ def main() -> None:
             "opacities": params["opacities"].detach().cpu(),
             "colors": params["colors"].detach().cpu(),
             "record": record,
+            "image_size": args.image_size,
+            "sh_degree": args.sh_degree,
         },
         output_dir / "checkpoint.pt",
     )
