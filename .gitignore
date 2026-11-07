@@ -41,3 +41,36 @@ master.html
 .idea/
 .vscode/
 *.swp
+
+2.Add weights and images to .gitignore:Open your .gitignore file and add the extensions for your model weights and test/train images. Copy and paste these lines into the file:Plaintext# Model Weights
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+
+# Test/Train Images and Results
+*.png
+*.jpg
+*.jpeg
+results/
+outputs/
+
+# Virtual Environment
+.venv/
+
+# Model Weights
+pretrained/
+
+# Datasets
+data_test/
+
+# Test/Train Results and Checkpoints
+workspace/
+workspace_battery_test/
+workspace_*/
+
+# Compiled CUDA binaries
+build/
+*.so
