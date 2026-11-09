@@ -37,6 +37,15 @@ python download_house_extra.py --include-bedroom --output-dir dataset --point-co
 python prepare_model_data.py --target both   # or: pix2vox | atlasnet
 ```
 
+**Remaining categories** (the other 140 of the 216 on the remote, ~80 GiB): `download_remaining.py` fetches only the 24-view renders + 4096-point clouds. It is resumable (chunk journal + sha256 verification, atomic extraction) and prints live percent / speed / ETA. After any interruption, re-run the same command: finished categories are skipped and a partial archive resumes chunk by chunk.
+
+**Full-dataset status: 215 of 216 categories, 5,893 of 5,911 objects (99.70%)**, every object with all 24 views + its cloud. The 18 missing objects (category `package` blocked by the host's firewall, `laptop_002` and `anise_011` incomplete in the source) and per-category counts are in [`docs/DATASET.md`](docs/DATASET.md). Pairing is verified: `python fix_point_cloud_names.py --dry-run` (mapping now covers all categories) and `python check_dataset.py --dataset-dir dataset` must both come back clean on any copy of the dataset.
+
+```bash
+python download_remaining.py --output-dir dataset --dry-run   # plan + sizes, downloads nothing
+python download_remaining.py --output-dir dataset             # Ctrl+C is safe; re-run to resume
+```
+
 Writes `dataset/renders/<cat>/<obj>/{000..023}.png` + `dataset/point_clouds/<cat>/<obj>.npy`. `dataset/` is gitignored — copy it between machines or re-download. Never commit `dataset/`, `*.pth`, or `AtlasNet/log/` / `Pix2Vox/output/`.
 
 > **Point-cloud pairing fix.** Datasets downloaded before this fix have ~95% of `point_clouds/<cat>/<obj>.npy` files holding a *different* object of the same category (the old downloader assumed the unnamed HDF5 rows were in sorted ID order; they are not). The shapes are intact, only the names are shuffled. Repair an existing copy offline, then rebuild model inputs and retrain/re-evaluate anything that used point clouds or voxels:
