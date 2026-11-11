@@ -75,6 +75,34 @@ with a later density/SDF-grid extraction step.
 Outputs are written to `3dgs/results/battery_battery_001/`. The checkpoint is
 the complete Gaussian model; `gaussian_centers.npy` is an evaluation export.
 
+## Train and evaluate the complete 3DGS benchmark
+
+For a resumable run over every object in the frozen manifest:
+
+```bash
+cd ashry/3dgs
+../../.venv/bin/python run_benchmark.py \
+  --split all --image-size 512 --iterations 10000 \
+  --output-dir results/benchmark_512_10k \
+  --report-dir ../3dgs_metrics/benchmark_512_10k
+```
+
+Checkpoints and renders are kept in the ignored `3dgs/results` directory.
+The shareable `3dgs_metrics` directory contains only
+`benchmark_metrics.json` and `benchmark_metrics.csv`; per-object PLY files are
+deleted after evaluation unless `--keep-pointclouds` is specified.
+The report contains per-object results and mean/median aggregates.
+Metrics include Chamfer L2, precision, recall, and F1 at 0.01 and 0.02, plus
+the fraction of predicted points outside the reference bounds. Existing
+completed objects are skipped, so the command can be stopped and resumed.
+
+`512` pixels and `10,000` iterations are a sensible quality/compute baseline.
+Run a small sample first; 1,694 objects at this setting is a large multi-day
+or multi-week GPU workload. Increase to `15,000` iterations only after a
+sample shows that validation metrics are still improving near iteration
+10,000. Higher resolution improves appearance more reliably than geometry
+unless the training views and camera calibration are also adequate.
+
 ## Visualize a reconstruction
 
 ```bash
