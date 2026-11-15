@@ -88,3 +88,38 @@ The deck was built with python-pptx 1.0.2 by a script kept outside the repo
 (`build_deck.py` in the session scratchpad). It reads `benchmark_v1.json` directly from
 `refs/heads/ashry` and figures from `refs/heads/main` and `refs/heads/bones`. The render check used
 LibreOffice → PDF → `pdftoppm -r 80`, with output in `/tmp/opencode/ms2/`.
+
+## Feedback pass (2026-11-15)
+
+- Slide 13: "(next slide)" → "(slide 12)"; the gallery is the slide before.
+- Slide 14: proposal 3 uses F@5%, not F@1%. Viewer `f_ceiling_1` = 0.271 (a perfect 4,096-pt prediction caps there), `f_ceiling_5` = 0.994; AtlasNet SPHERE run f_1 = 0.005 (nesegemaa `viewer/runs/nesegemaa__atlasnet__a2_p25_sphere_s123/run.json`). This matches MS1 `docs/METRICS.md` ("almost nothing within 1%").
+- Slide 15: Mohamed's improvement placeholder removed.
+- Slide 17/18/19: Ashry 3DGS from `origin/ashry` 461f55c, `ashry/3dgs_metrics/benchmark_512_3k/benchmark_metrics.json`: 20 views, 512 px, 3,000 iterations, 1,689/1,694 objects, F1@0.02 mean 0.667 (GT is unit sphere ×0.4, so 0.02 = 5% radius), F1@0.01 0.351, Chamfer-L2 mean 0.0035. The prediction is bbox scale/centre-aligned to GT (`ashry/app/pointclouds.py::align_to_target`).
+  - GT pairing check: the manifest `benchmark_v1.json` (2026-10-06) has pre-fix sha256s (449 of 470 local objects hash to a different name), but evaluation loads files by name. Objects the fix moved score like unmoved ones (F1@0.02 0.628 vs 0.648), so the scores were computed on the fixed clouds.
+- Hamdy: `origin/hamdy` has only LGM code (ee0b1cc), no results. NeRF/NeuS: no committed scores beyond the oracle.
+- Slide 19: "mine" removed; the tracks line counts the 7 scored models.
+
+## AtlasNet run audit (2026-11-15)
+
+- `a3_aug_rot` and `a3_aug_flip` never augmented: `AtlasNet/training/trainer.py:51` applies the augmenter only when `not self.opt.SVR`, and both `results/atlasnet/a3_aug_{rot,flip}/options.json` have `SVR: true`, `manualSeed: null`. They are baseline re-runs with new random seeds. Baseline settings therefore scored 0.0424 / 0.0467 / 0.087 (full split).
+- 3-view run (`a1_k3_attn`) sees 3 photos at test: views `idx_image_val + i*8`, i.e. 0, 8, 16 (`AtlasNet/dataset/dataset_shapenet.py`), fused by `AtlasNet/model/multiview.py`.
+- Slide 10: bars relabelled "Baseline rerun 1*/2*" (grey like the baseline) and "3 views, attention†", with footnotes. Slide 13: "Views need attention" row replaced by "Run-to-run noise"; frozen encoder marked as one run. Slide 14: new proposal 1 "Repeat key runs, 3 seeds"; subtitle "four to test next".
+- PAPER.md §6.5 still says "rotation mild win; flips hurt": not edited (spec).
+
+## Focus pass (2026-11-15), deck now 23 slides
+
+- Names: body text uses Noureldin S., Noureldeen A., Mohamed A., Abdelrahman A., Ahmed H.; title slide and "Who does what" give full names and IDs (user-supplied): Noureldin S. Abdelrahman 58-7007, Noureldeen A. Younes 58-1632, Mohamed A. Awad 58-8189, Abdelrahman A. Ashry 58-0567, Ahmed H. Mostafa 58-7370. Assumed mapping: Mohamed A. Awad = mohamed-ayman, Abdelrahman A. Ashry = ashry, Ahmed H. Mostafa = hamdy.
+- Slide 9 (new) "Why tracks aren't comparable": per-track input, test objects, metric, points, alignment. Mohamed's test split (`mohamed_ayman/outputs/evaluations/pix2vox_3views_test_results.csv`, 263 objects) shares 27 objects with the team test split.
+- Slide 13 (new) "Same scorer: raw vs pose-aligned": viewer micro summaries of `nesegemaa__{atlasnet__a2_p25_sphere_s123, triposr__default_masked_full[_aligned], point_e__default_masked_g3_full[_aligned]}`. Aligned = rigid ICP onto GT (oracle).
+- Slide 18 gallery redrawn: Mohamed's viewer export covers the 294 COLMAP objects and only 48 are in his test split; three earlier gallery objects were not. New objects (all in his test split): chair_001, bed_001, tvstand_003, vase_007 (Pix2Vox++ F@5% 0.475/0.361/0.254/0.331).
+- Slide 20 (new) "Focus from here", marked pending team agreement. Bigger dataset: main README, 215/216 categories, 5,893 objects downloaded and pairing-verified (879a350).
+- Slide 17 notes: config.yaml 25 epochs vs logs 15/30. Slide 22: next = one protocol, more data, pose fix; multi-view refs labelled as such.
+
+## Augmentation proposal (2026-11-15)
+
+- Slide 16 proposals: 1 Image augmentation (new), 2 SPHERE + frozen encoder, 3 Class-balanced sampling, 4 Repeat key runs, 3 seeds. "Stricter evaluation" moved into slide 20's protocol item ("viewer scorer (F@5%)").
+- Basis: `AtlasNet/dataset/dataset_shapenet.py::init_singleview` applies only RandomCrop + RandomHorizontalFlip to images; renders are RGBA with transparent background (`dataset/renders/*/000.png`, pixel (0,0,0,0)), i.e. clean single-object renders. The `--random_rotation` / `--data_augmentation_random_flips` flags act on point clouds and are skipped when SVR is on.
+
+## LGM dropped (2026-11-15, user)
+
+- Slide 20: Drop line now "Pix2Vox (≈ ++), TripoSR, LGM"; slide 21: Ahmed H. Mostafa status "Dropped (team decision)"; slide 22: "Tracks: 7 models scored; focus on 3". Slides 6 and 7 still list LGM as explored in MS1.
