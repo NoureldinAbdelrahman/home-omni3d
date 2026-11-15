@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Targeted downloader for the bedroom subset of OmniObject3D (OpenDataLab).
 
-Fetches only ``blender_renders_24_views`` images and per-category point-cloud
-HDF5 files for the categories in :mod:`bedroom_categories`, extracts them, and
-reorganizes everything into a PyTorch-friendly layout::
+Fetches only ``blender_renders_24_views`` images and the named per-object
+point-cloud PLYs for the categories in :mod:`bedroom_categories`, extracts them,
+and reorganizes everything into a PyTorch-friendly layout::
 
     dataset/
     ├── point_clouds/
@@ -41,7 +41,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-import h5py
 import numpy as np
 
 from bedroom_categories import BEDROOM_CATEGORIES, resolve_category
@@ -55,7 +54,9 @@ logger = logging.getLogger("download_bedroom_subset")
 DATASET_REPO = "omniobject3d/OmniObject3D-New"
 LOCAL_REPO_DIR = DATASET_REPO.replace("/", "___")
 RENDER_PREFIX = "/raw/blender_renders_24_views/img"
-PC_PREFIX_TMPL = "/raw/point_clouds/hdf5_files/{point_count}"
+# Named per-object clouds: <N>/<cat>/<obj>/pcd_<N>.ply (one archive, all categories).
+# Do not use hdf5_files/: its rows are unnamed and NOT in sorted object-ID order.
+PC_ARCHIVE_TMPL = "/raw/point_clouds/ply_files/{point_count}_ply.tar.gz"
 DEFAULT_FALLBACK_AK = "bmyqk5wpbaxl6x1vkzq9"
 DEFAULT_FALLBACK_SK = "nl7kq9palyr6j3pwxolden7ezq4dwjmbgdm81yeo"
 
@@ -200,43 +201,40 @@ def _extract_renders(archive: Path, category: str, renders_root: Path) -> list[s
     return object_ids
 
 
+def _read_ascii_ply(data: bytes) -> np.ndarray:
+    header, _, body = data.partition(b"end_header\n")
+    if b"format ascii" not in header:
+        raise DownloadError("Unexpected PLY encoding (expected ASCII)")
+    return np.loadtxt(body.decode().splitlines(), dtype=np.float64, usecols=(0, 1, 2), ndmin=2)
+
+
 def _extract_point_clouds(
-    hdf5_path: Path,
-    category: str,
+    archive: Path,
+    categories: Sequence[str],
     point_cloud_root: Path,
-    object_ids: Sequence[str],
-) -> int:
-    """Split a per-category HDF5 ``(n_obj, n_points, 3)`` into per-object .npy files."""
-    out_dir = point_cloud_root / category
-    out_dir.mkdir(parents=True, exist_ok=True)
+) -> dict[str, int]:
+    """Write ``<N>/<cat>/<obj>/pcd_<N>.ply`` members as ``point_clouds/<cat>/<obj>.npy``.
 
-    with h5py.File(hdf5_path, "r") as f:
-        if "data" not in f:
-            raise DownloadError(f"Unexpected HDF5 layout in {hdf5_path}: missing 'data'")
-        data = np.asarray(f["data"], dtype=np.float32)
-
-    if data.ndim != 3 or data.shape[-1] != 3:
-        raise DownloadError(
-            f"Unexpected HDF5 shape {data.shape} in {hdf5_path}; expected (n, N, 3)"
-        )
-
-    n_objects = data.shape[0]
-    ids = list(object_ids)
-    if len(ids) != n_objects:
-        if len(ids) < n_objects:
-            ids = ids + [f"{category}_{i:03d}" for i in range(len(ids), n_objects)]
-        else:
-            logger.warning(
-                "%s: %d render objects but %d point clouds; extras skipped",
-                category,
-                len(ids),
-                n_objects,
-            )
-            ids = ids[:n_objects]
-
-    for object_id, cloud in zip(ids, data):
-        np.save(out_dir / f"{object_id}.npy", cloud)
-    return n_objects
+    Clouds are paired with renders by the object ID in the archive path.
+    """
+    wanted = set(categories)
+    counts = {cat: 0 for cat in categories}
+    with tarfile.open(archive, "r:gz") as tar:
+        for member in tar:
+            parts = member.name.split("/")
+            if not member.isfile() or len(parts) != 4 or not parts[3].endswith(".ply"):
+                continue
+            cat, object_id = parts[1], parts[2]
+            if cat not in wanted:
+                continue
+            cloud = _read_ascii_ply(tar.extractfile(member).read())
+            if cloud.ndim != 2 or cloud.shape[1] != 3:
+                raise DownloadError(f"Unexpected cloud shape {cloud.shape} in {member.name}")
+            out_dir = point_cloud_root / cat
+            out_dir.mkdir(parents=True, exist_ok=True)
+            np.save(out_dir / f"{object_id}.npy", cloud.astype(np.float32))
+            counts[cat] += 1
+    return counts
 
 
 def _human_bytes(n: int) -> str:
@@ -270,21 +268,11 @@ def plan_downloads(
             plan.append(("render", cat, by_path[path]))
 
     if want_point_clouds:
-        prefix = PC_PREFIX_TMPL.format(point_count=point_count)
-        by_path = {f.path: f for f in list_remote_files(prefix)}
-        for cat in categories:
-            # Normal layout is /.../cat_N.hdf5; a few entries nest an extra dir.
-            matches = [
-                f
-                for p, f in by_path.items()
-                if Path(p).name in {f"{cat}_{point_count}.hdf5", f"{cat}.hdf5"}
-                or p.rstrip("/").endswith(f"/{cat}_{point_count}.hdf5")
-            ]
-            if not matches:
-                raise DownloadError(
-                    f"Category {cat!r} has no point cloud file under {prefix}"
-                )
-            plan.append(("point_cloud", cat, matches[0]))
+        path = PC_ARCHIVE_TMPL.format(point_count=point_count)
+        matches = list_remote_files(path)
+        if not matches:
+            raise DownloadError(f"No point cloud archive at {path}")
+        plan.append(("point_cloud", "*", matches[0]))
 
     return plan
 
@@ -323,7 +311,6 @@ def run(args: argparse.Namespace) -> int:
     (output_dir / "renders").mkdir(parents=True, exist_ok=True)
     (output_dir / "point_clouds").mkdir(parents=True, exist_ok=True)
 
-    object_ids_by_cat: dict[str, list[str]] = {}
     failures: list[str] = []
 
     for idx, (kind, cat, remote) in enumerate(plan, start=1):
@@ -341,7 +328,7 @@ def run(args: argparse.Namespace) -> int:
 
         if kind == "render":
             try:
-                object_ids_by_cat[cat] = _extract_renders(
+                _extract_renders(
                     local, cat, output_dir / "renders"
                 )
             except Exception as exc:  # noqa: BLE001
@@ -351,28 +338,14 @@ def run(args: argparse.Namespace) -> int:
                 local.unlink(missing_ok=True)
         else:
             try:
-                # When only point clouds are requested we still need object IDs
-                # that match the render folder names. Derive them from any
-                # already-extracted renders/<cat> (sorted, same order the HDF5
-                # rows and _extract_renders use) instead of falling back to the
-                # synthetic ``<cat>_NNN`` names, which would not match.
-                category_object_ids = object_ids_by_cat.get(cat, [])
-                if not category_object_ids:
-                    existing_render_dir = output_dir / "renders" / cat
-                    if existing_render_dir.is_dir():
-                        category_object_ids = sorted(
-                            p.name for p in existing_render_dir.iterdir() if p.is_dir()
-                        )
-                n = _extract_point_clouds(
-                    local,
-                    cat,
-                    output_dir / "point_clouds",
-                    category_object_ids,
-                )
-                print(f"  → point_clouds/{cat}: {n} objects")
+                counts = _extract_point_clouds(local, categories, output_dir / "point_clouds")
+                for cat, n in counts.items():
+                    print(f"  → point_clouds/{cat}: {n} objects")
+                    if n == 0:
+                        failures.append(f"point clouds {cat}: not found in {remote.path}")
             except Exception as exc:  # noqa: BLE001
-                failures.append(f"extract point clouds {cat}: {exc}")
-                logger.error("point cloud extract failed for %s: %s", cat, exc)
+                failures.append(f"extract point clouds: {exc}")
+                logger.error("point cloud extract failed: %s", exc)
             if not args.keep_archives:
                 local.unlink(missing_ok=True)
 
@@ -420,7 +393,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         type=int,
         choices=(1024, 4096, 16384),
         default=4096,
-        help="Point-cloud resolution for HDF5 files.",
+        help="Points per cloud (selects the <N>_ply.tar.gz archive).",
     )
     p.add_argument(
         "--delay",
@@ -436,7 +409,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--keep-archives",
         action="store_true",
-        help="Keep downloaded .tar.gz / .hdf5 archives after extraction.",
+        help="Keep downloaded .tar.gz archives after extraction.",
     )
     p.add_argument(
         "--use-fallback-keys",

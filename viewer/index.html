@@ -1,0 +1,507 @@
+<meta charset="utf-8">
+<title>Home-Omni3D Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: lab-instrument workbench. Run cards (which runs are on screen) on top,
+   then object browser | 3D viewport | inspector, then the per-category chart and
+   notes. Graphite neutrals; runs take categorical hues in a fixed order, GT is grey. */
+:root {
+  --bg: #f4f5f6; --panel: #ffffff; --sunk: #eceef0; --ink: #15181c; --muted: #5a636d; --faint: #8a939c;
+  --line: #dce0e4; --focus: #2a78d6; --gt: #9aa3ad; --cam: #b5bcc3; --warn: #a15c00;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+  --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1215; --panel: #171b1f; --sunk: #1f242a; --ink: #edf0f3; --muted: #a2abb5; --faint: #77818b;
+  --line: #2a3138; --focus: #3987e5; --gt: #7d8790; --cam: #4b545d; --warn: #e0a040;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f1215; --panel: #171b1f; --sunk: #1f242a; --ink: #edf0f3; --muted: #a2abb5; --faint: #77818b;
+  --line: #2a3138; --focus: #3987e5; --gt: #7d8790; --cam: #4b545d; --warn: #e0a040;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.5 var(--f-body); }
+.wrap { max-width: 1440px; margin: 0 auto; padding-inline: 20px; padding-block: 20px 48px; display: grid; gap: 20px; }
+h1, h2 { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.15rem; }
+.eyebrow { font: 500 0.72rem/1.2 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+p { margin: 0; max-width: 68ch; }
+.muted { color: var(--muted); }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; background: var(--c, var(--gt)); }
+.key { display: inline-flex; align-items: center; gap: 6px; }
+
+/* header + run cards */
+.head-top { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; }
+.runs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.run { position: relative; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px 12px 18px; display: grid; gap: 6px; cursor: pointer; }
+.run::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 4px; border-radius: 0 3px 3px 0; background: var(--c); opacity: 0.25; }
+.run[aria-pressed="true"]::before { opacity: 1; }
+.run[aria-pressed="false"] { color: var(--muted); }
+.run:hover { border-color: var(--faint); }
+.run .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.run .label { font-weight: 600; color: var(--ink); }
+.run[aria-pressed="false"] .label { color: var(--muted); }
+.run .figs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; }
+.run .figs b { font: 500 1.05rem/1.2 var(--f-mono); font-variant-numeric: tabular-nums; display: block; }
+.run .figs span { font-size: 0.72rem; color: var(--muted); }
+.run .state { font: 500 0.7rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
+.hint { font-size: 0.8rem; color: var(--warn); }
+.empty { background: var(--panel); border: 1px dashed var(--line); border-radius: var(--r); padding: 18px; display: grid; gap: 8px; }
+
+/* workbench */
+.bench { display: grid; grid-template-columns: 250px minmax(0, 1fr) 320px; gap: 16px; align-items: stretch; min-height: 600px; }
+.pane { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); min-width: 0; }
+.browser { display: grid; grid-template-rows: auto 1fr; overflow: hidden; max-height: 720px; }
+.browser .search { padding: 10px; border-bottom: 1px solid var(--line); }
+.browser input { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 4px; background: var(--sunk); }
+.list { overflow-y: auto; padding-block: 4px 8px; }
+.cat { padding: 8px 12px 2px; font-weight: 600; }
+.obj { display: flex; width: 100%; justify-content: space-between; gap: 8px; padding: 4px 12px 4px 20px; border: 0; background: none; text-align: left; cursor: pointer; font-size: 0.86rem; }
+.obj:hover { background: var(--sunk); }
+.obj[aria-current="true"] { background: var(--sunk); box-shadow: inset 3px 0 0 var(--ink); font-weight: 600; }
+.obj .vals { display: inline-flex; gap: 8px; }
+.obj .vals span { font-family: var(--f-mono); font-variant-numeric: tabular-nums; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; }
+.obj .vals .dot { width: 6px; height: 6px; }
+.flag { color: var(--warn); font-size: 0.72rem; }
+
+.viewport { position: relative; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; }
+.vbar { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.vbar h2 { font-size: 1rem; margin-right: auto; }
+.toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; cursor: pointer; user-select: none; }
+.toggle input { margin: 0; accent-color: var(--ink); }
+.toggle.off { opacity: 0.45; cursor: not-allowed; }
+#stage { position: relative; min-height: 420px; }
+#stage canvas { display: block; width: 100%; height: 100%; position: absolute; inset: 0; cursor: grab; }
+#stage canvas:active { cursor: grabbing; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-family: var(--f-mono); font-size: 0.8rem; pointer-events: none; padding: 16px; text-align: center; }
+.vfoot { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 8px 12px; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
+.vfoot label { display: inline-flex; align-items: center; gap: 6px; }
+.vfoot input[type=range] { width: 90px; accent-color: var(--ink); }
+.btn { border: 1px solid var(--line); background: var(--sunk); border-radius: 4px; padding: 3px 9px; cursor: pointer; font-size: 0.8rem; }
+.btn:hover { border-color: var(--faint); }
+
+.inspector { padding: 14px; display: grid; gap: 14px; align-content: start; }
+.photo { aspect-ratio: 1; max-width: 100%; border-radius: 4px; background-color: var(--sunk); background-repeat: no-repeat; }
+.ins-title { display: grid; gap: 2px; }
+.ins-title b { font: 600 1.05rem/1.25 var(--f-body); word-break: break-word; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.84rem; }
+th, td { padding: 5px 0 5px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; font-weight: 400; color: var(--muted); padding-left: 0; white-space: normal; }
+thead th { vertical-align: bottom; }
+thead th .dot { margin-bottom: 2px; }
+thead th span { display: block; font: 500 0.68rem/1.2 var(--f-mono); letter-spacing: 0.04em; color: var(--muted); white-space: normal; max-width: 9ch; margin-left: auto; }
+.views { display: grid; gap: 6px; }
+.views .row { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; }
+.views .row i { height: 10px; border-radius: 2px; background: var(--sunk); border: 1px solid var(--line); }
+.views .row i.on { background: var(--c); border-color: transparent; }
+.note { font-size: 0.8rem; color: var(--muted); border-left: 2px solid var(--warn); padding-left: 8px; }
+
+/* lower */
+.lower { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.card { padding: 16px; display: grid; gap: 12px; }
+.chart-head { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; justify-content: space-between; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted); }
+#chart { width: 100%; overflow-x: auto; position: relative; }
+#chart svg { display: block; width: 100%; min-width: 560px; }
+#chart text { fill: var(--muted); font: 11px var(--f-body); }
+#chart .axis text, #chart text.v { font-family: var(--f-mono); font-size: 10px; }
+#chart .grid line { stroke: var(--line); }
+#chart .row:hover rect.hit, #chart .row.sel rect.hit { fill: var(--sunk); }
+#chart .row { cursor: pointer; }
+.tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 7px 9px; font-size: 0.78rem; box-shadow: 0 4px 14px rgb(0 0 0 / 0.12); white-space: nowrap; z-index: 2; }
+.notes { display: grid; gap: 12px; }
+.notes h3 { font: 600 0.92rem/1.3 var(--f-body); margin: 0 0 2px; }
+.notes p { font-size: 0.86rem; color: var(--muted); }
+pre { margin: 0; background: var(--sunk); border-radius: 4px; padding: 10px; overflow-x: auto; font: 0.76rem/1.5 var(--f-mono); }
+
+@media (max-width: 1100px) {
+  .bench { grid-template-columns: 220px minmax(0, 1fr); }
+  .inspector { grid-column: 1 / -1; grid-template-columns: 160px minmax(0, 1fr); }
+  .inspector > :not(.photo) { grid-column: 2; }
+  .inspector .photo { grid-row: 1 / span 4; }
+  .lower { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .wrap { padding-inline: 16px; }
+  .bench { grid-template-columns: 1fr; min-height: 0; }
+  .browser { max-height: 260px; }
+  #stage { min-height: 360px; }
+  .inspector { grid-template-columns: 1fr; }
+  .inspector > :not(.photo) { grid-column: auto; }
+  .inspector .photo { grid-row: auto; max-width: 220px; }
+}
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:14px">
+    <div class="head-top">
+      <div>
+        <div class="eyebrow">home-omni3d · team results</div>
+        <h1>Home-Omni3D Viewer</h1>
+      </div>
+      <p class="muted" style="font-size:.86rem">Every run against the 4096-point ground truth <span class="key"><i class="dot"></i>grey</span>, in the unit-sphere frame of docs/METRICS.md. Click a run to show or hide it (up to 3 at once).</p>
+    </div>
+    <div class="runs" id="runs"></div>
+    <p class="hint" id="hint" hidden></p>
+  </header>
+
+  <section class="bench" aria-label="Object viewer">
+    <nav class="pane browser" aria-label="Objects">
+      <div class="search"><input id="q" type="search" placeholder="Filter categories or objects" aria-label="Filter objects"></div>
+      <div class="list" id="list"></div>
+    </nav>
+
+    <div class="pane viewport">
+      <div class="vbar">
+        <h2 id="vtitle">Loading</h2>
+        <label class="toggle"><input type="checkbox" id="l-gt" checked><i class="dot"></i>Ground truth</label>
+        <label class="toggle" id="cams-wrap"><input type="checkbox" id="l-cams"> Cameras</label>
+      </div>
+      <div id="stage"><div class="loading" id="loading">Loading viewer</div></div>
+      <div class="vfoot">
+        <span>Drag to rotate · scroll to zoom · right-drag to pan</span>
+        <label>Point size <input type="range" id="psize" min="1" max="8" value="3"></label>
+        <label class="toggle"><input type="checkbox" id="spin"> Auto-rotate</label>
+        <button class="btn" id="reset" type="button">Reset view</button>
+      </div>
+    </div>
+
+    <aside class="pane inspector" aria-label="Selected object">
+      <div class="photo" id="photo" role="img" aria-label="Render of the selected object"></div>
+      <div class="ins-title"><span class="eyebrow" id="i-cat"></span><b id="i-id"></b></div>
+      <div class="tbl"><table aria-label="Scores for the selected object"><thead id="i-head"></thead><tbody id="i-table"></tbody></table></div>
+      <div class="views" id="views" hidden></div>
+      <div id="i-notes" style="display:grid;gap:8px"></div>
+    </aside>
+  </section>
+
+  <section class="lower">
+    <div class="pane card">
+      <div class="chart-head">
+        <div><h2>F-score at 5% by category</h2><p class="muted" style="font-size:.84rem">Mean over each run's objects in the category. Click a row to open its first object.</p></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div id="chart"></div>
+    </div>
+    <div class="pane card notes">
+      <h2>Reading the numbers</h2>
+      <div><h3>On surface (precision) and coverage (recall)</h3><p>On surface: share of a run's points within the threshold of the ground-truth surface. Coverage: share of ground-truth points with a run point within the threshold.</p></div>
+      <div><h3>Thresholds and the ceiling</h3><p>Distances are in the object's unit sphere. The ground truth has 4096 points, about 1.6% of the radius apart, so even a perfect surface scores only about 0.28 at 1%. The ceiling row shows that limit per object; 2% and 5% are more informative.</p></div>
+      <div><h3>Comparing runs</h3><p>Runs can cover different objects. Category means only use each run's own objects, so compare runs on the objects they share (the list shows every run's score per object).</p></div>
+      <div><h3>Add your results</h3><p>From the repo root, in your own code:</p></div>
+      <pre>import sys; sys.path.insert(0, "viewer")
+from export import ViewerRun, voxels_to_points
+run = ViewerRun(owner="you", model="AtlasNet", name="svr25")
+for obj_id, pts in predictions.items():
+    run.add(obj_id, pts)   # (N,3), GT unit-sphere frame
+run.save()                 # then: python viewer/view.py</pre>
+      <p class="muted" style="font-size:.84rem">Details, frames and voxel models: viewer/README.md.</p>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const pct = (v) => v == null ? "–" : Math.round(v * 100) + "%";
+  const f2 = (v) => v == null ? "–" : v.toFixed(2);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const MAX_ON = 3;
+  let RUNS = [], OBJECTS = [], current = null;
+  const visible = new Set();
+  const cache = {};
+
+  const color = (run) => `var(--s${(RUNS.indexOf(run) % 8) + 1})`;   // fixed per run, never by rank
+  const colorHex = (run) => css(`--s${(RUNS.indexOf(run) % 8) + 1}`);
+  const shown = () => RUNS.filter((r) => visible.has(r.id));
+
+  function decode(b64) {
+    const bin = atob(b64), u8 = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    return new Int16Array(u8.buffer);
+  }
+  function getJSON(url) {
+    if (!cache[url]) cache[url] = fetch(url).then((r) => { if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.json(); })
+      .catch((e) => { delete cache[url]; throw e; });
+    return cache[url];
+  }
+
+  /* ---------- three.js ---------- */
+  const stage = $("stage");
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  stage.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.dampingFactor = 0.08; controls.autoRotateSpeed = 1.6;
+  const HOME = new THREE.Vector3(2.4, 1.6, 3.4);
+  const resetView = () => { camera.position.copy(HOME); controls.target.set(0, 0, 0); controls.update(); };
+  resetView();
+  const disc = (() => { const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
+    g.beginPath(); g.arc(32, 32, 30, 0, 7); g.fillStyle = "#fff"; g.fill(); return new THREE.CanvasTexture(c); })();
+  const newPoints = () => new THREE.Points(new THREE.BufferGeometry(), new THREE.PointsMaterial({ map: disc, alphaTest: 0.5 }));
+  const gtLayer = newPoints(); scene.add(gtLayer);
+  const runLayers = {};
+  const camGroup = new THREE.Group(); scene.add(camGroup);
+  const coneGeo = new THREE.ConeGeometry(0.08, 0.16, 4); coneGeo.rotateX(-Math.PI / 2);
+  const camOn = new THREE.MeshBasicMaterial(), camOff = new THREE.MeshBasicMaterial({ wireframe: true });
+
+  function applyTheme() {
+    renderer.setClearColor(new THREE.Color(css("--panel")));
+    gtLayer.material.color.set(css("--gt")); camOff.color.set(css("--cam"));
+    for (const r of RUNS) if (runLayers[r.id]) runLayers[r.id].material.color.set(colorHex(r));
+    const cr = camRun(); if (cr) camOn.color.set(colorHex(cr));
+  }
+  function applySize() {
+    const s = +$("psize").value * 0.0105;
+    gtLayer.material.size = s * 0.8;
+    Object.values(runLayers).forEach((l) => { l.material.size = s; });
+  }
+  function resize() { const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / Math.max(h, 1); camera.updateProjectionMatrix(); }
+  new ResizeObserver(resize).observe(stage);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  $("l-gt").addEventListener("change", () => { gtLayer.visible = $("l-gt").checked; });
+  $("l-cams").addEventListener("change", () => { updateCameras(); if ($("l-cams").checked && camera.position.length() < 6) camera.position.setLength(9); });
+  $("psize").addEventListener("input", applySize);
+  $("spin").addEventListener("change", () => { controls.autoRotate = $("spin").checked; });
+  $("reset").addEventListener("click", resetView);
+  (function loop() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
+
+  function setGeom(layer, raw, quant, start, count) {
+    const a = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i++) a[i] = raw[start * 3 + i] * quant;
+    const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(a, 3));
+    layer.geometry.dispose(); layer.geometry = g;
+  }
+  const camRun = () => current && shown().find((r) => r.objects[current.id] && r.objects[current.id].cameras);
+  function updateCameras() {
+    camGroup.clear();
+    const r = camRun();
+    $("cams-wrap").classList.toggle("off", !r);
+    $("l-cams").disabled = !r;
+    camGroup.visible = !!r && $("l-cams").checked;
+    if (!r) return;
+    camOn.color.set(colorHex(r));
+    const o = r.objects[current.id];
+    o.cameras.forEach((p, i) => {
+      const m = new THREE.Mesh(coneGeo, (o.cameras_used || [])[i] ? camOn : camOff);
+      m.position.set(p[0], p[1], p[2]); m.lookAt(0, 0, 0); camGroup.add(m);
+    });
+  }
+
+  /* ---------- selection ---------- */
+  async function select(id, push = true) {
+    const o = OBJECTS.find((x) => x.id === id); if (!o) return;
+    current = o;
+    document.querySelectorAll(".obj").forEach((b) => b.setAttribute("aria-current", String(b.dataset.id === id)));
+    document.querySelectorAll("#chart .row").forEach((r) => r.classList.toggle("sel", r.dataset.cat === o.cat));
+    $("vtitle").textContent = o.id;
+    renderInspector();
+    await drawObject();
+    if (push) { try { history.replaceState(null, "", "#" + id.replace("/", "__")); } catch (_) {} }
+  }
+  async function drawObject() {
+    const o = current; if (!o) return;
+    $("loading").textContent = "Loading points"; $("loading").hidden = false;
+    try {
+      const gt = await getJSON(`api/gt/${o.cat}.json`);
+      const runs = shown().filter((r) => r.objects[o.id]);
+      const pts = await Promise.all(runs.map((r) => getJSON(`runs/${r.id}/pts/${o.cat}.json`)));
+      if (current !== o) return;
+      const off = gt.offsets[o.id];
+      if (off && off[1]) { setGeom(gtLayer, gt._raw || (gt._raw = decode(gt.b64)), gt.quant, off[0], off[1]); gtLayer.visible = $("l-gt").checked; }
+      else gtLayer.visible = false;
+      Object.values(runLayers).forEach((l) => { l.visible = false; });
+      runs.forEach((r, i) => {
+        if (!runLayers[r.id]) { runLayers[r.id] = newPoints(); scene.add(runLayers[r.id]); }
+        const p = pts[i], [s, n] = r.objects[o.id].offset;
+        setGeom(runLayers[r.id], p._raw || (p._raw = decode(p.b64)), r.quant, s, n);
+        runLayers[r.id].visible = true;
+      });
+      applyTheme(); applySize(); updateCameras();
+      $("loading").hidden = runs.length > 0;
+      if (!runs.length) $("loading").textContent = "None of the shown runs has this object.";
+    } catch (e) {
+      $("loading").textContent = `Could not load points (${e.message}).`;
+    }
+  }
+
+  function renderInspector() {
+    const o = current; if (!o) return;
+    const gt = cache[`api/gt/${o.cat}.json`];
+    Promise.resolve(gt || getJSON(`api/gt/${o.cat}.json`)).then((g) => {
+      const i = g.objects.indexOf(o.id), ph = $("photo");
+      if (i < 0) { ph.style.backgroundImage = "none"; return; }
+      const cols = Math.min(g.cols, g.objects.length), rows = Math.ceil(g.objects.length / g.cols);
+      ph.style.backgroundImage = `url("api/img/${o.cat}.webp")`;
+      ph.style.backgroundSize = `${cols * 100}% ${rows * 100}%`;
+      ph.style.backgroundPosition = `${cols > 1 ? (i % g.cols) / (cols - 1) * 100 : 0}% ${rows > 1 ? Math.floor(i / g.cols) / (rows - 1) * 100 : 0}%`;
+    }).catch(() => {});
+    $("i-cat").textContent = o.cat.replace(/_/g, " ");
+    $("i-id").textContent = o.id.split("/")[1];
+    const runs = shown();
+    $("i-head").innerHTML = `<tr><th></th>${runs.map((r) => `<th><i class="dot" style="--c:${color(r)}"></i><span>${esc(r.label)}</span></th>`).join("")}</tr>`;
+    const m = (r) => (r.objects[o.id] || {}).metrics || {};
+    const infoKeys = [...new Set(runs.flatMap((r) => Object.keys((r.objects[o.id] || {}).info || {})))];
+    const rows = [
+      ...infoKeys.map((k) => [k[0].toUpperCase() + k.slice(1), (r) => esc(((r.objects[o.id] || {}).info || {})[k] ?? "–")]),
+      ["Points", (r) => r.objects[o.id] ? r.objects[o.id].offset[1] : "–"],
+      ["On surface @5%", (r) => pct(m(r).precision_5)],
+      ["Coverage @5%", (r) => pct(m(r).recall_5)],
+      ["F-score @5%", (r) => f2(m(r).f_5)],
+      ["F-score @2%", (r) => f2(m(r).f_2)],
+      ["F-score @1%", (r) => f2(m(r).f_1)],
+      ["Chamfer-L1", (r) => f2(m(r).chamfer_l1)],
+    ];
+    const ceil = runs.map(m).find((x) => x.f_ceiling_1 != null);
+    $("i-table").innerHTML = runs.length ? rows.map(([label, fn]) => `<tr><td>${label}</td>${runs.map((r) => `<td class="num">${fn(r)}</td>`).join("")}</tr>`).join("") +
+      (ceil ? `<tr><td>F ceiling @1% / 2%</td><td class="num" colspan="${runs.length}">${f2(ceil.f_ceiling_1)} / ${f2(ceil.f_ceiling_2)}</td></tr>` : "")
+      : `<tr><td>Show a run above to see scores.</td></tr>`;
+    const withCams = runs.filter((r) => (r.objects[o.id] || {}).cameras_used);
+    $("views").hidden = !withCams.length;
+    $("views").innerHTML = `<span class="eyebrow">Views used</span>` + withCams.map((r) => {
+      const u = r.objects[o.id].cameras_used;
+      return `<div class="row" style="--c:${color(r)}" title="${esc(r.label)}: ${u.filter(Boolean).length} of ${u.length} views">${u.map((x) => `<i class="${x ? "on" : ""}"></i>`).join("")}</div>`;
+    }).join("");
+    $("i-notes").innerHTML = runs.map((r) => {
+      const e = r.objects[o.id];
+      if (!e) return `<p class="note">${esc(r.label)}: no prediction for this object.</p>`;
+      if (e.excluded) return `<p class="note">${esc(r.label)}: not scored. ${esc(e.excluded)}.</p>`;
+      if (!e.offset[1]) return `<p class="note">${esc(r.label)}: produced no points for this object.</p>`;
+      return "";
+    }).join("");
+  }
+
+  /* ---------- run cards, list, chart ---------- */
+  function renderRuns() {
+    if (!RUNS.length) {
+      $("runs").innerHTML = `<div class="empty"><b>No runs yet.</b><p class="muted">Export predictions with viewer/export.py (see "Add your results" below), then reload.</p></div>`;
+      return;
+    }
+    $("runs").innerHTML = RUNS.map((r) => {
+      const s = r.summary.micro, on = visible.has(r.id);
+      return `<button class="run" type="button" data-id="${esc(r.id)}" aria-pressed="${on}" style="--c:${color(r)}" title="${esc(r.notes || "")}">
+        <span class="top"><span class="label">${esc(r.label)}</span><span class="state" style="color:${on ? color(r) : "var(--faint)"}">${on ? "shown" : "hidden"}</span></span>
+        <span class="eyebrow">${esc(r.owner)} · ${esc(r.model)} · ${r.summary.n_scored}/${r.summary.n_objects} scored</span>
+        <span class="figs"><span><b>${f2(s.f_5)}</b>F @5%</span><span><b>${pct(s.precision_5)}</b>on surface</span><span><b>${pct(s.recall_5)}</b>coverage</span></span>
+      </button>`;
+    }).join("");
+  }
+  $("runs").addEventListener("click", (e) => {
+    const b = e.target.closest(".run"); if (!b) return;
+    const id = b.dataset.id;
+    if (visible.has(id)) visible.delete(id);
+    else if (visible.size >= MAX_ON) { $("hint").hidden = false; $("hint").textContent = `Up to ${MAX_ON} runs can be shown at once. Hide one first.`; return; }
+    else visible.add(id);
+    $("hint").hidden = true;
+    refresh();
+  });
+
+  function renderList(filter = $("q").value) {
+    const f = filter.trim().toLowerCase(), runs = shown(), html = [];
+    let cat = null;
+    for (const o of OBJECTS) {
+      if (f && !o.id.includes(f)) continue;
+      if (o.cat !== cat) { cat = o.cat; html.push(`<div class="cat">${cat.replace(/_/g, " ")}</div>`); }
+      const vals = runs.filter((r) => r.objects[o.id]).map((r) => {
+        const e = r.objects[o.id];
+        return `<span title="${esc(r.label)} F@5%"><i class="dot" style="--c:${color(r)}"></i>${e.excluded ? '<span class="flag">n/s</span>' : f2((e.metrics || {}).f_5)}</span>`;
+      }).join("");
+      html.push(`<button class="obj" type="button" data-id="${o.id}" aria-current="${current && current.id === o.id}"><span>${o.id.split("/")[1]}</span><span class="vals">${vals}</span></button>`);
+    }
+    $("list").innerHTML = html.join("") || `<p class="muted" style="padding:12px">No objects match “${esc(filter)}”.</p>`;
+  }
+  $("list").addEventListener("click", (e) => { const b = e.target.closest(".obj"); if (b) select(b.dataset.id); });
+  $("q").addEventListener("input", () => renderList());
+
+  function renderChart() {
+    const runs = shown();
+    $("legend").innerHTML = runs.map((r) => `<span class="key"><i class="dot" style="--c:${color(r)}"></i>${esc(r.label)}</span>`).join("");
+    const box = $("chart");
+    if (!runs.length) { box.innerHTML = `<p class="muted">Show a run to see its categories.</p>`; return; }
+    const cats = [...new Set(runs.flatMap((r) => Object.keys(r.categories)))];
+    const key = (c) => { const v = runs[0].categories[c]; return v ? v.f_5 : -1; };
+    cats.sort((a, b) => key(b) - key(a) || a.localeCompare(b));
+    const W = 640, rowH = 17, top = 26, left = 128, right = 30 + 34 * runs.length, H = top + cats.length * rowH + 8;
+    const x = (v) => left + v * (W - left - right);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="F-score at 5 percent per category for the shown runs"><g class="grid axis">`;
+    for (let t = 0; t <= 1.0001; t += 0.25) s += `<line x1="${x(t)}" x2="${x(t)}" y1="${top - 6}" y2="${H - 6}"/><text x="${x(t)}" y="${top - 12}" text-anchor="middle">${t.toFixed(2)}</text>`;
+    s += `</g>`;
+    cats.forEach((c, i) => {
+      const y = top + i * rowH + rowH / 2;
+      const vals = runs.map((r) => r.categories[c] ? r.categories[c].f_5 : null);
+      const xs = vals.filter((v) => v != null).map(x);
+      s += `<g class="row" data-cat="${c}" tabindex="0"><rect class="hit" x="0" y="${y - rowH / 2}" width="${W}" height="${rowH}" fill="transparent"/>
+        <text x="${left - 8}" y="${y + 3.5}" text-anchor="end">${c.replace(/_/g, " ")}</text>`;
+      if (xs.length > 1) s += `<line x1="${Math.min(...xs)}" x2="${Math.max(...xs)}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="2"/>`;
+      runs.forEach((r, j) => { if (vals[j] != null) s += `<circle cx="${x(vals[j])}" cy="${y}" r="4.5" fill="${color(r)}" stroke="var(--panel)" stroke-width="2"/>`; });
+      s += `<text class="v" x="${W - right + 8}" y="${y + 3.5}">${vals.map(f2).join(" / ")}</text></g>`;
+    });
+    box.innerHTML = s + `</svg>`;
+    const tip = document.createElement("div"); tip.className = "tip"; tip.hidden = true; box.appendChild(tip);
+    box.querySelectorAll(".row").forEach((row) => {
+      const c = row.dataset.cat;
+      const show = (ev) => {
+        tip.innerHTML = `<b>${c.replace(/_/g, " ")}</b><br>` + runs.map((r) => {
+          const v = r.categories[c], n = Object.keys(r.objects).filter((o) => o.startsWith(c + "/")).length;
+          return `<span class="key"><i class="dot" style="--c:${color(r)}"></i>${esc(r.label)}: F@5% <span class="num">${f2(v && v.f_5)}</span>, ${n} objects</span>`;
+        }).join("<br>");
+        tip.hidden = false;
+        const bb = box.getBoundingClientRect(), rb = row.getBoundingClientRect();
+        let l = (ev && ev.clientX ? ev.clientX - bb.left : bb.width / 2) + 14;
+        if (l + tip.offsetWidth > box.clientWidth) l = Math.max(0, l - tip.offsetWidth - 28);
+        tip.style.left = l + box.scrollLeft + "px"; tip.style.top = rb.top - bb.top + rb.height + 4 + "px";
+      };
+      const open = () => { const first = OBJECTS.find((o) => o.cat === c && runs.some((r) => r.objects[o.id]));
+        if (first) { select(first.id); stage.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); } };
+      row.addEventListener("mousemove", show); row.addEventListener("focus", () => show());
+      row.addEventListener("mouseleave", () => { tip.hidden = true; }); row.addEventListener("blur", () => { tip.hidden = true; });
+      row.addEventListener("click", open); row.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      if (current && current.cat === c) row.classList.add("sel");
+    });
+  }
+
+  function refresh() {
+    try { localStorage.setItem("omni3d-viewer-runs", JSON.stringify([...visible])); } catch (_) {}
+    renderRuns(); renderList(); renderChart(); renderInspector(); drawObject();
+  }
+
+  /* ---------- boot ---------- */
+  applySize(); resize(); applyTheme();
+  fetch("api/runs.json").then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then((runs) => {
+    RUNS = runs;
+    const ids = new Set(runs.flatMap((r) => Object.keys(r.objects)));
+    OBJECTS = [...ids].sort().map((id) => ({ id, cat: id.split("/")[0] }));
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem("omni3d-viewer-runs") || "[]"); } catch (_) {}
+    (saved.filter((id) => runs.some((r) => r.id === id)).length ? saved : runs.map((r) => r.id))
+      .filter((id) => runs.some((r) => r.id === id)).slice(0, MAX_ON).forEach((id) => visible.add(id));
+    renderRuns(); renderList(); renderChart();
+    if (!OBJECTS.length) { $("loading").textContent = "No runs yet. See “Add your results” below."; $("vtitle").textContent = "No results"; return; }
+    const fromHash = location.hash.slice(1).replace("__", "/");
+    const start = OBJECTS.find((o) => o.id === fromHash) || OBJECTS.find((o) => o.id === "teddy_bear/teddy_bear_003") || OBJECTS[0];
+    select(start.id, false);
+  }).catch((e) => {
+    $("loading").textContent = `Could not load the runs (${e.message}). Start the viewer with: python viewer/view.py`;
+    $("vtitle").textContent = "Results unavailable";
+  });
+})();
+</script>

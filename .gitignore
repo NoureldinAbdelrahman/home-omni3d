@@ -74,3 +74,5 @@ workspace_*/
 # Compiled CUDA binaries
 build/
 *.so
+# --- viewer: local screenshots ---
+viewer/.screenshots/
