@@ -1,6 +1,28 @@
 # Dataset notes: OmniObject3D subset (24 views + 4096-point clouds)
 
-Generated 2026-11-09. Source: OpenDataLab `omniobject3d/OmniObject3D-New`, only the two modalities we use: `blender_renders_24_views` (24 PNGs + `transforms.json` per object) and `point_clouds/ply_files/4096_ply` (named per-object clouds).
+Generated 2026-11-09 (scopes and licence sections added 2026-11-15). Source: OpenDataLab `omniobject3d/OmniObject3D-New`, only the two modalities we use: `blender_renders_24_views` (24 PNGs + `transforms.json` per object) and `point_clouds/ply_files/4096_ply` (named per-object clouds).
+
+## Scopes
+
+Each count below is right for its own scope. Say which scope a number uses.
+
+| Scope | Categories | Objects | Images | Source |
+|---|---:|---:|---:|---|
+| OmniObject3D source | 216 | 5,911 | 141,864 | this file |
+| Full download (complete objects only) | 215 | 5,893 | 141,432 | this file, `check_dataset.py` |
+| Modelled subset, MS1 copy on disk | 76 | 1,695 | 40,665 | `results/ms1_snapshot.md` (includes `laptop_002` with 9 of 24 views) |
+| **Modelled subset, MS2 benchmark** | **76** | **1,694** | 24 per object | `origin/ashry:ashry/benchmark/results/benchmark_v1.json` (`laptop_002` dropped) |
+| Team split (70/15/15, seed 2026) | 76 | 1,177 / 257 / 260 | | same file |
+
+The chain is: 5,911 source objects → 5,893 downloaded complete → 1,695 on disk in the 76 modelled categories (MS1 copy) → 1,694 after dropping `laptop_002`. The full download already excludes `laptop_002`, so its 76-category part also has 1,694 objects.
+
+The 76 modelled categories = 18 bedroom (`bedroom_categories.py`) + 58 house extras; the 58 = 32 named in `house_extra_categories.py` + 26 auto-discovered by `prepare_model_data.py`. The other 139 downloaded categories (food, toys, …) are not used by any MS2 model.
+
+Long tail of the modelled subset (`benchmark_v1.json`): doll 84 objects; bed, canned_beverage, plug 2 each; median 19.5; top-10 classes = 31.05% of objects; 35 of 76 categories have fewer than 3 test objects.
+
+## Licence
+
+OmniObject3D is released under **CC BY 4.0** (use and redistribution of derived results with attribution). This is team-supplied (stated by the presenter for the MS2 deck, slide 4); no other file in the repo states it.
 
 ## Completeness
 
