@@ -73,5 +73,5 @@ object. Runs can cover different objects: compare them on shared objects.
 | `view.py` | Local server (foreground, Ctrl+C), static `--export` |
 | `export.py` | `ViewerRun`, frame helpers, the shared `score()` |
 | `index.html` | The page (three.js from a CDN) |
-| `runs/` | One folder per run: `run.json` (metadata, scores) + `pts/<cat>.json` |
+| `runs/` | One folder per run: `run.json` (metadata, scores) + `pts/<cat>.json`. Index of all runs on all branches: [`runs/README.md`](runs/README.md) |
 | `screenshot.py` | Headless screenshots for checking the page (needs playwright) |
