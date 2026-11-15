@@ -1,174 +1,77 @@
-# ROADMAP — house-omni3d (DMET 901: 3D Object Generation from 2D Images)
+# Roadmap: pipeline and where things live
 
-> **Branch scope note (`nesegemaa` only — the text below is the shared team
-> base):** this branch owns **AtlasNet + Point-E**. Pix2Vox code/results live
-> on `mohamed-ayman`, the NeRF oracle on `ashry`; the full pre-split snapshot
-> is tag `milestone-1`. AtlasNet qualitative evals run via
-> `nesegemaa/atlas_qual.py` (root `make_qual_atlasnet.py` was removed; see the
-> tag if you need it). `results/comparison/` here is append-only.
+This guide covers the pipeline and where each artifact lives. It does not define project scope or status: those come from the MS2 deck ([`docs/README.md`](README.md#source-of-truth-order)).
 
-This document is the **single source of truth** for an agent working on the lab PC.
-It explains the pipeline, where every artifact belongs, and exactly where to put
-results. Read it fully before touching anything.
+## 1. What `main` does
 
----
+`main` is the shared base. It holds no model code and no model results (they were moved to owner branches in `3d5efbc`; the MS1 state with everything on one branch is tag `milestone-1`).
 
-## 1. Project summary
+| Step | Command | Output |
+|---|---|---|
+| Environment | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt && ./install_openxlab.sh && pip check` | `.venv/` (gitignored) |
+| Modelled subset (76 categories) | `python download_house_extra.py --include-bedroom --output-dir dataset --point-count 4096` | `dataset/renders/<cat>/<obj>/{000..023}.png + transforms.json`, `dataset/point_clouds/<cat>/<obj>.npy` (4,096 × 3) |
+| Remaining 140 categories (optional) | `python download_remaining.py --output-dir dataset` | same layout ([`DATASET.md`](DATASET.md)) |
+| Integrity / pairing | `python check_dataset.py --dataset-dir dataset`; `python fix_point_cloud_names.py --dry-run` | both must be clean |
+| Model inputs | `python prepare_model_data.py --target both` | `Pix2Vox/datasets/OmniObject3D/*`, `AtlasNet/dataset/data/*` (gitignored); drops incomplete objects (`laptop_002`) |
+| Analysis | `notebooks/dataset_analysis.ipynb` | MS1 figures in `results/comparison/figures/`, `results/comparison/metrics_table.csv` and `results/notebook_index.md` |
+| Viewer | `python viewer/view.py` | local page; runs read from `viewer/runs/` |
 
-OmniObject3D **house-themed subset** bridged into two single-view reconstruction
-baselines:
+Categories are auto-discovered from `dataset/` by `prepare_model_data.py`: the 18 bedroom + 32 named extras in the category files, plus 26 more on disk, give the 76 modelled categories. Never hardcode categories in model code.
 
-| Model | Task | Output | Metric |
-|-------|------|--------|--------|
-| **Pix2Vox** | image → 32³ voxel grid | `.mat` / voxel volume | IoU per threshold |
-| **AtlasNet (`--SVR`)** | image → surface | `.ply` mesh / point cloud | Chamfer, F-score |
+The prepared model inputs go to `Pix2Vox/` and `AtlasNet/` paths. Those directories exist only on the owner branches that carry the code (below). On `main` the prep script creates the data folders only.
 
-Course milestone (DMET 901, GUC) asks for image-conditioned 3D generation plus
-quantitative comparison. Optional secondary metrics: COV / MMD / FID.
+## 2. Where each owner's code and results live
 
-### Category sets
-- **Bedroom (18)**: bed, pillow, chair, light, cabinet, table, sofa, stool,
-  clock, tvstand, vase, tissue, teddy_bear, doll, plant, fan, suitcase, hair_dryer
-- **Extra house (32)**: kettle, microwaveoven, ricecooker, pan, dish, cup, bowl,
-  bottle, teapot, thermos, timer, remote_control, speaker, projector, keyboard,
-  laptop, monitor, mouse, power_strip, plug, shampoo, soap, tooth_brush,
-  tooth_paste, razor, medicine_bottle, dustbin, fire_extinguisher, flash_light,
-  hammer, scissor, umbrella
+Read across branches without checking them out: `git show <branch>:<path>`, `git cat-file -e <branch>:<path>`. Prefer `origin/<branch>`: local copies may be stale.
 
-Categories on disk are **auto-discovered** by `prepare_model_data.py`; never
-hardcode them in model code.
+| Track | Owner | Branch | Code | Results |
+|---|---|---|---|---|
+| Pix2Vox, Pix2Vox++ | Mohamed A. Awad | `mohamed-ayman` | `Pix2Vox/`, `mohamed_ayman/src/`, `mohamed_ayman/configs/config.yaml` | `mohamed_ayman/outputs/evaluations/*_3views_{report.md,test_results.csv}`, `mohamed_ayman/outputs/checkpoints/*_history.json`, `viewer/runs/mohamed_ayman__*` |
+| AtlasNet-SVR, Point-E, TripoSR | Noureldin S. Abdelrahman | `nesegemaa` | `AtlasNet/`, `nesegemaa/` | `results/atlasnet/<run>/`, `nesegemaa/ablation_{atlasnet,pointe,triposr}.csv`, `nesegemaa/PAPER.md`, `viewer/runs/nesegemaa__*` |
+| COLMAP | Noureldeen A. Younes | `bones` | `bones/` | `results/colmap/sparse_{known,sfm}/`, `viewer/runs/bones__*` (also copied to `main`) |
+| 3DGS, NeRF, NeuS | Abdelrahman A. Ashry | `ashry` | `ashry/{3dgs,nerf,neus,benchmark,app}/` | `ashry/3dgs_metrics/benchmark_512_3k/`, `results/oracle/summary.json`, `ashry/benchmark/results/benchmark_v1.json` (team split) |
+| LGM | Ahmed H. Mostafa | `hamdy` | `LGM/` (`infer.py`) | none (code only, dropped) |
 
----
+The full index of result files with protocols is [`results/README.md`](../results/README.md).
 
-## 2. Environment / reproduction
+## 3. Reproducing a track
+
+Check out the owner's branch (read-only unless you are the owner) and follow its own README:
+
+| Track | Entry point |
+|---|---|
+| Pix2Vox / Pix2Vox++ | `mohamed-ayman:mohamed_ayman/README.md` |
+| AtlasNet-SVR, Point-E, TripoSR | `nesegemaa:nesegemaa/PAPER.md` §4 (setup), `nesegemaa:nesegemaa/notes.md` (run log) |
+| COLMAP | `bones:bones/README.md` |
+| 3DGS / NeRF / NeuS | `origin/ashry:ashry/README.md` |
+| LGM | `origin/hamdy:LGM/readme.md` |
+
+For AtlasNet-SVR, `--class_choice` must be passed (the default is `airplane`). Build it from the taxonomy written by `prepare_model_data.py`:
 
 ```bash
-git clone https://github.com/NoureldinAbdelrahman/home-omni3d.git
-cd home-omni3d
-python3 -m venv .venv && source .venv/bin/activate   # Python 3.10–3.14 (not 3.14.1)
-pip install -r requirements.txt
-./install_openxlab.sh
-pip check          # must print: No broken requirements found.
-```
-
-### Data
-```bash
-# extras only (~11.7 GB)
-python download_house_extra.py --output-dir dataset --point-count 4096
-
-# everything (18 bedroom + 32 extras, ~21 GB)
-python download_house_extra.py --include-bedroom --output-dir dataset --point-count 4096
-
-# build model inputs from whatever is in dataset/
-python prepare_model_data.py --target both
-```
-
-`dataset/` layout:
-```
-dataset/
-├── renders/<category>/<object_id>/{000..023}.png + transforms.json
-└── point_clouds/<category>/<object_id>.npy        # (N,3) float32
-```
-
-If the 9 GB bedroom dump is copied in later, **re-run `prepare_model_data.py`**
-so taxonomies include every category.
-
----
-
-## 3. Training
-
-### Pix2Vox — image → 32³ voxels
-```bash
-cd Pix2Vox
-python runner.py --epoch 50 --batch-size 8 --gpu 0
-python runner.py --test --weights ./output/checkpoints/<run>/best-ckpt.pth --batch-size 8
-```
-`--gpu 0` = first GPU (sets `CUDA_VISIBLE_DEVICES`). Checkpoints →
-`Pix2Vox/output/checkpoints/<timestamp>/`.
-
-### AtlasNet `--SVR` — image → surface (this is the image-conditioned one)
-`--class_choice` **must** be passed (default is `airplane`). Build it from the
-taxonomy:
-```bash
-cd AtlasNet
+cd AtlasNet   # on nesegemaa
 CLASSES=$(python -c "import json;print(' '.join(d['synsetId'] for d in json.load(open('dataset/data/taxonomy.json'))))")
-python train.py --class_choice $CLASSES --SVR --no_metro \
-  --nepoch 50 --batch_size 8 --nb_primitives 25 --template_type SQUARE \
-  --dir_name log/svr25 --workers 2
-```
-- `--nb_primitives 1` = a single surface patch (coarse). Use 10–25 for a full shape.
-- Autoencoder (point-cloud→surface) is an *extra* baseline, not image-conditioned:
-  omit `--SVR`.
-- Checkpoints → `AtlasNet/log/<dir_name>/network.pth`.
-
-Both are long — run under `tmux`.
-
----
-
-## 4. Where results go (IMPORTANT)
-
-Create these directories and place artifacts **exactly** here. Use the
-`<timestamp>` / `<dir_name>` produced by the runs; do not invent names.
-
-```
-results/
-├── README.md                      # index table (created by the notebook)
-├── pix2vox/
-│   └── <run-id>/
-│       ├── stdout.log             # full console output (incl. TEST RESULTS table)
-│       ├── config.txt             # `pprint(cfg)` dump from runner
-│       ├── test_results.csv       # parsed per-category IoU table
-│       └── summary.json           # {overall_per_t, best_t, best_iou, n_samples}
-├── atlasnet/
-│   └── <dir_name>/
-│       ├── log.txt                # json_stats per epoch
-│       ├── options.json
-│       ├── curve.png / curve_log.png
-│       └── summary.json           # chamfer/fscore best+final
-└── comparison/
-    ├── metrics_table.csv          # one row per model with headline metrics
-    └── figures/                   # exported PNGs from the notebook
+python train.py --class_choice $CLASSES --SVR --no_metro --nepoch 50 --batch_size 8 \
+  --nb_primitives 25 --template_type SPHERE --dir_name log/<run> --workers 2
 ```
 
-### Rules
-- **Never commit raw data, checkpoints (`.pth`), or `dataset/`** — all gitignored.
-- `results/**/stdout.log`, `*.csv`, `*.json`, `*.png` **are** committed (small).
-- One run = one timestamped dir. Don't overwrite; re-runs get new dirs.
-- Pix2Vox `TEST RESULTS` table format (tab-separated):
-  `Taxonomy  #Sample  Baseline  t=0.20  t=0.30  t=0.40  t=0.50` then
-  `Overall  <best t column>`. Parse defensively — sample counts of 1 are noise.
+In SVR mode AtlasNet's point-cloud augmentation flags have no effect (`AtlasNet/training/trainer.py:51`): see the run-name caveat in [`results/README.md`](../results/README.md#legacy-and-misnamed-runs).
 
----
+## 4. Rules for results
 
-## 5. Notebook: `notebooks/dataset_analysis.ipynb`
+- Results are committed on the owner's branch, not on `main`. `main` only carries indexes, team docs and the viewer runs that were promoted with the viewer.
+- Never commit `dataset/`, checkpoints (`*.pth`), `AtlasNet/log/`, `Pix2Vox/output/`. Small JSON/CSV/MD/PNG results and viewer predictions are committed.
+- One run = one directory. Do not overwrite or rename: the deck and the outline cite run names.
+- Every result states its protocol: views at test, split and number of test objects, scorer and point count, alignment. See [`METRICS.md`](METRICS.md).
+- To show predictions in the team viewer, export from your own evaluation code with `viewer/export.py` ([`viewer/README.md`](../viewer/README.md)).
 
-The notebook must run top-to-bottom on a machine with `dataset/` present. It:
+## 5. Phases (deck slide 21)
 
-1. **Discover** categories & counts from `dataset/point_clouds` and `dataset/renders`.
-2. **Dataset info**: per-category object/img counts, long-tail table + bar chart,
-   split sizes from taxonomy JSONs, class balance.
-3. **Integrity / failure points**:
-   - missing renders (`< 24` PNGs, missing `transforms.json`)
-   - missing point clouds, wrong shape (`(N,3)`), NaNs/infs, duplicate points
-   - point-cloud extent/anisotropy, degenerate (flat) clouds
-   - objects present in one modality only
-4. **Cleaning / imputation suggestions** (printed as an actionable checklist):
-   - drop or flag objects with <24 views / missing PC
-   - skip/store degenerate clouds; prefer re-download for NaN clouds
-   - class-imbalance handling: cap per-class, oversample rare, or use
-     class-weighted loss; note categories with <3 objects are not trainable
-5. **Results ingestion**: read `results/**/summary.json` + CSVs if present and
-   render comparison tables/plots; if absent, print "no runs found yet".
-6. **Export**: write `results/README.md` index and `results/comparison/figures/*.png`.
+| Phase | State at MS2 |
+|---|---|
+| 1. Data pipeline (download, prep, 70/15/15 split, integrity checks) | done, on `main` |
+| 2. Run models (each owner's branch) | done |
+| 3. Evaluate (each track with its own evaluator, protocol recorded) | in progress |
+| 4. Improve (MS3; tracks side by side in the viewer, no cross-track ranking) | next |
 
-Keep cells defensive (missing files → informative message, not a crash).
-
----
-
-## 6. Definition of done for the agent
-
-- [ ] `results/` tree populated per §4 with the real run(s) from this machine.
-- [ ] `notebooks/dataset_analysis.ipynb` runs end-to-end with no exceptions.
-- [ ] `results/README.md` + `results/comparison/metrics_table.csv` regenerated.
-- [ ] Nothing large/ignored accidentally staged (`git status` review).
-- [ ] Commit + push to `origin/main`.
+The slide 20 proposal (one protocol for everyone: team split, viewer scorer at 4,096 points, F@5%, one view at test, 3 seeds; the bigger 5,893-object dataset; a pose fix for the priors) is pending team agreement.
