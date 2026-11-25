@@ -30,25 +30,34 @@ dataset:
   seed: 42
 
 training:
-  batch_size: 16
-  num_workers: 4
-  epochs: 25
-  lr_encoder: 0.0001
+  batch_size: 32
+  num_workers: 12
+  epochs: 18
+  lr_encoder: 0.00015
   lr_decoder: 0.001
   weight_decay: 0.0001
   mixed_precision: true
   gradient_clip: 1.0
   device: "cuda"
+  augment: true
+  class_balanced: true
+  multi_k: true
+  # Note: per-run training histories in outputs/checkpoints/*_history.json are authoritative.
 
 models:
   pix2vox:
-    backbone: "resnet18"
+    backbone: "resnet50"
+    spatial_pool: 2
+    feat_dim: 1024
     voxel_res: 32
     use_refiner: true
+    deep_refiner: true
     bce_weight: 1.0
     dice_weight: 0.5
   atlasnet:
     backbone: "resnet50"
+    template: "sphere"
+    view_pooling: "attention"
     num_patches: 25
     points_per_patch: 164
     hidden_dim: 256

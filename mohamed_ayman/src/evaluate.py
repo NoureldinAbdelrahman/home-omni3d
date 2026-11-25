@@ -23,10 +23,10 @@ from tqdm import tqdm
 from src.data.splits import create_or_load_splits, HOME_DECOR_CATEGORIES
 from src.data.dataset import OmniObject3DDataset
 from src.data.voxelizer import points_to_voxels
-from src.models.pix2vox import Pix2Vox
-from src.models.atlasnet import AtlasNet
+from src.models.loader import load_pix2vox_checkpoint, load_atlasnet_checkpoint
 from src.models.baseline_point_e import PointEBaseline
 from src.metrics.evaluator import ReconstructionEvaluator
+from src.losses.chamfer_distance import chamfer_distance
 
 
 def parse_args():
@@ -35,9 +35,11 @@ def parse_args():
     parser.add_argument("--weights", type=str, default=None, help="Path to checkpoint .pth")
     parser.add_argument("--num_views", "--num_view", dest="num_views", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=16)
+    parser.add_argument("--num_workers", type=int, default=4)
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--output_dir", type=str, default="outputs/evaluations")
     parser.add_argument("--dataset_root", type=str, default=None, help="Path to dataset directory")
+    parser.add_argument("--tag", type=str, default=None, help="Optional filename prefix tag for report/csv")
     return parser.parse_args()
 
 
@@ -56,13 +58,11 @@ def voxels_to_point_cloud(voxels: torch.Tensor, threshold: float = 0.4, num_poin
     for b in range(B):
         idx = torch.nonzero(voxels[b] > threshold, as_tuple=False).float()  # (M, 3)
         if len(idx) < 10:
-            # Fallback to random points if empty
             pts = torch.rand((num_points, 3), device=device) - 0.5
         else:
-            # Rescale index [0, V-1] to [-0.5, 0.5]
             coords = (idx / (V - 1.0)) - 0.5
             if len(coords) >= num_points:
-                perm = torch.randperm(len(coords))[:num_points]
+                perm = torch.randperm(len(coords), device=device)[:num_points]
                 pts = coords[perm]
             else:
                 repeats = int(np.ceil(num_points / len(coords)))
@@ -71,6 +71,22 @@ def voxels_to_point_cloud(voxels: torch.Tensor, threshold: float = 0.4, num_poin
         batch_pts.append(pts)
 
     return torch.stack(batch_pts, dim=0)
+
+
+def compute_output_diversity(pcs: List[torch.Tensor]) -> float:
+    """Computes mean pairwise L1 Chamfer distance across distinct objects' predictions (diagnoses blob collapse)."""
+    if not pcs:
+        return 0.0
+    sample = torch.cat(pcs, dim=0)[:32]
+    n = sample.shape[0]
+    if n < 4:
+        return 0.0
+    dists = []
+    with torch.no_grad():
+        for i in range(0, n - 1, 2):
+            _, cd = chamfer_distance(sample[i:i+1], sample[i+1:i+2], distance_type="l1")
+            dists.append(float(cd.item()))
+    return float(np.mean(dists)) if dists else 0.0
 
 
 def main():
@@ -87,28 +103,24 @@ def main():
         samples=test_samples,
         dataset_root=args.dataset_root,
         num_views=args.num_views,
-        is_train=False
+        is_train=False,
+        augment=False,
     )
     test_loader = DataLoader(
         test_ds,
         batch_size=args.batch_size,
         shuffle=False,
-        num_workers=2,
+        num_workers=args.num_workers,
         pin_memory=(device.type == "cuda")
     )
 
     evaluator = ReconstructionEvaluator(home_decor_categories=HOME_DECOR_CATEGORIES)
+    diversity_pcs: List[torch.Tensor] = []
 
     if "pix2vox" in args.model:
         use_refiner = ("++" in args.model) or ("plus" in args.model)
-        model = Pix2Vox(pretrained=False, use_refiner=use_refiner).to(device)
-        print(f"Evaluating {'Pix2Vox++ (with 3D Refiner)' if use_refiner else 'Pix2Vox (Base / No Refiner)'}")
-        if args.weights and os.path.exists(args.weights):
-            ckpt = torch.load(args.weights, map_location=device)
-            state_dict = ckpt.get("model_state_dict", ckpt)
-            model.load_state_dict(state_dict)
-            print(f"Loaded weights from {args.weights}")
-        model.eval()
+        model = load_pix2vox_checkpoint(args.weights, device=device, use_refiner=use_refiner)
+        print(f"Evaluating {'Pix2Vox++' if model.use_refiner else 'Pix2Vox (Base)'} arch={model.arch_config} weights={args.weights}")
 
         with torch.no_grad():
             for batch in tqdm(test_loader, desc="Evaluating Pix2Vox"):
@@ -117,8 +129,11 @@ def main():
                 gt_pc = batch["point_cloud"].to(device)
 
                 out = model(images)
-                pred_voxels = out["voxels"]
+                pred_voxels = out["voxels"] if model.use_refiner else out["coarse_voxels"]
                 pred_pc = voxels_to_point_cloud(pred_voxels, threshold=0.4, num_points=4096)
+
+                if len(diversity_pcs) * args.batch_size < 32:
+                    diversity_pcs.append(pred_pc[:, ::4, :].cpu())
 
                 evaluator.add_batch(
                     categories=batch["category"],
@@ -130,13 +145,8 @@ def main():
                 )
 
     elif args.model == "atlasnet":
-        model = AtlasNet(num_patches=25, latent_dim=1024, hidden_dim=256, pretrained=False).to(device)
-        if args.weights and os.path.exists(args.weights):
-            ckpt = torch.load(args.weights, map_location=device)
-            state_dict = ckpt.get("model_state_dict", ckpt)
-            model.load_state_dict(state_dict)
-            print(f"Loaded weights from {args.weights}")
-        model.eval()
+        model = load_atlasnet_checkpoint(args.weights, device=device)
+        print(f"Evaluating AtlasNet arch={model.arch_config} weights={args.weights}")
 
         with torch.no_grad():
             for batch in tqdm(test_loader, desc="Evaluating AtlasNet"):
@@ -147,7 +157,9 @@ def main():
                 out = model(images, num_points=4096)
                 pred_pc = out["points"]
 
-                # Cross-representation: convert AtlasNet point cloud to voxel grid for IoU
+                if len(diversity_pcs) * args.batch_size < 32:
+                    diversity_pcs.append(pred_pc[:, ::4, :].cpu())
+
                 pred_voxels_list = []
                 for b in range(pred_pc.shape[0]):
                     pc_np = pred_pc[b].cpu().numpy()
@@ -198,10 +210,16 @@ def main():
             )
 
     results = evaluator.summarize()
-    csv_file = os.path.join(args.output_dir, f"{args.model}_{args.num_views}views_test_results.csv")
+    diversity_cd = compute_output_diversity(diversity_pcs)
+    file_tag = args.tag or f"{args.model}_{args.num_views}views"
+    csv_file = os.path.join(args.output_dir, f"{file_tag}_test_results.csv")
     results["detailed_df"].to_csv(csv_file, index=False)
 
+    n_objs = len(results["detailed_df"])
+    n_cats = results["detailed_df"]["category"].nunique() if n_objs else 0
     md_report = f"# Evaluation Report: {args.model.upper()} ({args.num_views} Views)\n\n"
+    md_report += f"- **Test objects**: {n_objs} across {n_cats} categories\n"
+    md_report += f"- **Inter-object prediction diversity (CD-L1)**: {diversity_cd:.4f}\n\n"
     md_report += "## Overall Benchmark Summary\n\n"
     md_report += "| Metric | Overall (Micro) | Per-Class (Macro) | Home Decor Subset | Everyday Objects |\n"
     md_report += "| :--- | :--- | :--- | :--- | :--- |\n"
@@ -214,7 +232,7 @@ def main():
             other_val = results["everyday_objects"].get(m, float("nan"))
             md_report += f"| **{m}** | {micro_val:.4f} | {macro_val:.4f} | {decor_val:.4f} | {other_val:.4f} |\n"
 
-    report_path = os.path.join(args.output_dir, f"{args.model}_{args.num_views}views_report.md")
+    report_path = os.path.join(args.output_dir, f"{file_tag}_report.md")
     with open(report_path, "w") as f:
         f.write(md_report)
 

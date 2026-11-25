@@ -54,20 +54,27 @@ Unlike single-view baselines which suffer from severe 2.5D visual hull ambiguity
 
 ---
 
-## 📊 Benchmark Results
+## 📊 Milestone 3 Benchmark Results (Full 215 Categories, 5,893 Objects)
 
-Evaluated on the held-out test split (263 3D objects, 6,312 multi-view images) across 76 categories with dedicated tracking on the **Home Decor Subset**:
+Evaluated on the stratified held-out test split (**900 unseen objects** across **215 categories**, zero training leakage):
 
-| Model | Representation | Input Views | Val IoU / CD-L2 | Test Chamfer-L2 $\downarrow$ | F-Score@1% $\uparrow$ | Inference Speed |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Pix2Vox++** | $32^3$ Voxels | 3 views | **0.4078** (IoU) | 0.0184 | 34.2% | **18.4 ms** / obj |
-| **AtlasNet** | 25 Surface Patches | 3 views | **0.0102** (CD) | **0.0142** | **41.7%** | **24.1 ms** / obj |
-| **Point-E** | 4,096 Points | 1 view | 0.0245 (CD) | 0.0261 | 28.5% | 185.0 ms / obj |
+### 1. Best Model Per Category & Multi-View Generalization
+| Category / Paradigm | Selected Best Model | Protocol | Voxel IoU@0.4 $\uparrow$ | CD-L2 $\downarrow$ | CD-L1 $\downarrow$ | F-Score@0.02 $\uparrow$ | Viewer F@5% $\uparrow$ |
+| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| **Volumetric DL** | **Pix2Vox++ (MS3 Aug, ResNet-50 + Deep 3D U-Net)** | 3 views, General | **0.6446** | **0.0028** | **0.0566** | **0.4138** | **0.514** *(unseen)* / 0.537 |
+| **Volumetric DL** | **Pix2Vox++ (MS3 Aug)** *(Single-View)* | 1 view, General | **0.6201** | **0.0031** | **0.0586** | **0.4063** | — |
+| **Volumetric DL** | MS2 Baseline (`pix2vox`, Home Decor) | 3 views, Old | 0.3193 | 0.0123 | 0.1126 | 0.2311 | 0.302 |
+| **Surface Mesh DL** | **AtlasNet (MS3 Aug, 25 Spherical Patches + Attention)** | 3 views, General | 0.5797 | **0.0021** | **0.0500** | **0.5040** | **0.581** *(unseen)* / 0.658 |
+| **Surface Mesh DL** | **AtlasNet (MS3 Aug)** *(Single-View)* | 1 view, General | 0.5436 | 0.0026 | 0.0550 | 0.4632 | — |
+| **Mathematics / SfM** | **COLMAP (`sparse_known` Reference)** | 24 views + GT Poses | — | — | 0.1341 *(viewer)* | **0.2242** *(F@2%)* | **0.539** *(pre-computed)* |
 
-### Key Metric Findings:
-- **Multi-view advantage**: Moving from 1 view to 3 views resolves backside occlusion, increasing IoU by $+8.4\%$ and cutting Chamfer distance by $31\%$.
-- **Macro vs. Micro Averaging**: Rare furniture classes (`bed`: 2 objects, `cabinet`: 7 objects) are weighted equally in Macro evaluation, preventing dominance by high-frequency novelty items like `doll` (84 objects).
-- **Surface Quality**: AtlasNet excels at thin structures and sharp geometric corners (chair legs, table edges), while Pix2Vox++ ensures solid closed interiors.
+### 2. Data Augmentation Domain-Shift Ablation (300 Unseen Objects)
+Comparing identical **Pix2Vox++ (ResNet-50 + Deep 3D U-Net + Class-Balanced)** trained with `--augment` vs `--no_augment`:
+
+| Evaluation Domain | Without Augmentation (`--no_augment`) | **With 3D-Safe Augmentation (`--augment`)** | Domain Robustness Delta |
+| :--- | :---: | :---: | :---: |
+| **Clean White Background** (Std Test) | 0.6435 IoU | 0.6388 IoU *(0.4138 F@0.02)* | `-0.7%` (Comparable) |
+| **Non-White / Cluttered Background** (Domain Shift) | **0.3372 IoU** *(-47.6% collapse)* | **0.6356 IoU** *(holds steady)* | **+88.5% Relative Gain** |
 
 ---
 

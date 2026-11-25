@@ -18,6 +18,8 @@ def pairwise_distances(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
     Returns:
         dist: (B, N, M)
     """
+    x = x.float()
+    y = y.float()
     # (B, N, 1) + (B, 1, M) - 2 * (B, N, M)
     x_norm = (x ** 2).sum(dim=-1, keepdim=True)
     y_norm = (y ** 2).sum(dim=-1, keepdim=True).transpose(1, 2)

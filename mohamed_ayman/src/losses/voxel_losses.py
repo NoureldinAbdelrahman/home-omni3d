@@ -85,20 +85,22 @@ class Pix2VoxLoss(nn.Module):
             gt: (B, 32, 32, 32) target voxels
             coarse_pred: optional (B, 32, 32, 32) probabilities before refiner
         """
-        # Weighted BCE
-        eps = 1e-7
-        p_clamped = torch.clamp(pred, eps, 1.0 - eps)
-        bce = - (self.pos_weight * gt * torch.log(p_clamped) + (1.0 - gt) * torch.log(1.0 - p_clamped))
+        # Compute BCE & Dice strictly in FP32 to avoid float16 log(0) -> nan under AMP
+        pred_f = pred.float()
+        gt_f = gt.float()
+        eps = 1e-6
+        p_clamped = torch.clamp(pred_f, eps, 1.0 - eps)
+        bce = - (self.pos_weight * gt_f * torch.log(p_clamped) + (1.0 - gt_f) * torch.log(1.0 - p_clamped))
         bce_loss = bce.mean()
 
-        dice_loss = self.dice_loss(pred, gt)
+        dice_loss = self.dice_loss(pred_f, gt_f)
         total_loss = self.bce_weight * bce_loss + self.dice_weight * dice_loss
 
         if coarse_pred is not None:
-            # Auxiliary supervision on coarse stage
-            c_clamped = torch.clamp(coarse_pred, eps, 1.0 - eps)
-            c_bce = - (self.pos_weight * gt * torch.log(c_clamped) + (1.0 - gt) * torch.log(1.0 - c_clamped)).mean()
-            c_dice = self.dice_loss(coarse_pred, gt)
+            coarse_f = coarse_pred.float()
+            c_clamped = torch.clamp(coarse_f, eps, 1.0 - eps)
+            c_bce = - (self.pos_weight * gt_f * torch.log(c_clamped) + (1.0 - gt_f) * torch.log(1.0 - c_clamped)).mean()
+            c_dice = self.dice_loss(coarse_f, gt_f)
             total_loss = total_loss + 0.5 * (self.bce_weight * c_bce + self.dice_weight * c_dice)
 
         return total_loss

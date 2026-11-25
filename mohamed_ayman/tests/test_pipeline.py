@@ -23,7 +23,7 @@ from src.data.splits import create_or_load_splits
 from src.data.dataset import OmniObject3DDataset
 from src.losses.chamfer_distance import chamfer_distance, compute_f_score
 from src.losses.voxel_losses import Pix2VoxLoss, voxel_iou
-from src.models.pix2vox import Pix2Vox
+from src.models.pix2vox import Pix2Vox, Pix2VoxPlusPlus
 from src.models.atlasnet import AtlasNet
 
 
@@ -107,15 +107,37 @@ class TestReconstructionPipeline(unittest.TestCase):
         self.assertEqual(faces.shape[1], 3)
         print("✓ AtlasNet multi-view (K=3) forward, backward & mesh extraction passed.")
 
+    def test_upgraded_pix2voxpp_and_sphere_atlasnet(self):
+        p2vpp = Pix2VoxPlusPlus(pretrained=False, backbone="resnet18", spatial_pool=2, feat_dim=512, deep_refiner=True).to(self.device)
+        criterion = Pix2VoxLoss(bce_weight=1.0, dice_weight=0.5)
+        dummy_images = torch.randn(2, 3, 3, 224, 224, device=self.device)
+        dummy_gt = (torch.rand(2, 32, 32, 32, device=self.device) > 0.8).float()
+        out = p2vpp(dummy_images)
+        loss = criterion(out["voxels"], dummy_gt, out["coarse_voxels"])
+        self.assertFalse(torch.isnan(loss))
+        loss.backward()
+
+        atlas = AtlasNet(num_patches=25, latent_dim=256, hidden_dim=64, pretrained=False, template="sphere", view_pooling="attention").to(self.device)
+        out_a = atlas(dummy_images, num_points=1000)
+        loss_a, _ = chamfer_distance(out_a["points"], torch.randn(2, 1000, 3, device=self.device))
+        self.assertFalse(torch.isnan(loss_a))
+        loss_a.backward()
+        verts, faces = atlas.generate_mesh(dummy_images[:1], grid_res=6)
+        self.assertGreater(verts.shape[0], 0)
+        print("✓ Upgraded Pix2VoxPlusPlus (spatial_pool=2, deep_refiner) & Spherical Attention AtlasNet passed.")
+
     def test_dataset_loading(self):
-        if os.path.exists("dataset/renders"):
+        if os.path.exists("dataset/splits.json"):
             splits = create_or_load_splits(dataset_root="dataset")
             ds = OmniObject3DDataset(samples=splits["train"][:5], dataset_root="dataset", num_views=3, is_train=False)
             sample = ds[0]
             self.assertEqual(sample["images"].shape, (3, 3, 224, 224))
             self.assertEqual(sample["point_cloud"].shape, (4096, 3))
             self.assertEqual(sample["voxels"].shape, (32, 32, 32))
-            print(f"✓ Real OmniObject3D dataset sample loaded successfully: {sample['category']}/{sample['object_id']}")
+            ds_aug = OmniObject3DDataset(samples=splits["train"][:5], dataset_root="dataset", num_views=3, is_train=True, augment=True)
+            sample_aug = ds_aug[0]
+            self.assertEqual(sample_aug["images"].shape, (3, 3, 224, 224))
+            print(f"✓ Real OmniObject3D dataset & augmentation sample loaded successfully: {sample['category']}/{sample['object_id']}")
 
 
 if __name__ == "__main__":

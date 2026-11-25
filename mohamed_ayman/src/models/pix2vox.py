@@ -1,9 +1,10 @@
 """
 Pix2Vox / Pix2Vox++ Architecture for Multi-View 3D Shape Reconstruction.
-Reference: Xie et al., "Pix2Vox: Context-aware 3D Reconstruction from Single and Multi-view Images", ICCV 2019.
+Reference: Xie et al., "Pix2Vox: Context-aware 3D Reconstruction from Single and Multi-view Images", ICCV 2019,
+and "Pix2Vox++: Multi-scale Context-aware 3D Object Reconstruction from Single and Multiple Images", IJCV 2020.
 
 Pipeline:
-1. Shared 2D CNN Encoder (ResNet-18) extracts feature vectors from K views.
+1. Shared 2D CNN Encoder (ResNet-18 or ResNet-50 with optional spatial pooling) extracts feature vectors from K views.
 2. 3D Deconvolution Decoder generates coarse 32x32x32 voxel grids and visibility scores.
 3. Context-Aware Multi-View Fusion adaptively weights voxel features across viewpoints.
 4. 3D U-Net / Residual Refiner refines surface boundaries and fills inner cavities.
@@ -20,18 +21,35 @@ import torchvision.models as models
 
 
 class Encoder2D(nn.Module):
-    def __init__(self, pretrained: bool = True):
+    def __init__(
+        self,
+        pretrained: bool = True,
+        backbone: str = "resnet18",
+        spatial_pool: int = 1,
+        feat_dim: int = 512,
+    ):
         super().__init__()
-        base = None
-        if pretrained:
+        self.backbone_name = backbone
+        self.spatial_pool = spatial_pool
+        self.feat_dim = feat_dim
+
+        if backbone == "resnet50":
+            weights = models.ResNet50_Weights.DEFAULT if pretrained else None
             try:
-                base = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+                base = models.resnet50(weights=weights)
+            except Exception as e:
+                print(f"Notice: Could not download online ResNet-50 weights ({e}). Initializing from scratch.")
+                base = models.resnet50(weights=None)
+            enc_channels = 2048
+        else:
+            weights = models.ResNet18_Weights.DEFAULT if pretrained else None
+            try:
+                base = models.resnet18(weights=weights)
             except Exception as e:
                 print(f"Notice: Could not download online ResNet-18 weights ({e}). Initializing from scratch.")
                 base = models.resnet18(weights=None)
-        else:
-            base = models.resnet18(weights=None)
-        # Remove avgpool and fc
+            enc_channels = 512
+
         self.conv1 = base.conv1
         self.bn1 = base.bn1
         self.relu = base.relu
@@ -40,8 +58,19 @@ class Encoder2D(nn.Module):
         self.layer2 = base.layer2
         self.layer3 = base.layer3
         self.layer4 = base.layer4
-        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(512, 512)
+        self.avgpool = nn.AdaptiveAvgPool2d((spatial_pool, spatial_pool))
+
+        in_flat = enc_channels * (spatial_pool * spatial_pool)
+        if spatial_pool == 1 and backbone == "resnet18" and feat_dim == 512:
+            # Keep exact attribute name for legacy checkpoint compatibility
+            self.fc = nn.Linear(in_flat, feat_dim)
+        else:
+            self.fc = nn.Sequential(
+                nn.Linear(in_flat, feat_dim),
+                nn.BatchNorm1d(feat_dim),
+                nn.LeakyReLU(0.2, inplace=True),
+                nn.Dropout(0.1),
+            )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # x: (B*K, 3, 224, 224)
@@ -53,14 +82,14 @@ class Encoder2D(nn.Module):
         x = self.layer4(x)
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
-        feat = self.fc(x)  # (B*K, 512)
+        feat = self.fc(x)  # (B*K, feat_dim)
         return feat
 
 
 class Decoder3D(nn.Module):
     def __init__(self, in_features: int = 512):
         super().__init__()
-        # Project 512 -> 256 * 2^3 = 2048
+        # Project in_features -> 256 * 2^3 = 2048
         self.fc = nn.Linear(in_features, 256 * 2 * 2 * 2)
 
         # Transposed 3D Convolutions: 2 -> 4 -> 8 -> 16 -> 32
@@ -88,7 +117,7 @@ class Decoder3D(nn.Module):
         self.deconv5 = nn.Conv3d(16, 2, kernel_size=3, stride=1, padding=1)
 
     def forward(self, feat: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        # feat: (B*K, 512)
+        # feat: (B*K, in_features)
         x = self.fc(feat).view(-1, 256, 2, 2, 2)
         x = self.deconv1(x)  # (B*K, 128, 4, 4, 4)
         x = self.deconv2(x)  # (B*K, 64, 8, 8, 8)
@@ -174,18 +203,94 @@ class Refiner3D(nn.Module):
         return refined
 
 
+class MultiScaleRefiner3D(nn.Module):
+    """
+    Deeper 3D U-Net Refiner (32^3 -> 16^3 -> 8^3 -> 16^3 -> 32^3) with logit residual.
+    Ensures exact identity mapping at delta=0 and stronger multi-scale cavity completion.
+    """
+    def __init__(self):
+        super().__init__()
+        self.enc1 = nn.Sequential(
+            nn.Conv3d(1, 32, kernel_size=3, padding=1),
+            nn.BatchNorm3d(32),
+            nn.LeakyReLU(0.2, inplace=True),
+        )
+        self.enc2 = nn.Sequential(
+            nn.Conv3d(32, 64, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm3d(64),
+            nn.LeakyReLU(0.2, inplace=True),
+        )
+        self.enc3 = nn.Sequential(
+            nn.Conv3d(64, 128, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm3d(128),
+            nn.LeakyReLU(0.2, inplace=True),
+        )
+        self.bottleneck = nn.Sequential(
+            nn.Conv3d(128, 128, kernel_size=3, padding=1),
+            nn.BatchNorm3d(128),
+            nn.LeakyReLU(0.2, inplace=True),
+        )
+        self.dec2 = nn.Sequential(
+            nn.ConvTranspose3d(128, 64, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm3d(64),
+            nn.LeakyReLU(0.2, inplace=True),
+        )
+        self.dec1 = nn.Sequential(
+            nn.ConvTranspose3d(64, 32, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm3d(32),
+            nn.LeakyReLU(0.2, inplace=True),
+        )
+        self.out_conv = nn.Sequential(
+            nn.Conv3d(32, 16, kernel_size=3, padding=1),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv3d(16, 1, kernel_size=3, padding=1),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        e1 = self.enc1(x)
+        e2 = self.enc2(e1)
+        e3 = self.enc3(e2)
+        b = self.bottleneck(e3)
+        d2 = self.dec2(b) + e2
+        d1 = self.dec1(d2) + e1
+        delta = self.out_conv(d1)
+        # Perform logit residual in FP32 to prevent float16 clamp rounding to inf/nan
+        base_logits = torch.logit(x.float().clamp(1e-4, 1.0 - 1e-4))
+        return torch.sigmoid(base_logits + delta.float())
+
+
 class Pix2Vox(nn.Module):
     """
-    Complete Multi-View Pix2Vox++ model.
+    Complete Multi-View Pix2Vox / Pix2Vox++ model.
     """
-    def __init__(self, pretrained: bool = True, use_refiner: bool = True):
+    def __init__(
+        self,
+        pretrained: bool = True,
+        use_refiner: bool = True,
+        backbone: str = "resnet18",
+        spatial_pool: int = 1,
+        feat_dim: int = 512,
+        deep_refiner: bool = False,
+    ):
         super().__init__()
         self.use_refiner = use_refiner
-        self.encoder = Encoder2D(pretrained=pretrained)
-        self.decoder = Decoder3D(in_features=512)
+        self.arch_config = {
+            "backbone": backbone,
+            "spatial_pool": spatial_pool,
+            "feat_dim": feat_dim,
+            "deep_refiner": deep_refiner,
+            "use_refiner": use_refiner,
+        }
+        self.encoder = Encoder2D(
+            pretrained=pretrained,
+            backbone=backbone,
+            spatial_pool=spatial_pool,
+            feat_dim=feat_dim,
+        )
+        self.decoder = Decoder3D(in_features=feat_dim)
         self.fusion = ContextAwareFusion()
         if self.use_refiner:
-            self.refiner = Refiner3D()
+            self.refiner = MultiScaleRefiner3D() if deep_refiner else Refiner3D()
 
     def forward(self, images: torch.Tensor) -> Dict[str, torch.Tensor]:
         """
@@ -193,13 +298,12 @@ class Pix2Vox(nn.Module):
             images: (B, K, 3, 224, 224)
         Returns:
             dict containing:
+                'voxels': (B, 32, 32, 32)
                 'coarse_voxels': (B, 32, 32, 32)
-                'refined_voxels': (B, 32, 32, 32)
         """
         B, K, C, H, W = images.shape
-        # Flatten B and K for shared 2D encoder
         x_flat = images.view(B * K, C, H, W)
-        feats = self.encoder(x_flat)  # (B*K, 512)
+        feats = self.encoder(x_flat)  # (B*K, feat_dim)
 
         raw_voxels, raw_scores = self.decoder(feats)  # (B*K, 1, 32, 32, 32)
         coarse_fused = self.fusion(raw_voxels, raw_scores, B, K)  # (B, 1, 32, 32, 32)
@@ -219,7 +323,21 @@ class Pix2Vox(nn.Module):
 class Pix2VoxPlusPlus(Pix2Vox):
     """
     Pix2Vox++ Architecture (Xie et al., IJCV 2020).
-    Features Context-Aware Multi-View Fusion with 3D Residual U-Net Refiner.
+    Features Context-Aware Multi-View Fusion with Multi-Scale 3D U-Net Refiner.
     """
-    def __init__(self, pretrained: bool = True):
-        super().__init__(pretrained=pretrained, use_refiner=True)
+    def __init__(
+        self,
+        pretrained: bool = True,
+        backbone: str = "resnet50",
+        spatial_pool: int = 2,
+        feat_dim: int = 1024,
+        deep_refiner: bool = True,
+    ):
+        super().__init__(
+            pretrained=pretrained,
+            use_refiner=True,
+            backbone=backbone,
+            spatial_pool=spatial_pool,
+            feat_dim=feat_dim,
+            deep_refiner=deep_refiner,
+        )

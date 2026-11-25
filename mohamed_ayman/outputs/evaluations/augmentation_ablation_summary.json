@@ -1,0 +1,11 @@
+{
+  "n_test_objects": 300,
+  "clean_white_bg": {
+    "pix2voxpp_noaug_iou": 0.6435232679049174,
+    "pix2voxpp_aug_iou": 0.6388369957109292
+  },
+  "domain_shift_nonwhite_bg": {
+    "pix2voxpp_noaug_iou": 0.33715924380191914,
+    "pix2voxpp_aug_iou": 0.6356196086108684
+  }
+}
